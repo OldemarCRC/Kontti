@@ -1,0 +1,59 @@
+html,
+body {
+  height: 100%;
+  margin: 0;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.content {
+  flex: 1;
+}
+
+.container-list {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 0px;
+  max-height: unset;
+  min-height: 65vh;
+  background-color: hwb(0 85% 14%);
+}
+
+.submit-button {
+  margin-top: 10px;
+}
+
+input {
+  width: 200px;
+
+  /* Otros estilos para el input */
+  padding: 8px; /* Añade un poco de padding */
+  border: 1px solid #ccc; /* Borde ligero para el input */
+  border-radius: 100px; /* Ajusta este valor para controlar la redondez */
+  box-shadow: rgb(212, 212, 216) 0px 1px 3px 0px;
+  order: 1;
+}
+
+/* Estilos para el botón */
+button {
+  width: 200px;
+  padding: 10px 15px; /* Añade un poco de padding */
+  background-color: #046a7c; /* Color de fondo */
+  color: white; /* Color del texto */
+  cursor: pointer; /* Cambia el cursor a una mano cuando se pasa sobre el botón */
+  border: 1px solid #ccc; /* Borde ligero para el input */
+  border-radius: 100px; /* Ajusta este valor para controlar la redondez */
+  box-shadow: rgb(212, 212, 216) 0px 1px 3px 0px;
+  order: 1;
+}
+
+button:hover {
+  background-color: #064b57;
+}

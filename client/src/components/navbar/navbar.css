@@ -1,0 +1,61 @@
+
+.navbar {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: black;
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  color: #046a7c; /* Color de acento para el nombre de la aplicación */
+  text-decoration: none;
+}
+
+.navbar-nav {
+  list-style: none;
+  display: flex;
+  gap: 20px; /* Espaciado entre elementos de la lista */
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  display: block;
+}
+
+.nav-link {
+  color: #046a7c;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  transition: background-color 0.3s;
+}
+
+.nav-link:hover,
+.dropdown-item:hover,
+.dropdown-toggle:hover {
+  background-color: #34495e; /* Color más oscuro para el hover */
+}
+
+.dropdown-menu {
+  list-style: none;
+  border: none;
+  text-decoration: none;
+}
+
+.dropdown-item {
+  color: #046a7c;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+

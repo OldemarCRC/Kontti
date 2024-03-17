@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 8vh;
+  width: 98vw;
+  position: fixed;
+  top: 0;
+  background-color: white;
+  color: #046a7c;
+  text-align: right;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Sombra sutil para dar profundidad */
+  z-index: 1000; /* Asegura que el header esté sobre otros elementos */
+}
+
+/* .header-img{
+  margin-left: 30px;
+  height: 80px;
+} */
+body {
+  padding-top: 60px; /* Asegura que el contenido no quede oculto detrás del header fijo */
+}

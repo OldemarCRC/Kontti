@@ -1,0 +1,53 @@
+.container-excel-to-json {
+  font-size: 12px;
+  width: 99vw;
+  height: 70vh;
+  padding: 20px 20px;
+  
+  background-color: hwb(0 95% 4%);
+}
+.container-table::-webkit-scrollbar {
+  width: 18px;
+}
+.container-table::-webkit-scrollbar-track {
+  background: #a9dee8;
+}
+.container-table::-webkit-scrollbar-thumb {
+  background: #046a7c;
+}
+.container-table::-webkit-scrollbar-thumb:hover {
+  background: #024652;
+}
+.container-table{
+  overflow-y:scroll;
+  max-height: 98%; /* Ajusta según la altura deseada */
+}
+
+table {
+  
+  border-collapse: collapse;
+}
+
+thead th {
+  position: sticky;
+  top: 0;
+  background-color: #fff; /* Asegúrate de que el fondo no sea transparente */
+  z-index: 1; /* Asegura que el encabezado se muestre sobre el contenido al desplazar */
+}
+/* Estilos adicionales para mejorar la apariencia */
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+thead {
+  border-bottom: 2px solid #ddd;
+}
+
+.table-buttons input{
+margin-right: 2%;
+}
+
+.table-buttons button{
+  margin-right: 2%
+}

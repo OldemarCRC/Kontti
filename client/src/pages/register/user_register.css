@@ -1,0 +1,94 @@
+.register-container {
+    background-color: #c5c2c2;
+    display: flex;
+    position: relative;
+    margin: 0;
+    height: 85vh;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .register-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4%;
+    background-color: rgba(255, 255, 255, 0.10); /* cambiar el ultimo valor para graduar la transparencia */
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    max-width: 85vw;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2; /* Asegura que el formulario se muestre sobre el efecto de oscurecimiento */
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3),
+      -5px -5px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .app-name h3 {
+    color: #333;
+    margin-bottom: 10px;
+  }
+  
+  .register-message {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 20px;
+  }
+  
+  .label-input {
+    width: 100%;
+  }
+  
+  .form-label {
+    display: block;
+    margin-bottom: 5px;
+    color: #444;
+  }
+  
+  input[type="text"],
+  input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
+  
+  input[type="text"]::placeholder,
+  input[type="password"]::placeholder {
+    color: #bbb;
+  }
+  
+  .register-button {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .lbtn {
+    padding: 10px 20px;
+    background-color: #046a7c;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3),
+      -5px -5px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  .lbtn:disabled {
+    background-color: #ccc;
+  }
+  
+  .lbtn:not(:disabled):hover {
+    background-color: #043c46;
+  }
+  
+  .spinner-grow {
+    margin-right: 5px;
+  }
