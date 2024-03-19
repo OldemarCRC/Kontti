@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { fetchInventory } from "../../services/fetchInventory";
 import './containers_inventory.css';
+import Footer from  '../../components/footer/Footer';
+import Header from "../../components/header/Header";
+
 
 function InventoryTable() {
   const [inventoryData, setInventoryData] = useState([]);
@@ -21,7 +24,9 @@ function InventoryTable() {
   };
 
   return (
-    <div className="container-excel-to-json">
+    <>
+    <Header />
+<div className="container-excel-to-json">
       <div className="table-buttons">
         <button onClick={handleInventory}>
           Cargar inventario de contenedores
@@ -83,6 +88,9 @@ function InventoryTable() {
         {console.log(JSON.stringify(inventoryData))}
       </div>
     </div>
+    <Footer />
+    </>
+    
   );
 }
 export default InventoryTable;

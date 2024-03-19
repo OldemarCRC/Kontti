@@ -3,6 +3,8 @@ import * as XLSX from "xlsx";
 import "./import_movements.css";
 import uploadDataToMongoDB from "../../services/uploadService.js";
 import calculateCheckDigit from "../../services/calculateCheckDigit.js";
+import Footer from  '../../components/footer/Footer';
+import Header from "../../components/header/Header";
 
 function ImportMovements() {
   const [jsonData, setJsonData] = useState([]);
@@ -136,6 +138,8 @@ function ImportMovements() {
   };
 
   return (
+    <>
+    <Header />
     <div className="container-excel-to-json">
       <div className="table-buttons">
         <input type="file" accept=".xlsx, .xls" onChange={handleFile} />
@@ -206,6 +210,9 @@ function ImportMovements() {
         {/* {console.log(typeof (jsonData[0].truckID))} Para revisar los tipos de datos y que coincidan con los que tenemos en los modelos */}
       </div>
     </div>
+    <Footer />
+    </>
+    
   );
 }
 export default ImportMovements;
