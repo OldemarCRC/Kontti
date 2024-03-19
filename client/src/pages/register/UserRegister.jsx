@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./user_register.css";
+import Navbar from "../../components/navbar/NavBar";
+
 
 // User Registration
 const UserRegister = () => {
@@ -34,7 +36,7 @@ const UserRegister = () => {
 
   // Notifying if registration was Successful
   const notify = () => {
-    toast.success("Registration successful!");
+    toast.success("¡Registro exitoso, usuario debe verificar su correo!");
   };
 
   // User Submit for Regisration
@@ -43,7 +45,7 @@ const UserRegister = () => {
     const { username, email, password, confirmPassword, role, phone } =
       formData;
     if (password !== confirmPassword) {
-      toast.error("Passwords do not match!");
+      toast.error("¡Las contraseñas no concuerdan!");
       return;
     }
     try {
@@ -66,7 +68,7 @@ const UserRegister = () => {
         "ERROR EN LA SOLICITUD:",
         error.response ? error.response : error
       );
-      toast.error("Registration unsuccssesful!");
+      toast.error("¡Registro fallido!");
     }
   };
 
@@ -79,6 +81,7 @@ const UserRegister = () => {
 
   return (
     <>
+    <Navbar />
       <ToastContainer autoClose={2000} />
       <div className="register-container">
         <div className="register-form">

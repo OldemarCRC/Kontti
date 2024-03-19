@@ -2,7 +2,7 @@ import { createContext, useEffect, useReducer } from "react";
 
 // Initial State
 const INITIAL_STATE = {
-  user: JSON.parse(localStorage.getItem("user")) || null,
+  user: JSON.parse(sessionStorage.getItem("user")) || null,
   loading: false,
   error: null,
 };
@@ -48,7 +48,7 @@ export const AuthContextProvider = ({ children }) => {
 
   // Local Storage
   useEffect(() => {
-    localStorage.setItem("user", JSON.stringify(state.user));
+    sessionStorage.setItem("user", JSON.stringify(state.user));
   }, [state.user]); // Not logging out if you refresh the page
 
   return (

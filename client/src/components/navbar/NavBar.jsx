@@ -15,7 +15,7 @@ const Navbar = () => {
   const handleLogout = () => {
     notify();
     setTimeout(() => {
-      localStorage.removeItem("user");
+      sessionStorage.removeItem("user");
       dispatch({ type: "LOGOUT" });
       window.location.reload();
     }, 800);
@@ -60,4 +60,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-

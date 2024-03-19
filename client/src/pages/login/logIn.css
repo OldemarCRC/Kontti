@@ -1,3 +1,11 @@
+.empty-div{
+  height: 8vh;
+  width: 98vw;
+  position: fixed;
+  top: 0;
+  background-color: white;
+}
+
 .login-container {
   display: flex;
   position: relative;

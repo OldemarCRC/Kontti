@@ -27,13 +27,13 @@ export const register = async (req, res, next) => {
     );
     // Enviar correo electrónico de verificación
     // La URL de verificación debería ser algo que tu frontend pueda manejar para completar la verificación
-    const verificationUrl = `http://localhost:3000/account-verification?token=${verificationToken}`;
+    const verificationUrl = `http://192.168.10.45:3000/account-verification?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationUrl);
 
     res
       .status(200)
       .send(
-        "User has been created. Please check your email to verify your account."
+        "El usuario ha sido creado. Usuario debe revisar su correo para verificar la cuenta."
       );
   } catch (err) {
     next(err);
@@ -43,25 +43,24 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
-    if (!user) return next(createError(404, "User not found!"));
+    if (!user) return next(createError(404, "¡Usuario no encontrado!"));
 
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
       user.password
     );
     if (!isPasswordCorrect)
-      return next(createError(400, "password or username not correct!"));
+      return next(createError(400, "¡Contraseña o nombre de usuario erróneo!"));
 
       // Verificar si el correo electrónico del usuario ha sido verificado
     if (!user.isEmailVerified) {
-      return next(createError(403, "Please verify your email before logging in."));
+      return next(createError(403, "Por favor verifique su correo antes de intentar iniciar sesión."));
     }
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT, {
       expiresIn: "1d",
     });
 
     const { password, ...otherDetails } = user._doc;
-    console.log({ otherDetails });
     res
       .cookie("access_token", token, {
         httpOnly: true,
@@ -104,16 +103,15 @@ export const changePassword = async (req, res, next) => {
   try {
     const userId = req.body.userId; // O obtener el ID de usuario de alguna otra manera, e.g., a través de un token JWT
     const { currentPassword, newPassword } = req.body;
-console.log("User: ", userId );
     const user = await User.findById(userId);
     if (!user) {
-      return next(createError(404, "User not found!"));
+      return next(createError(404, "¡Usuario no existe!"));
     }
 
     // Verificar si la contraseña actual es correcta
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return next(createError(400, "Current password is incorrect!"));
+      return next(createError(400, "¡Contraseña actual no es correcta!"));
     }
 
     // Generar hash de la nueva contraseña
@@ -124,7 +122,7 @@ console.log("User: ", userId );
     user.password = hashedNewPassword;
     await user.save();
 
-    res.status(200).send("Password has been changed successfully.");
+    res.status(200).send("¡Contraseña ha sido cambiada exitosamente!");
   } catch (err) {
     next(err);
   }

@@ -1,0 +1,33 @@
+.empty-div{
+    height: 8vh;
+    width: 98vw;
+    position: fixed;
+    top: 0;
+    background-color: white;
+  }
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 85vh;
+  padding: 20px;
+  background-color: rgb(221, 219, 219);
+}
+.verification-status {
+  font-size: large;
+}
+
+.return-home-link {
+  text-decoration: none;
+  color: white;
+  background: #046a7c;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 20px;
+  display: inline-block;
+}
+
+.return-home-link:hover {
+  background: #024551;
+}
