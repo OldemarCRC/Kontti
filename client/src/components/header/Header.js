@@ -6,7 +6,6 @@ function Header({ type }) {
   return (
     <header className="header">
       <Navbar />
-     
       
     </header>
   );

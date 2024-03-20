@@ -7,6 +7,10 @@
   position: fixed;
   top: 0;
   background-color: white;
+/*   background-image: url(../../../public/pngegg.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat; */
   color: #046a7c;
   text-align: right;
   padding-left: 10px;

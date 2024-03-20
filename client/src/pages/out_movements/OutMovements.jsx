@@ -10,10 +10,15 @@ function OutMovements() {
 
 
   return (
+    <>
+    <Header />
     <div className="in-movements-container">
       <h2>OTRAS SALIDAS</h2>
       
     </div>
+    <Footer />
+    </>
+    
   );
 }
 export default OutMovements;

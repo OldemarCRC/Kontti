@@ -10,10 +10,13 @@ function InMovements() {
 
 
   return (
+    <>
+    <Header />
     <div className="in-movements-container">
       <h2>OTROS INGRESOS</h2>
-      
     </div>
+    <Footer />
+    </>
   );
 }
 export default InMovements;

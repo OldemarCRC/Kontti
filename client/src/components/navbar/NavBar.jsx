@@ -5,6 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+const logoImage = "https://www.grupodelsol.cr/Imagenes/logos/Decaprom_logosinfondo.png";
+
 const Navbar = () => {
   const { user, dispatch } = useContext(AuthContext);
 
@@ -26,9 +28,12 @@ const Navbar = () => {
       <nav className="navbar">
         <ToastContainer autoClose={800} />
         <div className="navbar-container">
-          <Link className="navbar-brand" to="/home">
-            KONTTI
+          <Link to="/home" className="navbar-brand">
+            <img src={logoImage} alt="Decaprom" className="navbar-logo" />
           </Link>
+          {/* <Link className="navbar-brand" to="/home">
+            KONTTI
+          </Link> */}
           <div className="navbar-container-2">
             <ul className="navbar-nav">
               {user && (
@@ -41,12 +46,33 @@ const Navbar = () => {
                     </li>
                   )}
                   <li className="nav-item dropdown">
-                    <span className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span
+                      className="nav-link dropdown-toggle"
+                      id="navbarDropdown"
+                      role="button"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
                       {user.username}
                     </span>
-                    <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-                      <li><Link className="dropdown-item" to="/change-password">Cambiar contraseña</Link></li>
-                      <li><span className="dropdown-item" onClick={handleLogout} style={{ cursor: "pointer" }}>Cerrar sesión</span></li>
+                    <ul
+                      className="dropdown-menu"
+                      aria-labelledby="navbarDropdown"
+                    >
+                      <li>
+                        <Link className="dropdown-item" to="/change-password">
+                          Cambiar contraseña
+                        </Link>
+                      </li>
+                      <li>
+                        <span
+                          className="dropdown-item"
+                          onClick={handleLogout}
+                          style={{ cursor: "pointer" }}
+                        >
+                          Cerrar sesión
+                        </span>
+                      </li>
                     </ul>
                   </li>
                 </>

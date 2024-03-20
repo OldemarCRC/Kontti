@@ -4,6 +4,12 @@ import { AuthContext } from "../../context/AuthContext";
 import "./home.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
+import import_img from "./images/import.png";
+import in_movements_img from "./images/in_movements.png";
+import export_img from "./images/export.png";
+import out_movements_img from "./images/out_movements.jpg";
+import inventory_img from "./images/inventory.png";
+
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -23,49 +29,52 @@ function Home() {
   };
 
   return (
-    <div className="home">
+    <>
       <Header />
+      <div className="home">
       <h2 className="home-header">Registro de movimientos e inventario de contenedores</h2>
       <div className="home-container">
         
         <div className="option-page" onClick={() => handleNavigate('/import')}>
-          <h3>Movimientos de importación</h3>
+          <h3 className="option-text">Movimientos de importación</h3>
           <img
-            src="https://images.pexels.com/photos/2199293/pexels-photo-2199293.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" // Reemplaza con la ruta correcta de tu imagen
+            src={import_img} // Reemplaza con la ruta correcta de tu imagen
             alt="import"
           />
         </div>
         <div className="option-page" onClick={() => handleNavigate('/in-movements')}>
-          <h3>Otros ingresos</h3>
+          <h3 className="option-text">Otros ingresos</h3>
           <img
-            src="https://images.pexels.com/photos/163726/belgium-antwerp-shipping-container-163726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" // Reemplaza con la ruta correcta de tu imagen
+            src={in_movements_img} // Reemplaza con la ruta correcta de tu imagen
             alt="otros ingresos"
           />
         </div>
         <div className="option-page" onClick={() => handleNavigate('/export')}>
-          <h3>Movimientos de exportación</h3>
+          <h3 className="option-text">Movimientos de exportación</h3>
           <img
-            src="https://images.pexels.com/photos/163726/belgium-antwerp-shipping-container-163726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" // Reemplaza con la ruta correcta de tu imagen
+            src={export_img} // Reemplaza con la ruta correcta de tu imagen
             alt="otros ingresos"
           />
         </div>
         <div className="option-page" onClick={() => handleNavigate('/out-movements')}>
-          <h3>Otras salidas</h3>
+          <h3 className="option-text">Otras salidas</h3>
           <img
-            src="https://images.pexels.com/photos/163726/belgium-antwerp-shipping-container-163726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" // Reemplaza con la ruta correcta de tu imagen
+            src={out_movements_img} // Reemplaza con la ruta correcta de tu imagen
             alt="otros ingresos"
           />
         </div>
         <div className="option-page" onClick={() => handleNavigate('/inventory')}>
-          <h3>Inventario de contenedores</h3>
+          <h3 className="option-text">Inventario de contenedores</h3>
           <img
-            src="https://images.pexels.com/photos/163726/belgium-antwerp-shipping-container-163726.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" // Reemplaza con la ruta correcta de tu imagen
+            src={inventory_img} // Reemplaza con la ruta correcta de tu imagen
             alt="otros ingresos"
           />
         </div>
       </div>
+      </div>
+      
       <Footer />
-    </div>
+    </>
   );
 }
 
