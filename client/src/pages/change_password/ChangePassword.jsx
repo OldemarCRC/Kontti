@@ -5,7 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./change_password.css";
-import NavBar from "../../components/navbar/NavBar";
+import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
 
 // User Registration
 const ChangePassword = () => {
@@ -74,7 +75,7 @@ const ChangePassword = () => {
 
   return (
     <>
-      <NavBar />
+      <Header />
       <ToastContainer autoClose={2000} />
       <div className="change-password-container">
         <div className="change-password-form">
@@ -135,6 +136,7 @@ const ChangePassword = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 import authRoute from "./routes/authRoute.js";
 import usersRoute from "./routes/usersRoute.js";
-import containersRoute from "./routes/containersRoute.js";
+import movementRoute from "./routes/movementRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -14,7 +14,7 @@ dotenv.config();
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
-    console.log("Connected to Containers database.");
+    console.log("Connected to Kontti database.");
   } catch (error) {
     throw error;
   }
@@ -38,7 +38,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
-app.use("/api/containers", containersRoute);
+app.use("/api/movements", movementRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

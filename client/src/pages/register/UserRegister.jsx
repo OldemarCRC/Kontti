@@ -5,8 +5,8 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./user_register.css";
-import Navbar from "../../components/navbar/NavBar";
-
+import Header from "../../components/header/Header";
+import Footer from "../../components/footer/Footer";
 
 // User Registration
 const UserRegister = () => {
@@ -81,7 +81,7 @@ const UserRegister = () => {
 
   return (
     <>
-    <Navbar />
+      <Header />
       <ToastContainer autoClose={2000} />
       <div className="register-container">
         <div className="register-form">
@@ -119,7 +119,21 @@ const UserRegister = () => {
               <label className="form-label" htmlFor="email">
                 Rol del usuario
               </label>
-              <input
+              <select
+                value={formData.role}
+                onChange={handleChange}
+                className="form-input"
+                id="role"
+                name="role"
+              >
+                <option value="">Selecciona un rol</option>
+                <option value="staff">Personal de oficina</option>
+                <option value="gate">Chequeador de puerta</option>
+                <option value="operator">Operador de stacker</option>
+                <option value="externalUser">Agente externo</option>
+              </select>
+
+              {/*  <input
                 value={formData.role}
                 onChange={handleChange}
                 type="text"
@@ -127,7 +141,7 @@ const UserRegister = () => {
                 placeholder="Rol de trabajo"
                 id="role"
                 name="role"
-              />
+              /> */}
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
@@ -179,6 +193,7 @@ const UserRegister = () => {
           </form>
         </div>
       </div>
+      <Footer />
     </>
   );
 };

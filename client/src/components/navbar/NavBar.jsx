@@ -4,8 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
-const logoImage = "https://www.grupodelsol.cr/Imagenes/logos/Decaprom_logosinfondo.png";
+import LogoKontti from "../logos/LogoKontti";
 
 const Navbar = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -24,65 +23,53 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <nav className="navbar">
-        <ToastContainer autoClose={800} />
-        <div className="navbar-container">
-          <Link to="/home" className="navbar-brand">
-            <img src={logoImage} alt="Decaprom" className="navbar-logo" />
-          </Link>
-          {/* <Link className="navbar-brand" to="/home">
-            KONTTI
-          </Link> */}
-          <div className="navbar-container-2">
-            <ul className="navbar-nav">
-              {user && (
-                <>
+    <nav className="navbar">
+      <ToastContainer autoClose={800} />
+      <div className="navbar-container">
+        <div className="navbar-container-2">
+          <ul className="navbar-nav">
+            {user && (
+              <li className="nav-item dropdown">
+                <span
+                  className="nav-link dropdown-toggle"
+                  id="navbarDropdown"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {user.username}
+                </span>
+                <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                   {user.role === "manager" && (
-                    <li className="nav-item">
-                      <Link to="/user-register" className="nav-link">
+                    <li className="navbar-list">
+                      <Link className="dropdown-item" to="/user-register">
                         Registrar usuario
                       </Link>
                     </li>
                   )}
-                  <li className="nav-item dropdown">
-                    <span
-                      className="nav-link dropdown-toggle"
-                      id="navbarDropdown"
-                      role="button"
-                      data-bs-toggle="dropdown"
-                      aria-expanded="false"
-                    >
-                      {user.username}
-                    </span>
-                    <ul
-                      className="dropdown-menu"
-                      aria-labelledby="navbarDropdown"
-                    >
-                      <li>
-                        <Link className="dropdown-item" to="/change-password">
-                          Cambiar contraseña
-                        </Link>
-                      </li>
-                      <li>
-                        <span
-                          className="dropdown-item"
-                          onClick={handleLogout}
-                          style={{ cursor: "pointer" }}
-                        >
-                          Cerrar sesión
-                        </span>
-                      </li>
-                    </ul>
+                  <li className="navbar-list">
+                    <Link className="dropdown-item" to="/change-password">
+                      Cambiar contraseña
+                    </Link>
                   </li>
-                </>
-              )}
-            </ul>
-          </div>
+                  <li className="navbar-list">
+                    <span
+                      className="dropdown-item"
+                      onClick={handleLogout}
+                      style={{ cursor: "pointer" }}
+                    >
+                      Cerrar sesión
+                    </span>
+                  </li>
+                </ul>
+              </li>
+            )}
+          </ul>
+          <LogoKontti />
         </div>
-      </nav>
-    </>
+      </div> {/*Fin div navbar container */}
+    </nav>
   );
-};
-
-export default Navbar;
+                  } 
+  export default Navbar;
+  

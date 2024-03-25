@@ -1,10 +1,11 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import "./App.css";
 import ContainersInventory from "./pages/containers_inventory/ContainersInventory";
-import ImportMovements from "./pages/import/ImportMovements";
-import ExportMovements from "./pages/export/ExportMovements";
 import InMovements from "./pages/in_movements/InMovements";
+import ExportMovements from "./pages/export/ExportMovements";
+import PreInMovements from "./pages/pre_in_movements/PreInMovements";
 import OutMovements from "./pages/out_movements/OutMovements";
 import LogIn from "./pages/login/LogIn";
 import Home from "./pages/home/Home";
@@ -25,9 +26,9 @@ function App() {
           />
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/import" element={<ImportMovements />} />
-          <Route path="/export" element={<ExportMovements />} />
           <Route path="/in-movements" element={<InMovements />} />
+          <Route path="/export" element={<ExportMovements />} />
+          <Route path="/pre-in-movements" element={<PreInMovements />} />
           <Route path="/out-movements" element={<OutMovements />} />
           <Route path="/inventory" element={<ContainersInventory />} />
         </Routes>

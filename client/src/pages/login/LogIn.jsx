@@ -5,8 +5,6 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./../../pages/login/logIn.css";
-import Header from "../../components/header/Header";
-import Footer from "../../components/footer/Footer";
 
 // User or Admin LogIn
 const Login = () => {
@@ -49,7 +47,7 @@ const Login = () => {
     dispatch({ type: "LOGIN_START" });
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/auth/login",
+        "http://192.168.10.45:8800/api/auth/login",
         credentials
       );
       if (res.data.details.isEmailVerified) {
@@ -73,18 +71,17 @@ const Login = () => {
   };
 
   return (
-    <>
+    <div className="login-page">
       <ToastContainer autoClose={2000} />
-      <div className="empty-div"></div>
       <div className="login-container">
         <div className="login-form">
           <form>
-            <div className="app-name">
-              <h3>Kontti</h3>
+            <div>
+              <h3 className="app-name">Kontti Hub</h3>
             </div>
             <h5 className="login-message">Inicia sesión en tu cuenta</h5>
             <div className="label-input">
-              <label form="username" className="form-label">
+              <label form="username" className="login-label">
                 Nombre de usuario
               </label>
               <input
@@ -97,7 +94,7 @@ const Login = () => {
               />
             </div>
             <div className="label-input">
-              <label form="passowrd" className="form-label">
+              <label form="passowrd" className="login-label">
                 Contraseña
               </label>
               <input
@@ -130,8 +127,7 @@ const Login = () => {
         {/*Fin de login-form */}
       </div>
       {/*Fin de login-container */}
-      <Footer />
-    </>
+    </div>
   );
 };
 

@@ -1,11 +1,12 @@
-const uploadDataToMongoDB = async (jsonData) => {
+const uploadDataToMongoDB = async (dataToSend) => {
   try {
-    const response = await fetch('http://localhost:8800/api/containers', {
+    console.log(dataToSend);
+    const response = await fetch('http://192.168.10.45:8800/api/movements', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(jsonData),
+      body: JSON.stringify(dataToSend),
     });
 
     if (response.ok) {

@@ -92,3 +92,14 @@
   .spinner-grow {
     margin-right: 5px;
   }
+
+  select
+  {
+    
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 50px;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+  }
