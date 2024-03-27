@@ -16,13 +16,17 @@ function Home() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
 
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
-  useEffect(() => {
-    if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión o a cualquier otra página
-      navigate("/"); // Ajusta esta ruta según sea necesario
-    }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
+useEffect(() => {
+  if (!user) {
+    // Si 'user' es null o undefined, redirige al inicio de sesión
+    navigate("/");
+  } else if (user.role === "operator") {
+    // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+    navigate("/location");
+  }
+  // Puedes agregar más condiciones para otros roles si es necesario
+}, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
   const handleNavigate = (path) => {
     navigate(path);

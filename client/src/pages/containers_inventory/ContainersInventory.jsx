@@ -27,11 +27,11 @@ function InventoryTable() {
     <>
     <Header />
 <div className="container-excel-to-json">
-      <div className="table-buttons">
+      {/* <div className="table-buttons">
         <button onClick={handleInventory}>
           Cargar inventario de contenedores
         </button>
-      </div>
+      </div> */}
       <div className="container-table">
         <table>
           <thead>
@@ -40,19 +40,14 @@ function InventoryTable() {
               <th></th>
               <th>Customer</th>
               <th>Container Nr</th>
-              <th>Truck ID</th>
-              <th>Truck Co</th>
-              <th>In/Out</th>
               <th>Size</th>
               <th>Type</th>
               <th>full/Empty</th>
               <th>dateAndTime</th>
-              <th>origin/destination</th>
+              <th>origin</th>
               <th>seal</th>
               <th>location</th>
-              <th>actualDigit</th>
-              <th>expectedDigit</th>
-              <th>matches</th>
+
             </tr>
           </thead>
           <tbody className="table-body">
@@ -62,25 +57,13 @@ function InventoryTable() {
                 <td>{index+1}</td>
                 <td>{row.customer}</td>
                 <td>{row.containerNumber}</td>
-                <td>{row.truckID}</td>
-                <td>{row.truckCo}</td>
-                <td>{row.gateInOrGateOut}</td>
                 <td>{row.containerSize}</td>
                 <td>{row.containerType}</td>
                 <td>{row.fullOrEmpty}</td>
-                <td>{row.lastIn}</td>
-                <td>{row.originOrDestination}</td>
-                <td>{row.sealNumber}</td>
+                <td>{row.dateAndTime}</td>
+                <td>{row.origin}</td>
+                <td>{row.sealNumber_1}</td>
                 <td>{`${row.locationInTerminal?.zone}${row.locationInTerminal?.stack}${row.locationInTerminal?.column}${row.locationInTerminal?.height}`}</td>
-                <td>{row.digitVerification?.actualDigit}</td>
-                <td>{row.digitVerification?.expectedDigit}</td>
-                <td
-                  style={{
-                    color: row.digitVerification?.matches ? "inherit" : "red",
-                  }}
-                >
-                  {row.digitVerification?.matches ? "True" : "False"}
-                </td>
               </tr>
             ))}
           </tbody>

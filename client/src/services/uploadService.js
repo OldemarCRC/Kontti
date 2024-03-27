@@ -1,4 +1,4 @@
-const uploadDataToMongoDB = async (dataToSend) => {
+export const uploadDataToMongoDB = async (dataToSend) => {
   try {
     console.log(dataToSend);
     const response = await fetch('http://192.168.10.45:8800/api/movements', {
@@ -14,13 +14,40 @@ const uploadDataToMongoDB = async (dataToSend) => {
       console.log(`Datos cargados con éxito: ${JSON.stringify(result)}`); // Usar console.log para éxito
       return result;
     } else {
-      const errorResponse = await response.text(); // O response.json() si el servidor responde con JSON
-      throw new Error(`Error al cargar los datos: ${errorResponse}`);
+      const errorResponse = await response.json(); // Intenta parsear la respuesta como JSON
+      const errorMessage = errorResponse.message || 'Error desconocido al cargar los datos';
+      throw new Error(errorMessage); // Usa el mensaje de error del backend o un mensaje por defecto
     }
   } catch (error) {
-    console.error('Error al intentar cargar los datos:', error); // Usar console.error para capturar errores
-    throw error; // Relanzar el error para que pueda ser capturado por el llamador
+    console.error(error.message); // Usar console.error para capturar errores
+    throw new Error(error.message); // Relanzar el error con el mensaje específico para que pueda ser capturado por el llamador
   }
 };
 
-export default uploadDataToMongoDB;
+
+
+// Función para actualizar la localización del contenedor en el inventario
+export const updateContainerLocation = async (dataToSend) => {
+  try {
+    const response = await fetch('http://192.168.10.45:8800/api/inventory/location', {
+      method: 'PATCH', // Cambia el método a PATCH para indicar una actualización parcial
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(dataToSend),
+    });
+
+    if (response.ok) {
+      const result = await response.json();
+      console.log(`Localización actualizada con éxito: ${JSON.stringify(result)}`);
+      return result;
+    } else {
+      const errorResponse = await response.json();
+      const errorMessage = errorResponse.message || 'Error desconocido al actualizar la localización';
+      throw new Error(errorMessage);
+    }
+  } catch (error) {
+    console.error(error.message);
+    throw new Error(error.message);
+  }
+};

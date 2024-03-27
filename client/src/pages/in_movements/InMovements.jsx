@@ -1,30 +1,21 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import calculateCheckDigit from "../../services/calculateCheckDigit.js";
 import { toast } from "react-toastify";
 import "./in_movements.css";
-import uploadMovementToMongoDB from "../../services/uploadService.js";
+import { uploadDataToMongoDB } from '../../services/uploadService.js';
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 
 function InMovements() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  const [jsonData, setJsonData] = useState([]);
   const [isUploading, setIsUploading] = useState(false);
 
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
-  useEffect(() => {
-    if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión o a cualquier otra página
-      navigate("/"); // Ajusta esta ruta según sea necesario
-    }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  const [isReefer, setIsReefer] = useState(false);
+  const [requireTempVent, setRequireTempVent] = useState(false);
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
   const [formData, setFormData] = useState({
     customer: "",
     containerNumber: "",
@@ -46,12 +37,43 @@ function InMovements() {
     weight: "",
     notes: "",
   });
+  // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
+  useEffect(() => {
+    const isReeferContainer =
+      formData.containerType === "HRF" || formData.containerType === "RF";
+    setIsReefer(isReeferContainer);
+
+    // Requiere temp y vent solo si es reefer y está lleno
+    const requiresTemperatureAndVentilation =
+      isReeferContainer && formData.fullOrEmpty === "Full";
+    setRequireTempVent(requiresTemperatureAndVentilation);
+  }, [formData.containerType, formData.fullOrEmpty]);
+
+  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
+useEffect(() => {
+  if (!user) {
+    // Si 'user' es null o undefined, redirige al inicio de sesión
+    navigate("/");
+  } else if (user.role === "operator") {
+    // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+    navigate("/location");
+  }
+  // Puedes agregar más condiciones para otros roles si es necesario
+}, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   // Calcula la fecha máxima permitida (hoy)
   const maxDate = new Date().toISOString().split("T")[0];
 
   // Calcula la hora máxima permitida (hora actual)
-  const maxTime = new Date().toLocaleTimeString('en-GB', { hour12: false, hour: '2-digit', minute: '2-digit' });
+  const maxTime = new Date().toLocaleTimeString("en-GB", {
+    hour12: false,
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 
   // Validación de fecha y hora futura
   const validateDateTime = () => {
@@ -59,7 +81,9 @@ function InMovements() {
     const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
 
     if (selectedDateTime > currentDateTime) {
-      toast.error("No se puede seleccionar una fecha y hora futuras.", { autoClose: 8000 });
+      toast.error("No se puede seleccionar una fecha y hora futuras.", {
+        autoClose: 8000,
+      });
       return false;
     }
 
@@ -70,17 +94,24 @@ function InMovements() {
     const { name, value } = e.target;
     // Determina si el campo actual debe convertirse a mayúsculas
     let updatedValue = value;
-    if (["containerNumber", "truckID", "originOrDestination"].includes(name)) {
+    if (
+      [
+        "containerNumber",
+        "truckID",
+        "originOrDestination",
+        "temperature",
+        "ventilation",
+      ].includes(name)
+    ) {
       updatedValue = value.toUpperCase();
     }
-  
+
     // Actualiza el estado con el valor (convertido a mayúsculas si es necesario)
     setFormData((prevData) => ({
       ...prevData,
       [name]: updatedValue,
     }));
   };
-  
 
   const handleCheckDigit = () => {
     // Asume que el dígito verificador es el último caracter del número de contenedor
@@ -104,18 +135,32 @@ function InMovements() {
     if (!validateDateTime()) {
       return;
     }
+    // Validación adicional para temperatura y ventilación
+    if (requireTempVent && (!formData.temperature || !formData.ventilation)) {
+      toast.error(
+        "Obligatorio temp y vent, si no es carga refrigerada digitar NOR en ambos campos",
+        { autoClose: 8000 }
+      );
+      return;
+    }
     // Validación para sealNumber_1 cuando el contenedor está Cargado
-  if ((formData.fullOrEmpty === "Full" && formData.containerType!=="FR") && !formData.sealNumber_1) {
-    toast.error("El número de marchamo 1 es obligatorio para contenedores llenos.",{autoClose:8000});
-    return; // Detiene la ejecución del envío si la validación falla
-  }
+    if (
+      formData.fullOrEmpty === "Full" &&
+      formData.containerType !== "FR" &&
+      !formData.sealNumber_1
+    ) {
+      toast.error(
+        "El número de marchamo 1 es obligatorio para contenedores llenos.",
+        { autoClose: 8000 }
+      );
+      return; // Detiene la ejecución del envío si la validación falla
+    }
     setIsUploading(true);
 
     // Combinar la fecha y la hora en un solo campo
     const dateTime = new Date(`${formData.date}T${formData.time}`);
     // Eliminar los campos de fecha y hora individuales si ya no son necesarios
-    delete formData.date;
-    delete formData.time;
+
     const dataToUpload = {
       ...formData,
       dateAndTime: dateTime, // Usar el nombre de campo que espera tu backend
@@ -125,8 +170,8 @@ function InMovements() {
     try {
       // Agrega gateInOrGateOut explícitamente al objeto formData antes de enviarlo
 
-      const result = await uploadMovementToMongoDB(dataToUpload);
-      toast.success("Movimiento ingresado con éxito!");
+      const result = await uploadDataToMongoDB(dataToUpload);
+      toast.success("¡Ingreso exitoso!");
       // Restablecer el formulario a su estado inicial aquí
       setFormData({
         customer: "",
@@ -137,8 +182,6 @@ function InMovements() {
         containerType: "",
         containerSize: "",
         fullOrEmpty: "",
-        date: "", // Asegurarse de restablecer los campos de fecha y hora
-        time: "",
         originOrDestination: "",
         TIRNumber: "",
         sealNumber_1: "",
@@ -149,7 +192,7 @@ function InMovements() {
         notes: "",
       });
     } catch (error) {
-      toast.error("Hubo un error al cargar el movimiento.",{autoClose:5000});
+      toast.error(error.message, { autoClose: 5000 });
     } finally {
       setIsUploading(false);
     }
@@ -165,9 +208,9 @@ function InMovements() {
       <Header />
       <div className="in-movement-container">
         <div className="in-movement-header">
-          <h2>Registro de ingreso de contenedores</h2>
+          <h2>INGRESOS</h2>
           <p>
-            Ingresar movimientos de importación o ingresos desde otras
+            Registrar movimientos de importación o ingresos desde otras
             ubicaciones.
           </p>
         </div>
@@ -356,8 +399,8 @@ function InMovements() {
                     required
                   >
                     <option value="">Seleccione tipo</option>
-                    <option value="HRF">HCRF</option>
-                    <option value="RF">RF</option>
+                    <option value="RFH">RFH</option>
+                    <option value="RFS">RFS</option>
                     <option value="DV">DV</option>
                     <option value="OT">OT</option>
                     <option value="TK">TK</option>
@@ -430,6 +473,7 @@ function InMovements() {
                     placeholder="Temp"
                     id="temperature"
                     name="temperature"
+                    disabled={!isReefer} // Deshabilita si no es reefer
                   />
                 </div>
                 <div className="in-movement-item">
@@ -445,6 +489,7 @@ function InMovements() {
                     placeholder="Vent"
                     id="ventilation"
                     name="ventilation"
+                    disabled={!isReefer} // Deshabilita si no es reefer
                   />
                 </div>
                 <div className="in-movement-item">
@@ -494,7 +539,7 @@ function InMovements() {
                 </div>
               </section>
             </fieldset>
-            <button type="submit">Ingresar movimiento</button>
+            <button type="submit">Confirmar ingreso de contenedor</button>
           </form>
         </div>
         {/*Fin div in-movement-box*/}
@@ -504,37 +549,3 @@ function InMovements() {
   );
 }
 export default InMovements;
-
-{
-  /*}
-              <input
-                value={formData.}
-                onChange={handleChange}
-                type="text"
-                className="input-in"
-                placeholder=""
-                id=""
-                name=""
-                required
-              />
-*/
-}
-
-{
-  /*}
-<select
-value={formData.}
-onChange={handleChange}
-className="select-in"
-id=""
-name=""
->
-<option value=""></option>
-<option value=""></option>
-<option value=""></option>
-<option value=""></option>
-<option value=""></option>
-<option value=""></option>
-</select>
-*/
-}

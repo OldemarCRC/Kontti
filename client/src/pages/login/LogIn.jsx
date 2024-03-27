@@ -36,11 +36,6 @@ const Login = () => {
     }
   }, [error]);
 
-  // Delay time & Navigation
-  const delay = () => {
-    navigate("/home");
-  };
-
   // User Submit for Login
   const handleClick = async (e) => {
     e.preventDefault();
@@ -53,8 +48,14 @@ const Login = () => {
       if (res.data.details.isEmailVerified) {
         dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
         sessionStorage.setItem("user", JSON.stringify(res.data.details)); // Asegúrate de usar JSON.stringify aquí
+
+        // Redireccionar según el rol del usuario
+        let destinationRoute = "/home"; // Ruta predeterminada
+        if (res.data.details.role === "operator") {
+          destinationRoute = "/location"; // Ruta específica para operadores
+        }
         notify();
-        setTimeout(delay, 2000);
+        setTimeout(() => navigate(destinationRoute), 2000);
       } else {
         const errorMessage =
           "Por favor, verifica tu correo electrónico antes de iniciar sesión.";

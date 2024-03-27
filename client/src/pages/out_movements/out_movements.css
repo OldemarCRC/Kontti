@@ -1,9 +1,9 @@
-.in-gatein-gateout{
+.out-gatein-gateout{
     display: none;
   }
   
   
-  .in-movement-container {
+  .out-movement-container {
     display: flex;
     flex-direction: column;
     justify-content: center; /*centra contenido del div verticalmente*/
@@ -15,7 +15,7 @@
     background-color: hwb(0 95% 4%);
   }
   
-  .in-movement-header {
+  .out-movement-header {
     height: 10%;
     color: #046a7c;
     font-size: 1.2rem;
@@ -23,7 +23,7 @@
     margin-bottom: 10px;
   }
   
-  .in-movement-form{
+  .out-movement-form{
     padding-top: 50px;
     padding-right: 50px;
   }
@@ -38,7 +38,7 @@
   }
   
   /* Asegúrate de que los contenedores de los elementos del formulario tengan un ancho definido o porcentaje */
-  .in-movement-item {
+  .out-movement-item {
     margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
     flex: 1 1 1%;
   }
@@ -71,18 +71,18 @@
     font-weight: bold;
   }
   
-  /* Si tus .in-movement-item están diseñados para estar en columnas en pantallas más anchas */
+  /* Si tus .out-movement-item están diseñados para estar en columnas en pantallas más anchas */
   @media (max-width: 768px) {
-    .in-movement-container {
+    .out-movement-container {
     margin-top: 100px;
     margin-bottom: 200px;
   
     }
-    .in-movement-header p{
+    .out-movement-header p{
       display: none;
     }
   
-    .in-movement-item {
+    .out-movement-item {
       margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
       flex: 1 1 25%;
     }
