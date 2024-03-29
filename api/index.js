@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import authRoute from "./routes/authRoute.js";
 import usersRoute from "./routes/usersRoute.js";
 import movementRoute from "./routes/movementRoute.js";
+import inventoryRoute from "./routes/inventoryRoute.js";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 
@@ -39,6 +40,7 @@ app.use(express.urlencoded({ limit: '50mb', extended: true }));
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);
 app.use("/api/movements", movementRoute);
+app.use("/api/inventory", inventoryRoute);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

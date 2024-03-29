@@ -19,12 +19,7 @@ function LocationInTerminal() {
 
   const [formData, setFormData] = useState({
     containerNumber: "",
-    locationInTerminal: {
-      zone: "",
-      stack: "",
-      column: "",
-      height: "",
-    },
+    locationInTerminal: "",
   });
 
   // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
@@ -73,29 +68,26 @@ function LocationInTerminal() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    if (name.startsWith("location")) {
-      // Extracción del campo específico de la ubicación basado en el nombre del input
-      const locationField = name.split("location")[1].toLowerCase();
+   // Concatenar la nueva selección con los valores existentes
+   let newLocationString = formData.locationInTerminal;
 
-      // Actualización del objeto locationInTerminal dentro de formData
-      setFormData((prevData) => ({
-        ...prevData,
-        locationInTerminal: {
-          ...prevData.locationInTerminal,
-          [locationField]:
-            locationField === "stack" || locationField === "height"
-              ? parseInt(value, 10)
-              : value,
-        },
-      }));
-    } else {
-      // Actualización de otros campos fuera de locationInTerminal
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
-  };
+   if (name === "locationZone") {
+     newLocationString = value + newLocationString.substring(1);
+   } else if (name === "locationStack") {
+     newLocationString =
+       newLocationString.charAt(0) + value + newLocationString.substring(2);
+   } else if (name === "locationColumn") {
+     newLocationString =
+       newLocationString.substring(0, 2) + value + newLocationString.charAt(3);
+   } else if (name === "locationHeight") {
+     newLocationString = newLocationString.substring(0, 3) + value;
+   }
+ 
+   setFormData((prevData) => ({
+     ...prevData,
+     locationInTerminal: newLocationString,
+   }));
+ };
 
   const handleUpload = async () => {
     setIsUploading(true);
@@ -110,12 +102,7 @@ function LocationInTerminal() {
       // Restablecer el formulario a su estado inicial aquí
       setFormData({
         containerNumber: "",
-        locationInTerminal: {
-          zone: "",
-          stack: 0,
-          column: "",
-          height: 0,
-        },
+        locationInTerminal: "",
       });
     } catch (error) {
       toast.error(error.message, { autoClose: 5000 });
@@ -171,7 +158,7 @@ function LocationInTerminal() {
                   Zona
                 </label>
                 <select
-                  value={formData.locationInTerminal.zone}
+                  value={formData.locationInTerminal.charAt(0)}
                   onChange={handleChange}
                   type="text"
                   className="location-select"
@@ -195,7 +182,7 @@ function LocationInTerminal() {
                   Stack
                 </label>
                 <select
-                  value={formData.locationInTerminal.stack}
+                  value={formData.locationInTerminal.charAt(1)}
                   onChange={handleChange}
                   type="number"
                   className="location-select"
@@ -221,7 +208,7 @@ function LocationInTerminal() {
                   Columna
                 </label>
                 <select
-                  value={formData.locationInTerminal.column}
+                  value={formData.locationInTerminal.charAt(2)}
                   onChange={handleChange}
                   type="text"
                   className="location-select"
@@ -248,7 +235,7 @@ function LocationInTerminal() {
                   Altura
                 </label>
                 <select
-                  value={formData.locationInTerminal.height}
+                  value={formData.locationInTerminal.charAt(3)}
                   onChange={handleChange}
                   type="number"
                   className="location-select"

@@ -1,46 +1,114 @@
+.terminal-container {
+  display: flex;
+  padding-top: 80px;
+  flex-direction: row; /* Organiza los contenedores en fila */
+  height: 100vh; /* O el alto que prefieras */
+  background-color: #e5e0e0;
+  margin-bottom: 60px;
+}
 
+.zones-container {
+  flex: 2; /* Toma una fracción del espacio disponible */
+  overflow-y: auto; /* Permite desplazamiento si las zonas ocupan más altura de la disponible */
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
 
-.container {
-    perspective: 1000px;
-    width: 200px;
-    height: 200px;
-    position: relative;
-    margin: 50px;
-  }
+.stack-details {
+  flex: 3; /* Toma una mayor fracción del espacio disponible */
+  padding: 10px;
+  overflow-y: auto; /* Para desplazamiento si el contenido es muy largo */
+}
+
+.containers-without-position {
+  flex: 1;
+  padding: 5px;
+  overflow-y: auto;
+}
+
+.zone {
+  display: flex;
+  flex-direction: column;
+  gap: 2px; /* Espacio entre stacks */
+  background-color: transparent;
+}
+
+/* Estilos para las zonas A y B */
+.zone-a,
+.zone-b {
+  width: 150px; /* Ancho para las zonas A y B */
+  height: 266px; /* Altura para las zonas A y B */
+  margin-bottom: 10px;
+}
+
+/* Estilos para la zona C */
+.zone-c {
+  width: 200px; /* Ancho doble para la zona C */
+  height: 300px; /* Altura igual para la zona C */
+  margin-bottom: 150px;
+}
+
+.stack {
+  align-items: center;
+  display: flex;
+  justify-content: center; /* Distribuye los stacks horizontalmente */
+  border: 1px solid #666; /* Borde para los stacks */
+  padding: 5px;
+  height: calc(
+    100% / 7
+  ); /* Calcula la altura para que 7 stacks quepan dentro de A y B */
+  background-color: rgb(209, 206, 206);
+}
+
+.stack-title {
+  text-align: center;
+  font-size: larger;
+  font-weight: bolder;
+  color: red;
+  margin-top: 20px;
+}
+/* Estilos específicos para los stacks dentro de la zona C */
+.zone-c .stack {
+  height: calc(
+    100% / 8
+  ); /* Calcula la altura para que 8 stacks quepan dentro de C */
+}
+
+.column {
+  flex: 1; /* Los divs de column se expandirán para llenar el espacio disponible */
+  border: 1px solid #39393b; /* Borde para las columnas */
+  margin: 0 2px; /* Margen entre columnas */
+  width: 20px;
   
-  .contenedor {
-    position: absolute;
-    width: 100px;
-    height: 50px;
-    transform-style: preserve-3d;
-    transform: rotateX(45deg) rotateY(0deg) rotateZ(45deg);
-    transition: transform 0.5s;
-  }
-  
-  .cara {
-    position: absolute;
-    border: 1px solid #000;
-    background-color: rgba(255, 0, 0, 0.6);
-    width: 100%;
-    height: 100%;
-  }
-  
-  .lado {
-    position: absolute;
-    background-color: rgba(0, 255, 0, 0.6);
-    width: 20px;
-    height: 50px;
-    right: 0;
-    transform: rotateY(90deg) translateX(50%);
-  }
-  
-  .top {
-    position: absolute;
-    background-color: rgba(0, 0, 255, 0.6);
-    width: 100px;
-    height: 20px;
-    top: 0;
-    transform: rotateX(90deg) translateY(-50%);
-  }
-  
-  
+}
+
+.stack-view {
+  display: flex;
+  flex-direction: row;
+}
+
+.height {
+  border: 1px solid rgb(144, 136, 136);
+  background-color: #b6b3b3;
+  height: 100px;
+  font-size: smaller;
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
+    -10px -10px 20px rgba(255, 255, 255, 0.5);
+}
+
+.empty-slot{
+  text-align: center;
+  color: #b6b3b3;
+  height: 100px;
+  font-size: smaller;
+  border: none;
+  background-color: transparent;
+}
+
+.stack:hover {
+  background-color: rgb(74, 227, 227);
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
+    -10px -10px 20px rgba(255, 255, 255, 0.5);
+}

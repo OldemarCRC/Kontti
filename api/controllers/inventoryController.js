@@ -1,91 +1,30 @@
 import Inventory from "../models/inventoryModel.js";
 
+//******************************GET INVENTORY********************************/
 
-//Permite que carguemos a la base de datos un archivo de excel con muchos contenedores.
-export const createInventory = async (req, res) => {
+export const getInventory = async (req, res) => {
   try {
-    // Verifica si el cuerpo de la solicitud es un array
-    if (Array.isArray(req.body)) {
-      // Inserta múltiples documentos
-      const inventory = await Inventory.insertMany(req.body);
-      res.status(201).json(inventory);
-    } else {
-      // Inserta un solo documento
-      const newInventory = new Inventory(req.body);
-      await newInventory.save();
-      res.status(201).json(newInventory);
-    }
+    // Obtener todo el inventario
+    const inventory = await Inventory.find({});
+    res.json(inventory);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    console.error("Error fetching inventory:", error);
+    res.status(500).send({ message: "Error fetching inventory", error: error.message });
   }
 };
 
+//******************************GET CONTAINERS FROM INVENTORY********************************/
 
-//******************************GET INVENTORY********************************/
-
-/* export async function getInventory(req, res) {
-  console.log("Fetching inventory...");
+export const getContainers = async (req, res) => {
   try {
-    console.log("Before querying the database");
-    const inventory = await Inventory.aggregate([
-      // Etapa 1: Filtrar por ingresos
-      { $match: { gateInOrGateOut: "IN" } },
-      
-      // Etapa 2: Agrupar por número de contenedor
-      {
-        $group: {
-          _id: "$containerNumber",
-          lastIn: { $max: "$dateAndTime" },
-        },
-      },
-      
-      // Etapa 3: Buscar por registros de salida después del último ingreso
-      {
-        $lookup: {
-          from: "inventory", // Asegúrate de que este sea el nombre correcto de tu colección
-          let: { containerNumber: "$_id", lastIn: "$lastIn" },
-          pipeline: [
-            { $match:
-              { $expr:
-                { $and: [
-                    { $eq: ["$containerNumber", "$$containerNumber"] },
-                    { $eq: ["$gateInOrGateOut", "OUT"] },
-                    { $gt: ["$dateAndTime", "$$lastIn"] }
-                  ]
-                }
-              }
-            },
-          ],
-          as: "outRecords"
-        }
-      },
-      
-      // Etapa 4: Filtrar contenedores sin registros de salida después del último ingreso
-      { $match: { outRecords: { $size: 0 } } },
-      
-      // Etapa 5: Proyectar el resultado final
-      {
-        $project: {
-          customer: 1,
-          containerNumber: "$_id",
-          lastIn: 1,
-          customer:1,
-          truckID:1,
-          gateInOrGateOut:1,
-        }
-      }
-    ]).exec();
-    
+    // Obtener solo los números de contenedores del inventario
+    const inventory = await Inventory.find({}, "containerNumber");
     res.json(inventory);
-    console.log(inventory);
   } catch (error) {
     console.error("Error fetching inventory:", error);
-    res.status(500).send(error);
+    res.status(500).send({ message: "Error fetching inventory", error: error.message });
   }
-} */
-
-
-
+};
 
 //****************************** FIN DE GET INVENTORY********************************/
 
@@ -111,7 +50,29 @@ export const deleteInventory = async (req, res, next) => {
   }
 };
 
-export const getInventory = async (req, res, next) => {
+// Controlador para modificar la posición de un contenedor en la terminal.
+
+export const updateLocation = async (req, res) => {
+  const { containerNumber, locationInTerminal } = req.body;
+  try {
+    const updatedInventory = await Inventory.findOneAndUpdate(
+      { containerNumber }, // Filtra por número de contenedor
+      { $set: { locationInTerminal } }, // Actualiza la localización
+      { new: true } // Opción para retornar el documento modificado
+    );
+
+    if (!updatedInventory) {
+      return res.status(404).json({ message: "Contenedor no encontrado en el inventario." });
+    }
+
+    res.json(updatedInventory);
+  } catch (error) {
+    res.status(500).json({ message: "Error al actualizar la localización del contenedor.", error: error.message });
+  }
+};
+
+
+/* export const getInventory = async (req, res, next) => {
   try {
     const inventory = await Inventory.findById(req.params.id);
     res.status(200).json(inventory);
@@ -129,7 +90,7 @@ export const getInventorys = async (req, res, next) => {
 
  console.log(req.query)
 
-};
+}; */
 
 /* export const createContainer = async (req, res, next) => {
   const newContainer = new Container(req.body);

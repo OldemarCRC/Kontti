@@ -40,6 +40,34 @@ const MovementSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+
+  portOfDestination: {
+    type: String,
+    required: false,
+  },
+
+  exportVessel: {
+    type: String,
+    required: false,
+  },
+
+  reeferDamage: {
+    type: Boolean,
+    default: false,
+    require:  false,
+  },
+
+  boxDamage: {
+    type: Boolean,
+    default: false,
+    require:  false,
+  },
+
+  damageComments :{
+     type:String,
+     required: false
+  } ,
+  
   sealNumber_1: {
     type: String,
     required: false,
@@ -70,6 +98,6 @@ const MovementSchema = new mongoose.Schema({
     required: false,
   },
   
-});
+},{ collection: 'movements' });
 
 export default mongoose.model("Movement", MovementSchema)

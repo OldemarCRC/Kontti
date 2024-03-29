@@ -51,12 +51,7 @@ const InventorySchema = new mongoose.Schema({
   },
 
   locationInTerminal: {
-    type: {
-      zone: String,
-      stack: Number,
-      column: String,
-      height: Number,
-    },
+    type: String,
     required: false,
   },
 
@@ -69,7 +64,35 @@ const InventorySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-});
+
+  portOfDestination: {
+    type: String,
+    required: false,
+  },
+
+  exportVessel: {
+    type: String,
+    required: false,
+  },
+
+  reeferDamage: {
+    type: Boolean,
+    default: false,
+    require:  false,
+  },
+
+  boxDamage: {
+    type: Boolean,
+    default: false,
+    require:  false,
+  },
+
+  damageComments :{
+     type:String,
+     required: false
+  } ,
+
+}, { collection: 'inventory' }); // Especifica el nombre de la colección aquí);
 
 export default mongoose.model("Inventory", InventorySchema);
 

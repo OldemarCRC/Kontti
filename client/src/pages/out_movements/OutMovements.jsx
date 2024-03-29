@@ -41,7 +41,7 @@ function OutMovements() {
   // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
   useEffect(() => {
     const isReeferContainer =
-      formData.containerType === "HRF" || formData.containerType === "RF";
+      formData.containerType === "RFH" || formData.containerType === "RFS";
     setIsReefer(isReeferContainer);
 
     // Requiere temp y vent solo si es reefer y está lleno

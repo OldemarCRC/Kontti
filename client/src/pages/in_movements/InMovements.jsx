@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import calculateCheckDigit from "../../services/calculateCheckDigit.js";
 import { toast } from "react-toastify";
 import "./in_movements.css";
-import { uploadDataToMongoDB } from '../../services/uploadService.js';
+import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 
@@ -34,13 +34,15 @@ function InMovements() {
     sealNumber_2: "",
     temperature: "",
     ventilation: "",
+    portOfDestination: "",
+    exportVessel: "",
     weight: "",
     notes: "",
   });
   // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
   useEffect(() => {
     const isReeferContainer =
-      formData.containerType === "HRF" || formData.containerType === "RF";
+      formData.containerType === "RFH" || formData.containerType === "RFS";
     setIsReefer(isReeferContainer);
 
     // Requiere temp y vent solo si es reefer y está lleno
@@ -50,16 +52,16 @@ function InMovements() {
   }, [formData.containerType, formData.fullOrEmpty]);
 
   // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
-useEffect(() => {
-  if (!user) {
-    // Si 'user' es null o undefined, redirige al inicio de sesión
-    navigate("/");
-  } else if (user.role === "operator") {
-    // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-    navigate("/location");
-  }
-  // Puedes agregar más condiciones para otros roles si es necesario
-}, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  useEffect(() => {
+    if (!user) {
+      // Si 'user' es null o undefined, redirige al inicio de sesión
+      navigate("/");
+    } else if (user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/location");
+    }
+    // Puedes agregar más condiciones para otros roles si es necesario
+  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -188,6 +190,8 @@ useEffect(() => {
         sealNumber_2: "",
         temperature: "",
         ventilation: "",
+        portOfDestination: "",
+        exportVessel: "",
         weight: "",
         notes: "",
       });
@@ -280,7 +284,7 @@ useEffect(() => {
                     <option value="Maersk">Maersk</option>
                     <option value="China Shipping">China Shipping</option>
                     <option value="APL">APL</option>
-                    <option value="EWL">EWL :)</option>
+                    <option value="EWL">EWL</option>
                     <option value="Streamlines">Streamlines</option>
                     <option value="CMA-CGM">CMA-CGM</option>
                     <option value="Hapag Lloyd">Hapag Lloyd</option>
@@ -460,6 +464,7 @@ useEffect(() => {
                     name="sealNumber_2"
                   />
                 </div>
+
                 <div className="in-movement-item">
                   {/*temperature*/}
                   <label htmlFor="temperature" className="in-movement-label">
@@ -492,6 +497,74 @@ useEffect(() => {
                     disabled={!isReefer} // Deshabilita si no es reefer
                   />
                 </div>
+
+                <div className="in-movement-item">
+                  {/*portOfDestination*/}
+                  <label
+                    htmlFor="portOfDestination"
+                    className="in-movement-label"
+                  >
+                    Puerto de destino
+                  </label>
+                  <select
+                    value={formData.portOfDestination}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="portOfDestination"
+                    name="portOfDestination"
+                    required
+                  >
+                    <option value="">POD</option>
+                    <option value="NLRTM">Rotterdam, Países Bajos</option>
+                    <option value="DEHAM">Hamburgo, Alemania</option>
+                    <option value="BEAMB">Amberes, Bélgica</option>
+                    <option value="PAMTZ">Manzanillo, Panamá</option>
+                    <option value="HNPTC">Puerto Cortés, Honduras</option>
+                    <option value="BRSSZ">Santos, Brasil</option>
+                    <option value="COCTG">Cartagena, Colombia</option>
+                    <option value="PECHP">Callao, Perú</option>
+                    <option value="USLAX">Los Ángeles, USA</option>
+                    <option value="USLGB">Long Beach, USA</option>
+                    <option value="USNYC">Nueva York, USA</option>
+                    <option value="GBFEL">Felixstowe, Gran Bretaña</option>
+                    <option value="GBLON">Londres, Gran Bretaña</option>
+                    <option value="GBSOU">Southampton, Gran Bretaña</option>
+                    <option value="GBBST">Bristol, Gran Bretaña</option>
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  {/*exportVessel*/}
+                  <label htmlFor="exportVessel" className="in-movement-label">
+                    Barco de exportación
+                  </label>
+                  <select
+                    value={formData.exportVessel}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="exportVessel"
+                    name="exportVessel"
+                    required
+                  >
+                    <option value="">Barco</option>
+                    <option value="MV Puerto Limón">MV Puerto Limón</option>
+                    <option value="MV Cahuita">MV Cahuita</option>
+                    <option value="MV Costa Rica carrier">
+                      MV Costa Rica carrier
+                    </option>
+                    <option value="MV Pueblo Nuevo Bay">
+                      MV Pueblo Nuevo Bay
+                    </option>
+                    <option value="MV Cieneguita Hope">
+                      MV Cieneguita Hope
+                    </option>
+                    <option value="MV Maersk Cerro Mocho">
+                      MV Maersk Cerro Mocho
+                    </option>
+                    <option value="MV CMA-CGM Moin">MV CMA-CGM Moin</option>
+                  </select>
+                </div>
+
                 <div className="in-movement-item">
                   {/*TIRNumber*/}
                   <label htmlFor="ventilation" className="in-movement-label">
