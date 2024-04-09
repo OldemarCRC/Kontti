@@ -216,16 +216,7 @@ function ContainerDispatch() {
             <fieldset>
               <legend>Datos obligatorios</legend>
               <section className="data">
-                <div className="out-gatein-gateout">
-                  <input
-                    type="text"
-                    value={formData.gateInOrGateOut}
-                    className="out-gatein-gateout"
-                    id="gateInOrGateOut"
-                    name="gateInOrGateOut"
-                    required
-                  />
-                </div>
+
                 <div className="out-movement-item">
                   <label htmlFor="date" className="out-movement-label">
                     Fecha

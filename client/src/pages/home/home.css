@@ -39,6 +39,7 @@
 
 .option-page {
   flex: 1 1 calc(33.333% - 20px);
+  max-width: 350px;
   margin: 20px;
   height: 300px;
   cursor: pointer;
@@ -67,13 +68,16 @@
 }
 
 .links-units-inquiry {
+width: 10vw;
   max-width: 20vw;
   height: 100vh;
   padding: 40px;
   border-left: 1px solid rgb(197, 195, 195);
+  
 }
 .links-units-inquiry h3 {
   text-align: center;
+  
 }
 
 .links-units-inquiry p {

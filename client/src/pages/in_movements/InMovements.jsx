@@ -223,16 +223,7 @@ function InMovements() {
             <fieldset>
               <legend>Datos obligatorios</legend>
               <section className="data">
-                <div className="in-gatein-gateout">
-                  <input
-                    type="text"
-                    value={formData.gateInOrGateOut}
-                    className="in-gatein-gateout"
-                    id="gateInOrGateOut"
-                    name="gateInOrGateOut"
-                    required
-                  />
-                </div>
+                
                 <div className="in-movement-item">
                   <label htmlFor="date" className="in-movement-label">
                     Fecha

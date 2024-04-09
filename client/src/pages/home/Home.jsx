@@ -5,10 +5,12 @@ import "./home.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import import_img from "./images/import.png";
+import cai_logo from "./images/cai.png";
 import triton_logo from "./images/Triton.png";
 import export_img from "./images/export.png";
 import seaco_logo from "./images/seacologo.png";
-import seatrade_logo from "./images/seatrade_logo.svg";
+import tica_logo from "./images/LogoTicaB.png";
+import gds_logo from "./images/gds2.png";
 import tracktrace_logo from "./images/track_trace.png";
 import inventory_img from "./images/inventory.png";
 import dispatch_img from "./images/in_movements.png";
@@ -107,16 +109,26 @@ useEffect(() => {
 
             </div>
 
-          </div>{" "}
+            <div
+              className="option-page"
+              onClick={() => handleNavigate("/home")}
+            >
+              <h3 className="option-text">Próximamente</h3>
+              <img
+                src={gds_logo} // Reemplaza con la ruta correcta de tu imagen
+                alt=""
+                className="option-img"
+              />
+
+            </div>
+
+          </div>{"fin de home-options-container"}
           {/*Fin options-container */}
-        </div>{" "}
+        </div>
         {/*Fin div text-and-options*/}
         <aside className="links-units-inquiry">
-          <h3>Búsqueda de contenedores</h3>
-          <p>
-            Estos enlaces le llevan a las paginas oficiales donde puede revisar
-            más detalles de los contenedores
-          </p>
+          <h3>Enlaces de interés</h3>
+        
           <ul>
             <li>
               <a href="https://www.track-trace.com/container" target="_blank">
@@ -132,7 +144,11 @@ useEffect(() => {
                 href="https://www.capps.com/cgi-bin/publicUnitInfo"
                 target="_blank"
               >
-                CAI
+                <img
+                  className="logo-link"
+                  src={cai_logo} // Reemplaza con la ruta correcta de tu imagen
+                  alt="cai_logo"
+                />
               </a>
             </li>
             <li>
@@ -160,17 +176,23 @@ useEffect(() => {
               </a>
             </li>
             <li>
-              <a href="https://portal.seatrade.com/" target="_blank">
+              <a href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx" target="_blank">
                 <img
                   className="logo-link"
-                  src={seatrade_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="seaco_logo"
+                  src={tica_logo} // Reemplaza con la ruta correcta de tu imagen
+                  alt="tica_logo"
                 />
               </a>
             </li>
-            {/*<li><a href="">Página 1</a></li>
-             */}
-
+            <li>
+              <a href="https://www.grupodelsol.cr/index.html" target="_blank">
+                <img
+                  className="logo-link"
+                  src={gds_logo} // Reemplaza con la ruta correcta de tu imagen
+                  alt="gds_logo"
+                />
+              </a>
+            </li>
             {/* Agrega más enlaces según sea necesario */}
           </ul>
         </aside>
