@@ -40,9 +40,6 @@ function TerminalMap() {
     setSelectedStack(stackId);
   };
 
-
-
-
   // Calcula la cantidad de contenedores para cada stack
   const countContainersInStack = (zoneId, stackNumber) => {
     return inventoryData.filter(
@@ -89,9 +86,7 @@ function TerminalMap() {
     <>
       <Header />
       <div className="terminal-map">
-        <div className="terminal-filters">
-          aqui van los filtros
-        </div>
+        <div className="terminal-filters">aqui van los filtros</div>
         <div className="terminal-container">
           <div className="zones-container">
             {zones.map((zone) => (
@@ -117,38 +112,41 @@ function TerminalMap() {
           </div>
           {selectedStack && (
             <div className="stack-details">
-{selectedStack === "INITIAL_VIEW"
-            ? renderInitialStackView()
-            : selectedStack && (
-              <div className="stack-view">
-                {(selectedStack.startsWith("C") ? columnsC : columnsAtoB).map(
-                  (column) => (
-                    <div className="column" key={column}>
-                      {heights.map((height) => {
-                        const location = `${selectedStack}${column}${height}`;
-                        const container = findContainerByLocation(location);
-                        return (
-                          <div
-                            className={`${container ? "height" : "empty-slot"}`}
-                            key={`${column}${height}`}
-                          >
-                            {container ? (
-                              <>
-                                {container.containerNumber} -{" "}
-                                {container.portOfDestination} -{" "}
-                                {container.exportVessel}
-                              </>
-                            ) : (
-                              "Empty"
-                            )}
-                          </div>
-                        );
-                      })}
+              {selectedStack === "INITIAL_VIEW"
+                ? renderInitialStackView()
+                : selectedStack && (
+                    <div className="stack-view">
+                      {(selectedStack.startsWith("C")
+                        ? columnsC
+                        : columnsAtoB
+                      ).map((column) => (
+                        <div className="column" key={column}>
+                          {heights.map((height) => {
+                            const location = `${selectedStack}${column}${height}`;
+                            const container = findContainerByLocation(location);
+                            return (
+                              <div
+                                className={`${
+                                  container ? "height" : "empty-slot"
+                                }`}
+                                key={`${column}${height}`}
+                              >
+                                {container ? (
+                                  <>
+                                    {container.containerNumber} -{" "}
+                                    {container.portOfDestination} -{" "}
+                                    {container.exportVessel}
+                                  </>
+                                ) : (
+                                  "Empty"
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ))}
                     </div>
-                  )
-                )}
-              </div>
-            )}
+                  )}
               <div className="stack-title">Stack {selectedStack}</div>
             </div>
           )}

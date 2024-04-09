@@ -42,7 +42,7 @@ const Login = () => {
     dispatch({ type: "LOGIN_START" });
     try {
       const res = await axios.post(
-        "http://localhost:8800/api/auth/login",
+        "http://192.168.10.45:8800/api/auth/login",
         credentials
       );
       if (res.data.details.isEmailVerified) {

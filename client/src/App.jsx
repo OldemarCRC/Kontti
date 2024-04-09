@@ -10,7 +10,6 @@ import Home from "./pages/home/Home";
 import UserRegister from "./pages/register/UserRegister";
 import AccountVerification from "./pages/account_verification/AccountVerification";
 import ChangePassword from "./pages/change_password/ChangePassword";
-import LocationInTerminal from "./pages/location_in_terminal/LocationInTerminal";
 import TerminalMap from "./pages/terminal_map/TerminalMap"
 import ContainerDispatch from "./pages/dispatch/ContainerDispatch";
 
@@ -31,7 +30,6 @@ function App() {
           <Route path="/out-movements" element={<OutMovements />} />
           <Route path="/containers-dispatch" element={<ContainerDispatch/>} />
           <Route path="/inventory" element={<ContainersInventory />} />
-          <Route path="/location" element={<LocationInTerminal />} />
           <Route path="/terminal-map" element={<TerminalMap />} />
         </Routes>
       </BrowserRouter>

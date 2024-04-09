@@ -25,7 +25,7 @@ useEffect(() => {
     navigate("/");
   } else if (user.role === "operator") {
     // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-    navigate("/location");
+    navigate("/terminal-map");
   }
   // Puedes agregar más condiciones para otros roles si es necesario
 }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias

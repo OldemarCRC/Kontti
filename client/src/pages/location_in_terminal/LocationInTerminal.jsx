@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import "./location_in_terminal.css";
@@ -8,7 +7,6 @@ import { updateContainerLocation } from "../../services/uploadService.js";
 
 function LocationInTerminal() {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
   const [isUploading, setIsUploading] = useState(false);
   const [inventory, setInventory] = useState([]); // Nuevo estado para almacenar el inventario
   // Estado para manejar el filtro de contenedores
@@ -20,14 +18,6 @@ function LocationInTerminal() {
     containerNumber: "",
     locationInTerminal: "",
   });
-
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
-  useEffect(() => {
-    if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión.
-      navigate("/"); // Ajusta esta ruta según sea necesario
-    }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
   // Define la función para cargar el inventario
   const loadInventory = async () => {
@@ -90,11 +80,6 @@ function LocationInTerminal() {
       };
     checkPositionInInventory();
   }, [formData.locationInTerminal, inventory]);
-
-
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -306,9 +291,7 @@ function LocationInTerminal() {
             Confirmar posición
           </button>
         </form>
-        {/* <button onClick={loadInventory} className="reload-inventory-btn">
-          Recargar Inventario
-        </button> */}
+
       </div>
     </>
   );

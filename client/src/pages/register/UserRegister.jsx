@@ -50,7 +50,7 @@ const UserRegister = () => {
     }
     try {
       const response = await axios.post(
-        "http://localhost:8800/api/auth/register",
+        "http://192.168.10.45:8800/api/auth/register",
         {
           username,
           email,
