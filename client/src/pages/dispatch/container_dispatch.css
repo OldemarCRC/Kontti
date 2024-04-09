@@ -1,0 +1,90 @@
+.out-gatein-gateout{
+    display: none;
+  }
+  
+  
+  .out-movement-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /*centra contenido del div verticalmente*/
+    align-items: center;
+    font-size: 12px;
+    width: 99vw;
+    height: 80vh;
+    padding: 20px 20px;
+    background-color: hwb(0 95% 4%);
+  }
+  
+  .out-movement-header {
+    height: 10%;
+    color: #046a7c;
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .out-movement-form{
+    padding-top: 50px;
+    padding-right: 50px;
+  }
+  
+  /* Ajusta estos estilos según tus necesidades */
+  .input-in, .select-in, .input-date {
+    width: 100%; /* Esto hará que todos ocupen el mismo ancho dentro de su contenedor padre */
+    padding: 8px 12px; /* Ajusta el padding para cambiar la altura y el espacio interno */
+    margin-bottom: 10px; /* Espacio entre cada elemento del formulario */
+    border: 1px solid #ccc; /* Borde sutil para todos los inputs y selects */
+    border-radius: 50px; /* Bordes redondeados para suavizar el diseño */
+  }
+  
+  /* Asegúrate de que los contenedores de los elementos del formulario tengan un ancho definido o porcentaje */
+  .out-movement-item {
+    margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
+    flex: 1 1 1%;
+  }
+  
+  .data {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Ajusta el espacio entre los inputs/selects si están en la misma fila */
+  }
+  
+  .optional-data{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Ajusta el espacio entre los inputs/selects si están en la misma fila */
+  }
+  
+  fieldset {
+    border: 2px solid #046a7c;
+    padding: 10px;
+    margin-bottom: 20px;
+    background-color: hwb(0 89% 11%);
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.3),
+    -5px -5px 10px rgba(255, 255, 255, 0.5);
+  }
+  
+  legend {
+    padding: 0 10px;
+    color: #333;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  /* Si tus .out-movement-item están diseñados para estar en columnas en pantallas más anchas */
+  @media (max-width: 768px) {
+    .out-movement-container {
+    margin-top: 100px;
+    margin-bottom: 200px;
+  
+    }
+    .out-movement-header p{
+      display: none;
+    }
+  
+    .out-movement-item {
+      margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
+      flex: 1 1 25%;
+    }
+  
+  }

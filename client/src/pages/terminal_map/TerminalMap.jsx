@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import LocationInTerminal from "../location_in_terminal/LocationInTerminal.jsx";
 import { fetchInventory } from "../../services/fetchInventory";
 import "./terminal_map.css";
 import Footer from "../../components/footer/Footer.js";
@@ -33,12 +33,15 @@ function TerminalMap() {
     loadInventory(); // Carga inicial del inventario
   }, []);
 
-  const [selectedStack, setSelectedStack] = useState(null);
+  const [selectedStack, setSelectedStack] = useState("INITIAL_VIEW");
   const [selectedZone, setSelectedZone] = useState(null);
 
   const handleStackClick = (stackId) => {
     setSelectedStack(stackId);
   };
+
+
+
 
   // Calcula la cantidad de contenedores para cada stack
   const countContainersInStack = (zoneId, stackNumber) => {
@@ -58,7 +61,7 @@ function TerminalMap() {
 
   const columnsAtoB = ["A", "B", "C", "D", "E"];
   const columnsC = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
-  const heights = [6, 5, 4, 3, 2, 1];
+  const heights = [/* 6, 5, */ 4, 3, 2, 1];
 
   // Agregamos una función para encontrar contenedores por ubicación
   const findContainerByLocation = (location) => {
@@ -67,14 +70,31 @@ function TerminalMap() {
     );
   };
 
+  // Generar una vista de stack vacía para la renderización inicial
+  const renderInitialStackView = () => (
+    <div className="stack-view">
+      {columnsAtoB.map((column) => (
+        <div className="column" key={column}>
+          {heights.map((height) => (
+            <div className="empty-slot" key={`${column}${height}`}>
+              Empty
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+  );
+
   return (
     <>
       <Header />
-      <div className="terminal-container">
-        <div className="zones-container">
-          {zones.map((zone) => (
-            
-            
+      <div className="terminal-map">
+        <div className="terminal-filters">
+          aqui van los filtros
+        </div>
+        <div className="terminal-container">
+          <div className="zones-container">
+            {zones.map((zone) => (
               <div
                 key={zone.id}
                 className={`zone zone-${zone.id.toLowerCase()}`}
@@ -93,117 +113,77 @@ function TerminalMap() {
                   );
                 })}
               </div>
-            
-          ))}
-        </div>
-        {selectedStack && (
-          <div className="stack-details">
-            {/* Aquí se muestra la información del stack seleccionado */}
-
-            <div className="stack-view">
-              {(selectedStack.startsWith("C") ? columnsC : columnsAtoB).map(
-                (column) => (
-                  <div className="column" key={column}>
-                    {heights.map((height) => {
-                      const location = `${selectedStack}${column}${height}`;
-                      const container = findContainerByLocation(location);
-                      return (
-                        <div
-                          className={`${container ? "height" : "empty-slot"}`}
-                          key={`${column}${height}`}
-                        >
-                          {container ? (
-                            <>
-                              {container.containerNumber} -{" "}
-                              {container.portOfDestination} -{" "}
-                              {container.exportVessel}
-                            </>
-                          ) : (
-                            "Empty"
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
-                )
-              )}
-            </div>
-            <div className="stack-title">Stack {selectedStack}</div>
+            ))}
           </div>
-        )}
-        <div className="containers-without-position">
-          {containersWithoutPosition.length > 0 ? (
-            <>
-              <button onClick={loadInventory} disabled={isLoading}>
-                {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
-              </button>
-              <h4>Lista de contenedores sin ubicación en sistema</h4>
-              <ol>
-                {containersWithoutPosition.map((container) => (
-                  <li key={container.containerNumber}>
-                    {container.containerNumber}
-                  </li>
-                ))}
-              </ol>
-            </>
-          ) : (
-            <>
-              <button onClick={loadInventory} disabled={isLoading}>
-                {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
-              </button>
-              <p>Todos los contenedores tienen posición en sistema.</p>
-            </>
+          {selectedStack && (
+            <div className="stack-details">
+{selectedStack === "INITIAL_VIEW"
+            ? renderInitialStackView()
+            : selectedStack && (
+              <div className="stack-view">
+                {(selectedStack.startsWith("C") ? columnsC : columnsAtoB).map(
+                  (column) => (
+                    <div className="column" key={column}>
+                      {heights.map((height) => {
+                        const location = `${selectedStack}${column}${height}`;
+                        const container = findContainerByLocation(location);
+                        return (
+                          <div
+                            className={`${container ? "height" : "empty-slot"}`}
+                            key={`${column}${height}`}
+                          >
+                            {container ? (
+                              <>
+                                {container.containerNumber} -{" "}
+                                {container.portOfDestination} -{" "}
+                                {container.exportVessel}
+                              </>
+                            ) : (
+                              "Empty"
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )
+                )}
+              </div>
+            )}
+              <div className="stack-title">Stack {selectedStack}</div>
+            </div>
           )}
+          <div className="location-in-terminal">
+            <LocationInTerminal />
+          </div>
+          <div className="containers-without-position">
+            {containersWithoutPosition.length > 0 ? (
+              <>
+                <button onClick={loadInventory} disabled={isLoading}>
+                  {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
+                </button>
+                <h4>Lista de contenedores sin ubicación en sistema</h4>
+                <ol>
+                  {containersWithoutPosition.map((container) => (
+                    <li key={container.containerNumber}>
+                      {container.containerNumber}
+                    </li>
+                  ))}
+                </ol>
+              </>
+            ) : (
+              <>
+                <button onClick={loadInventory} disabled={isLoading}>
+                  {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
+                </button>
+                <p>Todos los contenedores tienen posición en sistema.</p>
+              </>
+            )}
+          </div>
         </div>
       </div>
-
       <Footer />
     </>
   );
 }
 
 export default TerminalMap;
-
-{
-  /*
-
-    # Este es un ejemplo simplificado de cómo puedes estructurar el código para cumplir con tu requisito.
-# Vamos a simular el proceso de encontrar contenedores basado en una ubicación y mostrar los datos requeridos.
-
-# Simulación de datos de inventario
-inventory_data = [
-    {"containerNumber": "ABC123", "locationInTerminal": "A1A6", "portOfDestination": "Port A", "exportVessel": "Vessel A"},
-    {"containerNumber": "DEF456", "locationInTerminal": "A1B5", "portOfDestination": "Port B", "exportVessel": "Vessel B"},
-    # Más contenedores...
-]
-
-# Simulación de la ubicación seleccionada
-selected_stack = "A1"
-columns = ["A", "B", "C", "D", "E"]  # Asumiendo 5 columnas por simplicidad
-heights = [6, 5, 4, 3, 2, 1]  # Asumiendo 6 alturas por simplicidad
-
-# Generar la vista detallada del stack seleccionado
-stack_view = []
-for column in columns:
-    column_view = []
-    for height in heights:
-        location = f"{selected_stack}{column}{height}"
-        # Buscar si algún contenedor coincide con esta ubicación
-        matching_container = next((item for item in inventoryData if item["locationInTerminal"] == location), None)
-        if matching_container:
-            # Contenedor encontrado, mostrar los datos requeridos
-            container_info = f"{matching_container['containerNumber']}, {matching_container['portOfDestination']}, {matching_container['exportVessel']}"
-        else:
-            # No se encontró contenedor, mostrar "Empty"
-            container_info = "Empty"
-        column_view.append(container_info)
-    stack_view.append(column_view)
-
-# Imprimir el resultado
-stack_view
-
-
-const matching_container = 
-
-*/
-}

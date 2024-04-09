@@ -41,8 +41,11 @@ export const register = async (req, res, next) => {
 };
 
 export const login = async (req, res, next) => {
+  console.log(req.body);
   try {
+
     const user = await User.findOne({ username: req.body.username });
+    console.log("Usuario encontrado:", user);
     if (!user) return next(createError(404, "¡Usuario no encontrado!"));
 
     const isPasswordCorrect = await bcrypt.compare(
@@ -69,6 +72,7 @@ export const login = async (req, res, next) => {
       .json({ details: { ...otherDetails } });
      
   } catch (err) {
+    console.log(err);
     next(err);
   }
 };

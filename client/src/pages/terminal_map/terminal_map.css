@@ -1,10 +1,15 @@
+.terminal-map {
+  padding: 60px;
+}
+
+
 .terminal-container {
   display: flex;
-  padding-top: 80px;
+  padding-top: 10px;
   flex-direction: row; /* Organiza los contenedores en fila */
   height: 100vh; /* O el alto que prefieras */
   background-color: #e5e0e0;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 }
 
 .zones-container {
@@ -17,7 +22,7 @@
 }
 
 .stack-details {
-  flex: 3; /* Toma una mayor fracción del espacio disponible */
+  flex: 4; /* Toma una mayor fracción del espacio disponible */
   padding: 10px;
   overflow-y: auto; /* Para desplazamiento si el contenido es muy largo */
 }
@@ -26,6 +31,10 @@
   flex: 1;
   padding: 5px;
   overflow-y: auto;
+}
+
+.location-in-terminal {
+  flex: 1;
 }
 
 .zone {
@@ -96,6 +105,7 @@
   font-size: smaller;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
     -10px -10px 20px rgba(255, 255, 255, 0.5);
+    transition: transform 0.6s ease; /* Agrega transición suave */
 }
 
 .empty-slot{
@@ -112,3 +122,4 @@
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
     -10px -10px 20px rgba(255, 255, 255, 0.5);
 }
+

@@ -15,7 +15,7 @@ dotenv.config();
 const connect = async () => {
   try {
     await mongoose.connect(process.env.MONGO);
-    console.log("Connected to Kontti database.");
+    console.log("Connected to MongoDB.");
   } catch (error) {
     throw error;
   }
@@ -35,7 +35,7 @@ app.use(cookieParser());
 
 // Aumentar el límite de tamaño para solicitudes JSON y URL-encoded
 app.use(express.json({ limit: '50mb' }));
-app.use(express.urlencoded({ limit: '50mb', extended: true }));
+app.use(express.urlencoded({ limit: '50mb', extended: true })); 
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);

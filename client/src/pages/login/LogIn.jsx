@@ -42,7 +42,7 @@ const Login = () => {
     dispatch({ type: "LOGIN_START" });
     try {
       const res = await axios.post(
-        "http://192.168.10.45:8800/api/auth/login",
+        "http://localhost:8800/api/auth/login",
         credentials
       );
       if (res.data.details.isEmailVerified) {
@@ -52,7 +52,7 @@ const Login = () => {
         // Redireccionar según el rol del usuario
         let destinationRoute = "/home"; // Ruta predeterminada
         if (res.data.details.role === "operator") {
-          destinationRoute = "/location"; // Ruta específica para operadores
+          destinationRoute = "/terminal-map"; // Ruta específica para operadores
         }
         notify();
         setTimeout(() => navigate(destinationRoute), 2000);

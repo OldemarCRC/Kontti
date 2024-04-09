@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import calculateCheckDigit from "../../services/calculateCheckDigit.js";
 import { toast } from "react-toastify";
+import { fetchInventory } from "../../services/fetchInventory.js";
 import "./out_movements.css";
-import { uploadDataToMongoDB } from '../../services/uploadService.js';
+import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 
@@ -12,7 +12,7 @@ function OutMovements() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
   const [isUploading, setIsUploading] = useState(false);
-
+  const [inventory, setInventory] = useState([]);
   const [isReefer, setIsReefer] = useState(false);
   const [requireTempVent, setRequireTempVent] = useState(false);
 
@@ -38,6 +38,20 @@ function OutMovements() {
     notes: "",
   });
 
+  const loadInventory = async () => {
+    try {
+      const inventoryData = await fetchInventory();
+      setInventory(inventoryData);
+    } catch (error) {
+      console.error("Error al cargar el inventario: ", error);
+    }
+  };
+
+  // Carga el inventario al montar el componente
+  useEffect(() => {
+    loadInventory();
+  }, []);
+
   // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
   useEffect(() => {
     const isReeferContainer =
@@ -51,16 +65,16 @@ function OutMovements() {
   }, [formData.containerType, formData.fullOrEmpty]);
 
   // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
-useEffect(() => {
-  if (!user) {
-    // Si 'user' es null o undefined, redirige al inicio de sesión
-    navigate("/");
-  } else if (user.role === "operator") {
-    // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-    navigate("/location");
-  }
-  // Puedes agregar más condiciones para otros roles si es necesario
-}, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  useEffect(() => {
+    if (!user) {
+      // Si 'user' es null o undefined, redirige al inicio de sesión
+      navigate("/");
+    } else if (user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/location");
+    }
+    // Puedes agregar más condiciones para otros roles si es necesario
+  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
   const handleNavigate = (path) => {
     navigate(path);
@@ -114,23 +128,6 @@ useEffect(() => {
     }));
   };
 
-  const handleCheckDigit = () => {
-    // Asume que el dígito verificador es el último caracter del número de contenedor
-    const containerNumber = formData.containerNumber;
-    const actualCheckDigit = parseInt(containerNumber.slice(-1), 10);
-    const calculatedCheckDigit = calculateCheckDigit(
-      containerNumber.slice(0, -1)
-    );
-
-    if (actualCheckDigit !== calculatedCheckDigit) {
-      alert("Número de contenedor incorrecto");
-      // Limpiar el input de containerNumber al establecer su valor a una cadena vacía
-      setFormData({
-        ...formData,
-        containerNumber: "",
-      });
-    }
-  };
 
   const handleUpload = async () => {
     if (!validateDateTime()) {
@@ -161,7 +158,6 @@ useEffect(() => {
 
     // Combinar la fecha y la hora en un solo campo
     const dateTime = new Date(`${formData.date}T${formData.time}`);
-    
 
     const dataToUpload = {
       ...formData,
@@ -319,7 +315,6 @@ useEffect(() => {
                   <input
                     value={formData.containerNumber}
                     onChange={handleChange}
-                    onBlur={handleCheckDigit} // Se ejecuta handleCheckDigit cuando el input pierde el foco
                     type="text"
                     className="input-in"
                     placeholder="Contenedor"
@@ -367,9 +362,9 @@ useEffect(() => {
                     <option value="Trans Costa Rica">Trans CR</option>
                   </select>
                 </div>
-   {/*              <div className="out-movement-item">
+                <div className="out-movement-item">
                   {/*containerSize*/}
-                  {/*<label htmlFor="" className="out-movement-label">
+                  <label htmlFor="" className="out-movement-label">
                     Tam
                   </label>
                   <select
@@ -385,7 +380,7 @@ useEffect(() => {
                     <option value="20">20</option>
                     <option value="10">10</option>
                   </select>
-                </div> */}
+                </div>
                 <div className="out-movement-item">
                   {/*containerType*/}
                   <label htmlFor="containerType" className="out-movement-label">
@@ -510,7 +505,7 @@ useEffect(() => {
                 </div>
                 {/* <div className="out-movement-item">
                   {/*weight*/}
-                  {/* <label htmlFor="weight" className="out-movement-label">
+                {/* <label htmlFor="weight" className="out-movement-label">
                     Peso
                   </label>
                   <input

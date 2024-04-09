@@ -512,7 +512,6 @@ function InMovements() {
                     className="select-in"
                     id="portOfDestination"
                     name="portOfDestination"
-                    required
                   >
                     <option value="">POD</option>
                     <option value="NLRTM">Rotterdam, Países Bajos</option>
@@ -544,7 +543,6 @@ function InMovements() {
                     className="select-in"
                     id="exportVessel"
                     name="exportVessel"
-                    required
                   >
                     <option value="">Barco</option>
                     <option value="MV Puerto Limón">MV Puerto Limón</option>

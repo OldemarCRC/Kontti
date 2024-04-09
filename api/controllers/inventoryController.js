@@ -9,7 +9,9 @@ export const getInventory = async (req, res) => {
     res.json(inventory);
   } catch (error) {
     console.error("Error fetching inventory:", error);
-    res.status(500).send({ message: "Error fetching inventory", error: error.message });
+    res
+      .status(500)
+      .send({ message: "Error fetching inventory", error: error.message });
   }
 };
 
@@ -22,7 +24,9 @@ export const getContainers = async (req, res) => {
     res.json(inventory);
   } catch (error) {
     console.error("Error fetching inventory:", error);
-    res.status(500).send({ message: "Error fetching inventory", error: error.message });
+    res
+      .status(500)
+      .send({ message: "Error fetching inventory", error: error.message });
   }
 };
 
@@ -62,15 +66,28 @@ export const updateLocation = async (req, res) => {
     );
 
     if (!updatedInventory) {
-      return res.status(404).json({ message: "Contenedor no encontrado en el inventario." });
+      return res
+        .status(404)
+        .json({ message: "Contenedor no encontrado en el inventario." });
     }
 
     res.json(updatedInventory);
   } catch (error) {
-    res.status(500).json({ message: "Error al actualizar la localización del contenedor.", error: error.message });
+    // Verifica si el error es un error de duplicado de MongoDB
+    if (error.code === 11000) {
+      return res
+        .status(400)
+        .json({ message: "Ya existe un contenedor en esa posición." });
+    }
+    // Para otros tipos de errores, mantiene la respuesta genérica
+    res
+      .status(500)
+      .json({
+        message: "Error al actualizar la localización del contenedor.",
+        error: error.message,
+      });
   }
 };
-
 
 /* export const getInventory = async (req, res, next) => {
   try {

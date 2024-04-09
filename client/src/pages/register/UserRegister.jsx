@@ -73,11 +73,11 @@ const UserRegister = () => {
   };
 
   // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
-  useEffect(() => {
+   useEffect(() => {
     if (!user || user.role !== "manager") {
       navigate("/"); // Ajusta esta ruta según sea necesario
     }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  }, [user, navigate]);  // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
   return (
     <>
@@ -127,12 +127,13 @@ const UserRegister = () => {
                 name="role"
               >
                 <option value="">Selecciona un rol</option>
-                <option value="staff">Personal de oficina</option>
+                <option value="dispatcher">Personal de oficina</option>
                 <option value="gate">Chequeador de puerta</option>
                 <option value="operator">Operador de stacker</option>
                 <option value="externalUser">Agente externo</option>
+                <option value="surveyor">Inspector de daños</option>
               </select>
-
+              {/* ["admin", "manager", "dispatcher", "operator", "externalUser", "gate","surveyor"] */}
               {/*  <input
                 value={formData.role}
                 onChange={handleChange}

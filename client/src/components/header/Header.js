@@ -1,12 +1,13 @@
 import React from "react";
 import "./header.css";
 import Navbar from "../navbar/NavBar";
-import LogoCustomer from "../logos/LogoCustomer";
+import LogoKontti from "../logos/LogoKontti";
+
 
 function Header() {
   return (
     <div className="header">
-      <LogoCustomer />
+      <LogoKontti />
       <Navbar />
     </div>
   );

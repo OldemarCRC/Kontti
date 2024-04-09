@@ -3,9 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import "./location_in_terminal.css";
-import { fetchContainers } from "../../services/fetchInventory.js"; // Asegúrate de importar correctamente
+import { fetchInventory } from "../../services/fetchInventory.js"; // Asegúrate de importar correctamente
 import { updateContainerLocation } from "../../services/uploadService.js";
-import Header from "../../components/header/Header.js";
 
 function LocationInTerminal() {
   const { user } = useContext(AuthContext);
@@ -16,7 +15,7 @@ function LocationInTerminal() {
   const [filteredInventory, setFilteredInventory] = useState([]);
   // Estado para el número de contenedor seleccionado
   const [selectedContainer, setSelectedContainer] = useState("");
-
+  const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [formData, setFormData] = useState({
     containerNumber: "",
     locationInTerminal: "",
@@ -25,18 +24,23 @@ function LocationInTerminal() {
   // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
   useEffect(() => {
     if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión o a cualquier otra página
+      // Si 'user' es null o undefined, redirige al inicio de sesión.
       navigate("/"); // Ajusta esta ruta según sea necesario
     }
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
+  // Define la función para cargar el inventario
+  const loadInventory = async () => {
+    try {
+      const inventoryData = await fetchInventory();
+      setInventory(inventoryData);
+    } catch (error) {
+      console.error("Error al cargar el inventario: ", error);
+    }
+  };
+
   // Carga el inventario al montar el componente
   useEffect(() => {
-    const loadInventory = async () => {
-      const inventoryData = await fetchContainers();
-      setInventory(inventoryData);
-    };
-
     loadInventory();
   }, []);
 
@@ -61,6 +65,33 @@ function LocationInTerminal() {
     }));
   };
 
+  useEffect(() => {
+    // Función para verificar la existencia de la posición actual en el inventario
+    const checkPositionInInventory = () => {
+      const currentPosition = formData.locationInTerminal;
+
+      if (currentPosition.length === 4) {
+        // Asegúrate de que se haya completado una posición válida
+        // Buscar en el inventario si existe un contenedor con la posición actual
+        const exists = inventory.some(
+          (container) => container.locationInTerminal === currentPosition
+        );
+        setIsSubmitDisabled(exists);
+        if (exists) {
+          // Mostrar mensaje de error si la posición ya existe
+          alert(
+            "La posición especificada ya está ocupada por otro contenedor.",
+          );
+        }
+        } else {
+          // Deshabilitar el botón si la posición no está completamente definida
+          setIsSubmitDisabled(true);
+        }
+      };
+    checkPositionInInventory();
+  }, [formData.locationInTerminal, inventory]);
+
+
   const handleNavigate = (path) => {
     navigate(path);
   };
@@ -68,26 +99,26 @@ function LocationInTerminal() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-   // Concatenar la nueva selección con los valores existentes
-   let newLocationString = formData.locationInTerminal;
+    // Concatenar la nueva selección con los valores existentes
+    let newLocationString = formData.locationInTerminal;
 
-   if (name === "locationZone") {
-     newLocationString = value + newLocationString.substring(1);
-   } else if (name === "locationStack") {
-     newLocationString =
-       newLocationString.charAt(0) + value + newLocationString.substring(2);
-   } else if (name === "locationColumn") {
-     newLocationString =
-       newLocationString.substring(0, 2) + value + newLocationString.charAt(3);
-   } else if (name === "locationHeight") {
-     newLocationString = newLocationString.substring(0, 3) + value;
-   }
- 
-   setFormData((prevData) => ({
-     ...prevData,
-     locationInTerminal: newLocationString,
-   }));
- };
+    if (name === "locationZone") {
+      newLocationString = value + newLocationString.substring(1);
+    } else if (name === "locationStack") {
+      newLocationString =
+        newLocationString.charAt(0) + value + newLocationString.substring(2);
+    } else if (name === "locationColumn") {
+      newLocationString =
+        newLocationString.substring(0, 2) + value + newLocationString.charAt(3);
+    } else if (name === "locationHeight") {
+      newLocationString = newLocationString.substring(0, 3) + value;
+    }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      locationInTerminal: newLocationString,
+    }));
+  };
 
   const handleUpload = async () => {
     setIsUploading(true);
@@ -104,6 +135,7 @@ function LocationInTerminal() {
         containerNumber: "",
         locationInTerminal: "",
       });
+      loadInventory();
     } catch (error) {
       toast.error(error.message, { autoClose: 5000 });
     } finally {
@@ -118,11 +150,8 @@ function LocationInTerminal() {
 
   return (
     <>
-      <Header />
       <div className="location-container">
-        <div className="location-header">
-          <h2>POSICIÓN DEL CONTENEDOR EN LA TERMINAL</h2>
-        </div>
+       
 
         <form className="location-form" onSubmit={handleSubmit}>
           <fieldset>
@@ -170,9 +199,9 @@ function LocationInTerminal() {
                   <option value="A">A</option>
                   <option value="B">B</option>
                   <option value="C">C</option>
-                  <option value="M">M</option>
-                  <option value="T">T</option>
-                  <option value=""></option>
+                  {/* <option value="M">M</option>
+                  <option value="T">T</option> */}
+                  {/* <option value=""></option> */}
                 </select>
               </div>
 
@@ -191,14 +220,24 @@ function LocationInTerminal() {
                   required
                 >
                   <option value="">Stack</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="6">7</option>
-                  <option value="6">8</option>
+                  {[...Array(8).keys()].map((i) => {
+                    const stackNumber = i + 1;
+                    // Desactivar opciones de stack > 7 si la zona es A o B
+                    const isDisabled =
+                      (formData.locationInTerminal.charAt(0) === "A" ||
+                        formData.locationInTerminal.charAt(0) === "B") &&
+                      stackNumber > 7;
+
+                    return (
+                      <option
+                        key={stackNumber}
+                        value={stackNumber}
+                        disabled={isDisabled}
+                      >
+                        {stackNumber}
+                      </option>
+                    );
+                  })}
                 </select>
               </div>
 
@@ -217,16 +256,25 @@ function LocationInTerminal() {
                   required
                 >
                   <option value="">Columna</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  <option value="D">D</option>
-                  <option value="E">E</option>
-                  <option value="F">F</option>
-                  <option value="G">G</option>
-                  <option value="H">H</option>
-                  <option value="I">I</option>
-                  <option value="J">J</option>
+                  {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map(
+                    (column, index) => {
+                      // Desactivar opciones de columna F-J si la zona es A o B
+                      const isDisabled =
+                        (formData.locationInTerminal.charAt(0) === "A" ||
+                          formData.locationInTerminal.charAt(0) === "B") &&
+                        index >= 5;
+
+                      return (
+                        <option
+                          key={column}
+                          value={column}
+                          disabled={isDisabled}
+                        >
+                          {column}
+                        </option>
+                      );
+                    }
+                  )}
                 </select>
               </div>
 
@@ -254,22 +302,15 @@ function LocationInTerminal() {
             </div>
             {/*Fin container-location*/}
           </fieldset>
-          <button type="submit" className="position-button">
+          <button type="submit" disabled={isSubmitDisabled} className="position-button">
             Confirmar posición
           </button>
         </form>
+        {/* <button onClick={loadInventory} className="reload-inventory-btn">
+          Recargar Inventario
+        </button> */}
       </div>
     </>
   );
 }
 export default LocationInTerminal;
-
-/* locationInTerminal: {
-    type: {
-      zone: String,
-      stack: Number,
-      column: String,
-      height: Number,
-    },
-    required: false,
-  }, */

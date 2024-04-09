@@ -11,6 +11,8 @@ import seaco_logo from "./images/seacologo.png";
 import seatrade_logo from "./images/seatrade_logo.svg";
 import tracktrace_logo from "./images/track_trace.png";
 import inventory_img from "./images/inventory.png";
+import dispatch_img from "./images/in_movements.png";
+import stack_img from "./images/stack.png";
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -40,7 +42,9 @@ useEffect(() => {
           <h2 className="home-header">
             Registro de movimientos e inventario de contenedores
           </h2>
+
           <div className="home-options-container">
+
             <div
               className="option-page"
               onClick={() => handleNavigate("/in-movements")}
@@ -52,6 +56,7 @@ useEffect(() => {
                 className="option-img"
               />
             </div>
+
             <div
               className="option-page"
               onClick={() => handleNavigate("/out-movements")}
@@ -63,6 +68,19 @@ useEffect(() => {
                 className="option-img"
               />
             </div>
+
+            <div
+              className="option-page"
+              onClick={() => handleNavigate("/containers-dispatch")}
+            >
+              <h3 className="option-text">Despachos</h3>
+              <img
+                src={dispatch_img} // Reemplaza con la ruta correcta de tu imagen
+                alt="despachos"
+                className="option-img"
+              />
+            </div>
+
             <div
               className="option-page"
               onClick={() => handleNavigate("/inventory")}
@@ -70,10 +88,25 @@ useEffect(() => {
               <h3 className="option-text">Inventario</h3>
               <img
                 src={inventory_img} // Reemplaza con la ruta correcta de tu imagen
-                alt="otros ingresos"
+                alt="inventory"
                 className="option-img"
               />
+
             </div>
+
+            <div
+              className="option-page"
+              onClick={() => handleNavigate("/terminal-map")}
+            >
+              <h3 className="option-text">Plano de estibas</h3>
+              <img
+                src={stack_img} // Reemplaza con la ruta correcta de tu imagen
+                alt="terminal map"
+                className="option-img"
+              />
+
+            </div>
+
           </div>{" "}
           {/*Fin options-container */}
         </div>{" "}

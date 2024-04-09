@@ -1,7 +1,7 @@
 export const uploadDataToMongoDB = async (dataToSend) => {
   try {
     console.log(dataToSend);
-    const response = await fetch('http://192.168.10.45:8800/api/movements', {
+    const response = await fetch('http://localhost:8800/api/movements', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,7 +29,7 @@ export const uploadDataToMongoDB = async (dataToSend) => {
 // Función para actualizar la localización del contenedor en el inventario
 export const updateContainerLocation = async (dataToSend) => {
   try {
-    const response = await fetch('http://192.168.10.45:8800/api/inventory/location', {
+    const response = await fetch('http://localhost:8800/api/inventory/location', {
       method: 'PATCH', // Cambia el método a PATCH para indicar una actualización parcial
       headers: {
         'Content-Type': 'application/json',
