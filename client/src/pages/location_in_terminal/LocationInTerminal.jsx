@@ -1,12 +1,10 @@
-import React, { useState, useEffect, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
+import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import "./location_in_terminal.css";
 import { fetchInventory } from "../../services/fetchInventory.js"; // Asegúrate de importar correctamente
 import { updateContainerLocation } from "../../services/uploadService.js";
 
 function LocationInTerminal() {
-  const { user } = useContext(AuthContext);
   const [isUploading, setIsUploading] = useState(false);
   const [inventory, setInventory] = useState([]); // Nuevo estado para almacenar el inventario
   // Estado para manejar el filtro de contenedores

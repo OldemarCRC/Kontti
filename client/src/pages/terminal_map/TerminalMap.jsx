@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/AuthContext";
 import LocationInTerminal from "../location_in_terminal/LocationInTerminal.jsx";
 import { fetchInventory } from "../../services/fetchInventory";
 import "./terminal_map.css";
@@ -15,7 +17,8 @@ const zones = [
 function TerminalMap() {
   const [inventoryData, setInventoryData] = useState([]);
   const [isLoading, setIsLoading] = useState(false); // Para controlar el estado de carga
-
+  const { user } = useContext(AuthContext);
+  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
   // Función para cargar o actualizar el inventario
   const loadInventory = async () => {
     setIsLoading(true); // Indica que se está cargando el inventario
@@ -32,6 +35,18 @@ function TerminalMap() {
   useEffect(() => {
     loadInventory(); // Carga inicial del inventario
   }, []);
+
+  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
+  useEffect(() => {
+    if (!user) {
+      // Si 'user' es null o undefined, redirige al inicio de sesión
+      navigate("/");
+    } 
+  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+
+  const handleNavigate = (path) => {
+    navigate(path);
+  };
 
   const [selectedStack, setSelectedStack] = useState("INITIAL_VIEW");
   const [selectedZone, setSelectedZone] = useState(null);
