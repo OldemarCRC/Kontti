@@ -7,3 +7,16 @@ footer {
   position: fixed;
   bottom: 0;
 }
+footer {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  align-items: center;
+  justify-content: center;
+  justify-items: center;
+  align-content: center;
+}
+
+footer img {
+  height: 100px;
+}

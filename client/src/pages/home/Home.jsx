@@ -114,15 +114,16 @@ useEffect(() => {
               onClick={() => handleNavigate("/home")}
             >
               <h3 className="option-text">Próximamente</h3>
-              <img
-                src={gds_logo} // Reemplaza con la ruta correcta de tu imagen
+              <h3 className="option-text">TRUCKS</h3>
+             {/*  <img
+                src={_logo} 
                 alt=""
                 className="option-img"
-              />
+              /> */}
 
             </div>
 
-          </div>{"fin de home-options-container"}
+          </div>
           {/*Fin options-container */}
         </div>
         {/*Fin div text-and-options*/}

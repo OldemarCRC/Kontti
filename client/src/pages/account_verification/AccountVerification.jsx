@@ -17,7 +17,7 @@ const AccountVerification = () => {
       try {
         // Enviar solicitud de verificación al backend
         const response = await axios.get(
-          `http://localhost:8800/api/auth/verify-email?token=${token}`
+          `http://192.168.10.45:8800/api/auth/verify-email?token=${token}`
         );
         setVerificacionEstado(
           "Éxito: Tu correo ha sido verificado. Puedes cerrar esta ventana y continuar en la aplicación."

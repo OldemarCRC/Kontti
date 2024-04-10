@@ -55,7 +55,7 @@ const ChangePassword = () => {
     try {
       // Replace URL with your API endpoint for changing password
       const response = await axios.put(
-        "http://localhost:8800/api/auth/change-password",
+        "http://192.168.10.45:8800/api/auth/change-password",
         {
           userId: user._id, // Asumiendo que estás almacenando el ID del usuario en AuthContext
           currentPassword: password, // Cambiado de 'password' a 'currentPassword'
