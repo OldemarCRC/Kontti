@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom"; // Asegúrate de importar Link
 import axios from "axios";
-import Header from "../../components/header/Header";
 import "./account_verification.css";
+import logoKontti from "./kontti_logo.png";
 
 const AccountVerification = () => {
   const [verificacionEstado, setVerificacionEstado] = useState("");
@@ -16,8 +16,8 @@ const AccountVerification = () => {
 
       try {
         // Enviar solicitud de verificación al backend
-        const response = await axios.get(
-          `http://192.168.10.45:8800/api/auth/verify-email?token=${token}`
+        await axios.get(
+          `${process.env.REACT_APP_API_URL}/auth/verify-email?token=${token}`
         );
         setVerificacionEstado(
           "Éxito: Tu correo ha sido verificado. Puedes cerrar esta ventana y continuar en la aplicación."
@@ -36,6 +36,7 @@ const AccountVerification = () => {
     <div>
       <div className="empty-div"></div>
       <div className="container">
+      <img src={logoKontti} alt="Kontti" />
         <h2 className="verification-heading">Verificación de Correo Electrónico</h2>
         <p className="verification-status">{verificacionEstado}</p>
         <Link to="/" className="return-home-link">

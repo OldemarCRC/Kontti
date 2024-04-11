@@ -76,10 +76,6 @@ function OutMovements() {
     // Puedes agregar más condiciones para otros roles si es necesario
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
-
   // Calcula la fecha máxima permitida (hoy)
   const maxDate = new Date().toISOString().split("T")[0];
 
@@ -168,7 +164,7 @@ function OutMovements() {
     try {
       // Agrega gateInOrGateOut explícitamente al objeto formData antes de enviarlo
 
-      const result = await uploadDataToMongoDB(dataToUpload);
+      await uploadDataToMongoDB(dataToUpload);
       toast.success("¡Salida registrada!");
       // Restablecer el formulario a su estado inicial aquí
       setFormData({

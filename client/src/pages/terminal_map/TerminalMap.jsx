@@ -44,16 +44,8 @@ function TerminalMap() {
     } 
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
 
   const [selectedStack, setSelectedStack] = useState("INITIAL_VIEW");
-  const [selectedZone, setSelectedZone] = useState(null);
-
-  const handleStackClick = (stackId) => {
-    setSelectedStack(stackId);
-  };
 
   // Calcula la cantidad de contenedores para cada stack
   const countContainersInStack = (zoneId, stackNumber) => {

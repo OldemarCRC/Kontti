@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useNavigate, Link } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import "./App.css";
 import ContainersInventory from "./pages/containers_inventory/ContainersInventory";

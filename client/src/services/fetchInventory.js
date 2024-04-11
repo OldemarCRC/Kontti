@@ -1,6 +1,6 @@
 export async function fetchInventory() {
   try {
-    const response = await fetch('http://192.168.10.45:8800/api/inventory');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/inventory`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -15,7 +15,7 @@ export async function fetchInventory() {
 
 export async function fetchContainers() {
   try {
-    const response = await fetch('http://192.168.10.45:8800/api/inventory/containers');
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/inventory/containers`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }

@@ -12,7 +12,8 @@
   align-items: center;
   height: 85vh;
   padding: 20px;
-  background-color: rgb(221, 219, 219);
+  background-color: white;
+
 }
 .verification-status {
   font-size: large;

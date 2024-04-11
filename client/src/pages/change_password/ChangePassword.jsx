@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate} from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
@@ -54,8 +54,8 @@ const ChangePassword = () => {
     }
     try {
       // Replace URL with your API endpoint for changing password
-      const response = await axios.put(
-        "http://192.168.10.45:8800/api/auth/change-password",
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/auth/change-password`,
         {
           userId: user._id, // Asumiendo que estás almacenando el ID del usuario en AuthContext
           currentPassword: password, // Cambiado de 'password' a 'currentPassword'

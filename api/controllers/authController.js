@@ -19,7 +19,6 @@ export const register = async (req, res, next) => {
     });
     const user = await newUser.save();
     // Generar un token de verificación
-    // Esto asume que tienes una clave secreta JWT_SECRET definida en tus variables de entorno
     const verificationToken = jwt.sign(
       { userId: user._id },
       process.env.JWT,
@@ -27,7 +26,7 @@ export const register = async (req, res, next) => {
     );
     // Enviar correo electrónico de verificación
     // La URL de verificación debería ser algo que tu frontend pueda manejar para completar la verificación
-    const verificationUrl = `http://192.168.10.45:3000/account-verification?token=${verificationToken}`;
+    const verificationUrl = `${process.env.API_URL}:3000/account-verification?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationUrl);
 
     res

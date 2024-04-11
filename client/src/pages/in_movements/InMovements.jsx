@@ -11,7 +11,7 @@ import Header from "../../components/header/Header.js";
 function InMovements() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  const [isUploading, setIsUploading] = useState(false);
+  
 
   const [isReefer, setIsReefer] = useState(false);
   const [requireTempVent, setRequireTempVent] = useState(false);
@@ -63,9 +63,6 @@ function InMovements() {
     // Puedes agregar más condiciones para otros roles si es necesario
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
 
   // Calcula la fecha máxima permitida (hoy)
   const maxDate = new Date().toISOString().split("T")[0];
@@ -157,7 +154,6 @@ function InMovements() {
       );
       return; // Detiene la ejecución del envío si la validación falla
     }
-    setIsUploading(true);
 
     // Combinar la fecha y la hora en un solo campo
     const dateTime = new Date(`${formData.date}T${formData.time}`);
@@ -172,7 +168,7 @@ function InMovements() {
     try {
       // Agrega gateInOrGateOut explícitamente al objeto formData antes de enviarlo
 
-      const result = await uploadDataToMongoDB(dataToUpload);
+      await uploadDataToMongoDB(dataToUpload);
       toast.success("¡Ingreso exitoso!");
       // Restablecer el formulario a su estado inicial aquí
       setFormData({
@@ -197,9 +193,7 @@ function InMovements() {
       });
     } catch (error) {
       toast.error(error.message, { autoClose: 5000 });
-    } finally {
-      setIsUploading(false);
-    }
+    } 
   };
 
   const handleSubmit = async (e) => {

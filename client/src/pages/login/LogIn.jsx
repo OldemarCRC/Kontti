@@ -1,6 +1,6 @@
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -41,8 +41,7 @@ const Login = () => {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(
-        "http://192.168.10.45:8800/api/auth/login",
+      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`,
         credentials
       );
       if (res.data.details.isEmailVerified) {

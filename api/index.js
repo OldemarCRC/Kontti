@@ -9,7 +9,6 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 
 const app = express();
-const port = 8800;
 dotenv.config();
 
 const connect = async () => {
@@ -53,7 +52,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-app.listen(port, () => {
+app.listen(process.env.PORT, () => {
   connect();
-  console.log(`Connected to backend on http://localhost:${port}`);
+  console.log(`Connected to backend on port:${process.env.PORT}`);
 });
