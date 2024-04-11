@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { useNavigate, Link } from "react-router-dom"; // Importa useNavigate
+import React, { useEffect, useContext } from "react";
+import { useNavigate} from "react-router-dom"; // Importa useNavigate
 import { AuthContext } from "../../context/AuthContext";
 import "./home.css";
 import Header from "../../components/header/Header";
@@ -132,7 +132,7 @@ useEffect(() => {
         
           <ul>
             <li>
-              <a href="https://www.track-trace.com/container" target="_blank">
+              <a href="https://www.track-trace.com/container" target="_blank" rel="noopener noreferrer">
                 <img
                   className="logo-link"
                   src={tracktrace_logo} // Reemplaza con la ruta correcta de tu imagen
@@ -144,6 +144,7 @@ useEffect(() => {
               <a
                 href="https://www.capps.com/cgi-bin/publicUnitInfo"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <img
                   className="logo-link"
@@ -156,6 +157,7 @@ useEffect(() => {
               <a
                 href="https://tools.tritoncontainer.com/tritoncontainer/unitStatus/list?"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <img
                   className="logo-link"
@@ -168,6 +170,7 @@ useEffect(() => {
               <a
                 href="https://newseaweb.seacoglobal.com/sap/bc/ui5_ui5/sap/zseaco_ue17/index.html"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 <img
                   className="logo-link"
@@ -177,7 +180,7 @@ useEffect(() => {
               </a>
             </li>
             <li>
-              <a href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx" target="_blank">
+              <a href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx" target="_blank" rel="noopener noreferrer">
                 <img
                   className="logo-link"
                   src={tica_logo} // Reemplaza con la ruta correcta de tu imagen
@@ -186,7 +189,7 @@ useEffect(() => {
               </a>
             </li>
             <li>
-              <a href="https://www.grupodelsol.cr/index.html" target="_blank">
+              <a href="https://www.grupodelsol.cr/index.html" target="_blank" rel="noopener noreferrer">
                 <img
                   className="logo-link"
                   src={gds_logo} // Reemplaza con la ruta correcta de tu imagen
