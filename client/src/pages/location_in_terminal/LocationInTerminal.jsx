@@ -5,7 +5,7 @@ import { fetchInventory } from "../../services/fetchInventory.js"; // Asegúrate
 import { updateContainerLocation } from "../../services/uploadService.js";
 
 function LocationInTerminal() {
-  const [isUploading, setIsUploading] = useState(false);
+  /* const [isUploading, setIsUploading] = useState(false); */
   const [inventory, setInventory] = useState([]); // Nuevo estado para almacenar el inventario
   // Estado para manejar el filtro de contenedores
   const [filteredInventory, setFilteredInventory] = useState([]);
@@ -104,14 +104,14 @@ function LocationInTerminal() {
   };
 
   const handleUpload = async () => {
-    setIsUploading(true);
+   /*  setIsUploading(true); */
 
     const dataToUpload = {
       ...formData,
     };
 
     try {
-      const result = await updateContainerLocation(dataToUpload);
+      await updateContainerLocation(dataToUpload);
       toast.success("¡Posición actualizada!", { autoClose: 5000 });
       // Restablecer el formulario a su estado inicial aquí
       setFormData({
@@ -121,9 +121,9 @@ function LocationInTerminal() {
       loadInventory();
     } catch (error) {
       toast.error(error.message, { autoClose: 5000 });
-    } finally {
+    } /* finally {
       setIsUploading(false);
-    }
+    } */
   };
 
   const handleSubmit = async (e) => {

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { fetchInventory } from "../../services/fetchInventory.js";
+/* import { fetchInventory } from "../../services/fetchInventory.js"; */
 import { toast } from "react-toastify";
 import "./container_dispatch.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
@@ -11,8 +11,8 @@ import Header from "../../components/header/Header.js";
 function ContainerDispatch() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  const [isUploading, setIsUploading] = useState(false);
-  const [inventory, setInventory] = useState([]);
+  /* const [isUploading, setIsUploading] = useState(false); */
+ /*  const [inventory, setInventory] = useState([]); */
   const [isReefer, setIsReefer] = useState(false);
   const [requireTempVent, setRequireTempVent] = useState(false);
 
@@ -87,19 +87,18 @@ function ContainerDispatch() {
     return true;
   };
 
-  const loadInventory = async () => {
+/*   const loadInventory = async () => {
     try {
       const inventoryData = await fetchInventory();
       setInventory(inventoryData);
     } catch (error) {
       console.error("Error al cargar el inventario: ", error);
     }
-  };
+  }; */
 
-  useEffect(() => {
+  /* useEffect(() => {
     loadInventory();
-  }, []);
-
+  }, []); */
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -149,7 +148,7 @@ function ContainerDispatch() {
       );
       return; // Detiene la ejecución del envío si la validación falla
     }
-    setIsUploading(true);
+    /* setIsUploading(true); */
 
     // Combinar la fecha y la hora en un solo campo
     const dateTime = new Date(`${formData.date}T${formData.time}`);
@@ -184,12 +183,12 @@ function ContainerDispatch() {
         weight: "",
         notes: "",
       });
-      loadInventory();
+      /* loadInventory(); */
     } catch (error) {
       toast.error(error.message, { autoClose: 6000 });
-    } finally {
+    } /* finally {
       setIsUploading(false);
-    }
+    } */
   };
 
   const handleSubmit = async (e) => {
@@ -203,16 +202,13 @@ function ContainerDispatch() {
       <div className="out-movement-container">
         <div className="out-movement-header">
           <h2>DESPACHOS</h2>
-          <p>
-            Despacho de contenedores.
-          </p>
+          <p>Despacho de contenedores.</p>
         </div>
         <div className="out-movement-box">
           <form className="out-movement-form" onSubmit={handleSubmit}>
             <fieldset>
               <legend>Datos obligatorios</legend>
               <section className="data">
-
                 <div className="out-movement-item">
                   <label htmlFor="date" className="out-movement-label">
                     Fecha

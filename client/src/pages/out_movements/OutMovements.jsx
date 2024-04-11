@@ -2,7 +2,7 @@ import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
-import { fetchInventory } from "../../services/fetchInventory.js";
+/* import { fetchInventory } from "../../services/fetchInventory.js"; */
 import "./out_movements.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import Footer from "../../components/footer/Footer.js";
@@ -11,8 +11,8 @@ import Header from "../../components/header/Header.js";
 function OutMovements() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  const [isUploading, setIsUploading] = useState(false);
-  const [inventory, setInventory] = useState([]);
+ /*  const [isUploading, setIsUploading] = useState(false);*/
+  /* const [inventory, setInventory] = useState([]);  */
   const [isReefer, setIsReefer] = useState(false);
   const [requireTempVent, setRequireTempVent] = useState(false);
 
@@ -38,19 +38,19 @@ function OutMovements() {
     notes: "",
   });
 
-  const loadInventory = async () => {
+/*   const loadInventory = async () => {
     try {
       const inventoryData = await fetchInventory();
       setInventory(inventoryData);
     } catch (error) {
       console.error("Error al cargar el inventario: ", error);
     }
-  };
+  }; */
 
   // Carga el inventario al montar el componente
-  useEffect(() => {
+  /* useEffect(() => {
     loadInventory();
-  }, []);
+  }, []); */
 
   // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
   useEffect(() => {
@@ -150,7 +150,7 @@ function OutMovements() {
       );
       return; // Detiene la ejecución del envío si la validación falla
     }
-    setIsUploading(true);
+    /* setIsUploading(true); */
 
     // Combinar la fecha y la hora en un solo campo
     const dateTime = new Date(`${formData.date}T${formData.time}`);
@@ -187,9 +187,9 @@ function OutMovements() {
       });
     } catch (error) {
       toast.error(error.message, { autoClose: 6000 });
-    } finally {
+    }/*  finally {
       setIsUploading(false);
-    }
+    } */
   };
 
   const handleSubmit = async (e) => {
