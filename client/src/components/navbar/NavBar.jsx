@@ -4,7 +4,7 @@ import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import LogoCustomer from "../logos/LogoCustomer";
+/* import LogoCustomer from "../logos/LogoCustomer"; */
 
 const Navbar = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -65,7 +65,7 @@ const Navbar = () => {
               </li>
             )}
           </ul>
-          <LogoCustomer />
+          {/* <LogoCustomer /> */}
         </div>
       </div> {/*Fin div navbar container */}
     </nav>
