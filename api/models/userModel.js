@@ -28,6 +28,13 @@ const UserSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    attempts: {
+      type: Number,
+      default: 0,
+    },
+    lockUntil: {
+      type: Date,
+    },
   },
   { timestamps: true }
 );

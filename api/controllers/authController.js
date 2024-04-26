@@ -45,6 +45,11 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ username: req.body.username });
     if (!user) return next(createError(404, "¡Usuario no encontrado!"));
 
+     // Verificar si el usuario está bloqueado
+     if (user.lockUntil && user.lockUntil > Date.now()) {
+      return next(createError(403, "Usuario bloqueado. Contacte al administrador."));
+    }
+    
     const isPasswordCorrect = await bcrypt.compare(
       req.body.password,
       user.password
