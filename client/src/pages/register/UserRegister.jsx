@@ -82,7 +82,7 @@ const UserRegister = () => {
   return (
     <>
       <Header />
-      <ToastContainer autoClose={2000} />
+      
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
