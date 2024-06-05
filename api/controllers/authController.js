@@ -26,7 +26,7 @@ export const register = async (req, res, next) => {
     );
     // Enviar correo electrónico de verificación
     // La URL de verificación debería ser algo que tu frontend pueda manejar para completar la verificación
-    const verificationUrl = "https://kontti-client.onrender.com/account-verification?token=${verificationToken}";
+    const verificationUrl = `https://kontti-client.onrender.com/account-verification?token=${verificationToken}`;
     await sendVerificationEmail(user.email, verificationUrl);
 
     res
