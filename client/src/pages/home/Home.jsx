@@ -132,6 +132,12 @@ useEffect(() => {
         
           <ul>
             <li>
+              <a href="https://oldemarcrc.github.io/Sea-container-Check-Digit/" target="_blank" rel="noopener noreferrer">
+              Herramienta para chequear dígito verificador
+              </a>
+            </li>
+            
+            <li>
               <a href="https://www.track-trace.com/container" target="_blank" rel="noopener noreferrer">
                 <img
                   className="logo-link"
