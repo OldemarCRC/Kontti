@@ -8,7 +8,6 @@ import import_img from "./images/import.png";
 import cai_logo from "./images/cai.png";
 import triton_logo from "./images/Triton.png";
 import export_img from "./images/export.png";
-import seaco_logo from "./images/seacologo.png";
 import tica_logo from "./images/LogoTicaB.png";
 import gds_logo from "./images/gds2.png";
 import tracktrace_logo from "./images/track_trace.png";
@@ -146,6 +145,7 @@ useEffect(() => {
                 />
               </a>
             </li>
+            
             <li>
               <a
                 href="https://www.capps.com/cgi-bin/publicUnitInfo"
@@ -159,6 +159,7 @@ useEffect(() => {
                 />
               </a>
             </li>
+            
             <li>
               <a
                 href="https://tools.tritoncontainer.com/tritoncontainer/unitStatus/list?"
@@ -172,19 +173,7 @@ useEffect(() => {
                 />
               </a>
             </li>
-            <li>
-              <a
-                href="https://newseaweb.seacoglobal.com/sap/bc/ui5_ui5/sap/zseaco_ue17/index.html"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  className="logo-link"
-                  src={seaco_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="seaco_logo"
-                />
-              </a>
-            </li>
+            
             <li>
               <a href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx" target="_blank" rel="noopener noreferrer">
                 <img
@@ -194,6 +183,7 @@ useEffect(() => {
                 />
               </a>
             </li>
+            
             <li>
               <a href="https://www.grupodelsol.cr/index.html" target="_blank" rel="noopener noreferrer">
                 <img
@@ -203,6 +193,7 @@ useEffect(() => {
                 />
               </a>
             </li>
+            
             {/* Agrega más enlaces según sea necesario */}
           </ul>
         </aside>
