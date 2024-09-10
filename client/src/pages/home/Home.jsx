@@ -9,11 +9,11 @@ import cai_logo from "./images/cai.png";
 import triton_logo from "./images/Triton.png";
 import export_img from "./images/export.png";
 import tica_logo from "./images/LogoTicaB.png";
-import gds_logo from "./images/gds2.png";
 import tracktrace_logo from "./images/track_trace.png";
 import inventory_img from "./images/inventory.png";
 import dispatch_img from "./images/in_movements.png";
 import stack_img from "./images/stack.png";
+import check_digit_logo from "./images/check_digit_logo.png";
 
 function Home() {
   const { user } = useContext(AuthContext);
@@ -132,7 +132,11 @@ useEffect(() => {
           <ul>
             <li>
               <a href="https://oldemarcrc.github.io/Sea-container-Check-Digit/" target="_blank" rel="noopener noreferrer">
-              Herramienta para chequear dígito verificador
+              <img
+                  className="logo-link"
+                  src={check_digit_logo} 
+                  alt="Check-Digit logo"
+                />
               </a>
             </li>
             
@@ -140,8 +144,8 @@ useEffect(() => {
               <a href="https://www.track-trace.com/container" target="_blank" rel="noopener noreferrer">
                 <img
                   className="logo-link"
-                  src={tracktrace_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="seaco_logo"
+                  src={tracktrace_logo} 
+                  alt="Tracktrace logo"
                 />
               </a>
             </li>
@@ -155,7 +159,7 @@ useEffect(() => {
                 <img
                   className="logo-link"
                   src={cai_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="cai_logo"
+                  alt="CAI logo"
                 />
               </a>
             </li>
@@ -169,7 +173,7 @@ useEffect(() => {
                 <img
                   className="logo-link"
                   src={triton_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="triton_logo"
+                  alt="Triton logo"
                 />
               </a>
             </li>
@@ -179,17 +183,7 @@ useEffect(() => {
                 <img
                   className="logo-link"
                   src={tica_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="tica_logo"
-                />
-              </a>
-            </li>
-            
-            <li>
-              <a href="https://www.grupodelsol.cr/index.html" target="_blank" rel="noopener noreferrer">
-                <img
-                  className="logo-link"
-                  src={gds_logo} // Reemplaza con la ruta correcta de tu imagen
-                  alt="gds_logo"
+                  alt="tica logo"
                 />
               </a>
             </li>

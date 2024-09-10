@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.1bfeadf0.css",
-    "main.js": "/static/js/main.0e172525.js",
+    "main.css": "/static/css/main.a30f7129.css",
+    "main.js": "/static/js/main.ddce2792.js",
     "static/js/453.b107ff73.chunk.js": "/static/js/453.b107ff73.chunk.js",
     "static/media/stack.png": "/static/media/stack.3db99d7858c375a908b5.png",
     "static/media/export.png": "/static/media/export.be9d17e44b60b737b8df.png",
@@ -10,15 +10,15 @@
     "static/media/import.png": "/static/media/import.7251a805e0155bb63c02.png",
     "static/media/barcoArcoIris.JPG": "/static/media/barcoArcoIris.068968da1f75ec425afa.JPG",
     "static/media/LogoTicaB.png": "/static/media/LogoTicaB.f323173d38cff93c2d7c.png",
-    "static/media/gds2.png": "/static/media/gds2.d0e4a8263afe1562a8aa.png",
     "static/media/kontti_logo.png": "/static/media/kontti_logo.78a148195bcd56a7108a.png",
+    "static/media/check_digit_logo.png": "/static/media/check_digit_logo.a20c16bfd9436ad06dcf.png",
     "index.html": "/index.html",
-    "main.1bfeadf0.css.map": "/static/css/main.1bfeadf0.css.map",
-    "main.0e172525.js.map": "/static/js/main.0e172525.js.map",
+    "main.a30f7129.css.map": "/static/css/main.a30f7129.css.map",
+    "main.ddce2792.js.map": "/static/js/main.ddce2792.js.map",
     "453.b107ff73.chunk.js.map": "/static/js/453.b107ff73.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.1bfeadf0.css",
-    "static/js/main.0e172525.js"
+    "static/css/main.a30f7129.css",
+    "static/js/main.ddce2792.js"
   ]
 }
