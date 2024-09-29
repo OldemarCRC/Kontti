@@ -1,23 +1,19 @@
 {
   "files": {
-    "main.css": "/static/css/main.d831ea33.css",
-    "main.js": "/static/js/main.ade1c307.js",
+    "main.css": "/static/css/main.d83bf743.css",
+    "main.js": "/static/js/main.02dbaa8a.js",
     "static/js/453.b107ff73.chunk.js": "/static/js/453.b107ff73.chunk.js",
-    "static/media/stack.png": "/static/media/stack.3db99d7858c375a908b5.png",
-    "static/media/export.png": "/static/media/export.be9d17e44b60b737b8df.png",
     "static/media/inventory.png": "/static/media/inventory.8efc4ba717f872524e33.png",
-    "static/media/in_movements.png": "/static/media/in_movements.9840703ec13dfe76a213.png",
-    "static/media/import.png": "/static/media/import.7251a805e0155bb63c02.png",
     "static/media/LogoTicaB.png": "/static/media/LogoTicaB.f323173d38cff93c2d7c.png",
     "static/media/kontti_logo.png": "/static/media/kontti_logo.78a148195bcd56a7108a.png",
     "static/media/check_digit_logo.png": "/static/media/check_digit_logo.a20c16bfd9436ad06dcf.png",
     "index.html": "/index.html",
-    "main.d831ea33.css.map": "/static/css/main.d831ea33.css.map",
-    "main.ade1c307.js.map": "/static/js/main.ade1c307.js.map",
+    "main.d83bf743.css.map": "/static/css/main.d83bf743.css.map",
+    "main.02dbaa8a.js.map": "/static/js/main.02dbaa8a.js.map",
     "453.b107ff73.chunk.js.map": "/static/js/453.b107ff73.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.d831ea33.css",
-    "static/js/main.ade1c307.js"
+    "static/css/main.d83bf743.css",
+    "static/js/main.02dbaa8a.js"
   ]
 }

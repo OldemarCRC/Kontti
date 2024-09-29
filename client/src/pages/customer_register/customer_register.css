@@ -1,4 +1,6 @@
-.in-movement-container {
+/* customer_register.css */
+
+.register-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -7,17 +9,7 @@
   background-color: #f5f5f5;
 }
 
-.in-movement-header {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #276ba6;
-}
-
-.in-movement-header p {
-  font-size: larger;
-}
-
-.in-movement-form {
+.register-form {
   width: 100%;
   max-width: 800px;
   background: #fff;
@@ -26,49 +18,35 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-.in-movement-form fieldset {
-  border: none;
-  padding: 0;
-}
-
-.legend {
-  font-size: 1em;
-  margin-bottom: 10px;
+.register-message {
+  text-align: center;
+  margin-bottom: 20px;
   color: #276ba6;
 }
 
-.data {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-
-.in-movement-item {
-  flex: 1 1 calc(50% - 20px);
+.label-input {
   display: flex;
   flex-direction: column;
+  margin-bottom: 15px;
 }
 
-.in-movement-label {
+.form-label {
   margin-bottom: 5px;
   font-weight: bold;
   color: #276ba6;
 }
 
-.input-date,
-.select-in,
-.input-in {
+.form-input {
   padding: 8px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-input[type="date"],
-input[type="time"] {
-  max-width: 100%;
+.register-button {
+  margin-top: 20px;
 }
 
-button[type="submit"] {
+.lbtn {
   width: 100%;
   padding: 10px;
   border: none;
@@ -77,13 +55,8 @@ button[type="submit"] {
   color: #fff;
   font-size: 1em;
   cursor: pointer;
-  margin-top: 20px;
 }
 
-button[type="submit"]:hover {
+.lbtn:hover {
   background: #1e5481;
 }
-
-
-
-

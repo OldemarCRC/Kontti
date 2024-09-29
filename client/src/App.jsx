@@ -9,8 +9,12 @@ import Home from "./pages/home/Home";
 import UserRegister from "./pages/register/UserRegister";
 import AccountVerification from "./pages/account_verification/AccountVerification";
 import ChangePassword from "./pages/change_password/ChangePassword";
-import TerminalMap from "./pages/terminal_map/TerminalMap"
+import TerminalMap from "./pages/terminal_map/TerminalMap";
 import ContainerDispatch from "./pages/dispatch/ContainerDispatch";
+import CustomerRegister from "./pages/customer_register/CustomerRegister";
+import DataManagement from "./pages/data_management/DataManagement";
+import TruckCoRegister from "./pages/truck_co_register/TruckCoRegister";
+import CustomsNumberRegister from "./pages/customs_number_register/CustomsNumberRegister";
 
 function App() {
   return (
@@ -27,9 +31,16 @@ function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/in-movements" element={<InMovements />} />
           <Route path="/out-movements" element={<OutMovements />} />
-          <Route path="/containers-dispatch" element={<ContainerDispatch/>} />
+          <Route path="/containers-dispatch" element={<ContainerDispatch />} />
           <Route path="/inventory" element={<ContainersInventory />} />
           <Route path="/terminal-map" element={<TerminalMap />} />
+          <Route path="/customer-register" element={<CustomerRegister />} />
+          <Route path="/data-management" element={<DataManagement />} />
+          <Route path="/truck-co-register" element={<TruckCoRegister />} />
+          <Route
+            path="/customs-number-register"
+            element={<CustomsNumberRegister />}
+          />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

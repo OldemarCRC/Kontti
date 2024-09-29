@@ -3,6 +3,20 @@ body {
   height: 100%;
   margin: 0;
   font-family: Verdana, Geneva, Tahoma, sans-serif;
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.5)
+  ),url('./pages/home/images/inventory.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* background-attachment: fixed; */
+  min-height: 100vh;
+  width: 100%;
+  /* background-color: rgba(255, 255, 255, 0.15);  *//* Blanco con transparencia */
+  /* background-blend-mode: overlay; */ /* Mezcla la imagen y el color */
+  
 }
 
 #root {

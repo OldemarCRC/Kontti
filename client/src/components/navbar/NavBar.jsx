@@ -15,13 +15,13 @@ const Navbar = () => {
         <div className="navbar-option-page" onClick={() => handleNavigate("/in-movements")}>
           <h3 className="navbar-option-text">Ingresos</h3>
         </div>
-        <div className="navbar-option-page" onClick={() => handleNavigate("/release-order")}>
-          <h3 className="navbar-option-text">Órdenes de salida</h3>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/containers-dispatch")}>
+          <h3 className="navbar-option-text">Despachos</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/out-movements")}>
           <h3 className="navbar-option-text">Salidas</h3>
         </div>
-        <div className="navbar-option-page" onClick={() => handleNavigate("/query")}>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/inventory")}>
           <h3 className="navbar-option-text">Consultas</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/data-management")}>
