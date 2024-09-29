@@ -28,6 +28,7 @@ mongoose.connection.on("connected", () => {
   console.log("mongoDB connected!");
 });
 
+app.set('trust proxy', true);
 //middlewares
 app.use(cors());
 app.use(cookieParser());
