@@ -10,14 +10,15 @@ import Footer from "../../components/footer/Footer";
 
 // User Registration
 const UserRegister = () => {
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     username: "",
     email: "",
-    password: "",
-    confirmPassword: "",
     role: "",
     phone: "",
-  });
+    createdBy: "",
+  };
+
+  const [formData, setFormData] = useState(initialFormData);
 
   // AuthContext Authentication
   const { user } = useContext(AuthContext);
@@ -31,38 +32,37 @@ const UserRegister = () => {
     setFormData((prevData) => ({
       ...prevData,
       [id]: value,
+      createdBy: user.username,
     }));
   };
 
-  // Notifying if registration was Successful
   const notify = () => {
-    toast.success("¡Registro exitoso, usuario debe verificar su correo!");
+    toast.success("¡Registro exitoso, usuario debe verificar su correo!", {
+      onClose: () => delay(),
+    });
   };
 
-  // User Submit for Regisration
+  // Delay time & Navigation
+  const delay = () => {
+    navigate("/home");
+  };
+
+  // User Submit for Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, password, confirmPassword, role, phone } =
-      formData;
-    if (password !== confirmPassword) {
-      toast.error("¡Las contraseñas no concuerdan!");
-      return;
-    }
+    const { username, email, role, phone, createdBy } = formData;
+
     try {
-      const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/register`,
-        {
-          username,
-          email,
-          password,
-          role,
-          phone,
-        }
-      );
-      console.log("RESPUESTA DEL SERVIDOR:", response);
-      /* dispatch({type: "LOGIN_SUCCESS", payload: response.data.details}); */
+      await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
+        username,
+        email,
+        role,
+        phone,
+      });
+
       notify();
-      /* setTimeout(delay, 2000); */
+      // Limpiar el formulario después del registro exitoso
+      setFormData(initialFormData);
     } catch (error) {
       console.log(
         "ERROR EN LA SOLICITUD:",
@@ -73,16 +73,17 @@ const UserRegister = () => {
   };
 
   // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
-   useEffect(() => {
-    if (!user || user.role !== "manager") {
-      navigate("/"); // Ajusta esta ruta según sea necesario
+  useEffect(() => {
+    if (!user || user.role !== "admin") {
+      navigate("/");
     }
-  }, [user, navigate]);  // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  }, [user, navigate]);
 
   return (
     <>
+      <ToastContainer autoClose={2000} />
       <Header />
-      
+
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
@@ -99,6 +100,7 @@ const UserRegister = () => {
                 placeholder="Nombre de usuario"
                 id="username"
                 name="username"
+                required
               />
             </div>
             <div className="label-input">
@@ -113,6 +115,7 @@ const UserRegister = () => {
                 placeholder="correo electrónico"
                 id="email"
                 name="email"
+                required
               />
             </div>
             <div className="label-input">
@@ -125,24 +128,17 @@ const UserRegister = () => {
                 className="form-input"
                 id="role"
                 name="role"
+                required
               >
                 <option value="">Selecciona un rol</option>
+                <option value="admin">Kontti staff</option>
+                <option value="manager">Jefe de planta</option>
                 <option value="dispatcher">Personal de oficina</option>
                 <option value="gate">Chequeador de puerta</option>
                 <option value="operator">Operador de stacker</option>
                 <option value="externalUser">Agente externo</option>
                 <option value="surveyor">Inspector de daños</option>
               </select>
-              {/* ["admin", "manager", "dispatcher", "operator", "externalUser", "gate","surveyor"] */}
-              {/*  <input
-                value={formData.role}
-                onChange={handleChange}
-                type="text"
-                className="form-input"
-                placeholder="Rol de trabajo"
-                id="role"
-                name="role"
-              /> */}
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
@@ -158,34 +154,7 @@ const UserRegister = () => {
                 name="phone"
               />
             </div>
-            <div className="label-input">
-              <label className="form-label" htmlFor="password">
-                Contraseña
-              </label>
-              <input
-                value={formData.password}
-                onChange={handleChange}
-                type="password"
-                className="form-input"
-                placeholder="Contraseña"
-                id="password"
-                name="password"
-              />
-            </div>
-            <div className="label-input">
-              <label className="form-label" htmlFor="confirmPassword">
-                Confirmar contraseña
-              </label>
-              <input
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                type="password"
-                className="form-input"
-                placeholder="Confirmar contraseña"
-                id="confirmPassword"
-                name="confirmPassword"
-              />
-            </div>
+
             <div className="register-button">
               <button className="lbtn" type="submit">
                 Registrar

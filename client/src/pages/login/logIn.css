@@ -1,10 +1,7 @@
 .login-page{
   width: 100vw;
   height: 100vh;
-  background-image: url(./photos/barcoArcoIris.JPG);
-  overflow: hidden;
-  background-position: center;
-  background-repeat: no-repeat;
+  background-color: rgb(240, 233, 233);
 }
 
 .login-container {
@@ -38,12 +35,15 @@
 .app-name{
   color: #043841;
   margin-bottom: 10px;
+  text-align: center;
+  font-size: 1.8rem;
 }
 
 .login-message {
   font-size: 18px;
   color: #666;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .label-input {

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./../../pages/login/logIn.css";
+import "./logIn.css";
 
 // User or Admin LogIn
 const Login = () => {
@@ -111,7 +111,7 @@ const Login = () => {
                 className="lbtn"
                 disabled={loading}
                 onClick={handleClick}
-                type="button"
+                type="submit"
               >
                 {loading && (
                   <div className="" role="status">

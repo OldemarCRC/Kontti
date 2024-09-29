@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate} from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
@@ -22,6 +22,13 @@ const ChangePassword = () => {
   // Navigation
   const navigate = useNavigate();
 
+
+  useEffect(() => {
+    if (!user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
   // Handling changes
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -40,8 +47,9 @@ const ChangePassword = () => {
 
   // Delay time & Navigation
   const delay = () => {
-    sessionStorage.removeItem("user"); // Opcional: Limpiar el estado de autenticación local
-    navigate("/"); // Redirige al usuario a la página de inicio de sesión
+    sessionStorage.removeItem("user"); 
+    dispatch({ type: "LOGOUT" }); 
+    navigate("/"); 
   };
 
   // User Submit for Password Change
@@ -53,20 +61,16 @@ const ChangePassword = () => {
       return;
     }
     try {
-      // Replace URL with your API endpoint for changing password
+      
       await axios.put(
         `${process.env.REACT_APP_API_URL}/auth/change-password`,
         {
-          userId: user._id, // Asumiendo que estás almacenando el ID del usuario en AuthContext
-          currentPassword: password, // Cambiado de 'password' a 'currentPassword'
+          userId: user._id,
+          currentPassword: password,
           newPassword,
         }
       );
       notify(); // Notificar al usuario sobre el cambio exitoso
-      // Limpia el estado local y global de autenticación
-      sessionStorage.removeItem("user"); // Limpia el estado de autenticación en sessionStorage
-      dispatch({ type: "LOGOUT" }); // Actualiza el estado global para reflejar que el usuario no está autenticado
-      setTimeout(() => navigate("/"), 2000); // Redirige al usuario a la página de inicio de sesión después de un breve retraso
     } catch (error) {
       console.log("REQUEST ERROR:", error.response ? error.response : error);
       toast.error("Password change unsuccessful!");
@@ -76,23 +80,23 @@ const ChangePassword = () => {
   return (
     <>
       <Header />
-      <ToastContainer autoClose={2000} />
+      
       <div className="change-password-container">
         <div className="change-password-form">
           <form onSubmit={handleSubmit}>
             <h5 className="change-password-message">
-              Change Password for {user?.username}
+              Cambiar contraseña para: {user?.username}
             </h5>
             <div className="label-input">
               <label className="form-label" htmlFor="password">
-                Current Password
+                Contraseña actual
               </label>
               <input
                 value={formData.password}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="Current Password"
+                placeholder="Contraseña actual"
                 id="password"
                 name="password"
                 required
@@ -100,14 +104,14 @@ const ChangePassword = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="newPassword">
-                New Password
+                Nueva contraseña
               </label>
               <input
                 value={formData.newPassword}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="New Password"
+                placeholder="Nueva contraseña"
                 id="newPassword"
                 name="newPassword"
                 required
@@ -115,14 +119,14 @@ const ChangePassword = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="confirmNewPassword">
-                Confirm New Password
+                Confirmar nueva contraseña
               </label>
               <input
                 value={formData.confirmNewPassword}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="Confirm New Password"
+                placeholder="Confirmar nueva contraseña"
                 id="confirmNewPassword"
                 name="confirmNewPassword"
                 required
@@ -130,7 +134,7 @@ const ChangePassword = () => {
             </div>
             <div className="change-password-button">
               <button className="lbtn" type="submit">
-                Change Password
+                Cambiar contraseña
               </button>
             </div>
           </form>

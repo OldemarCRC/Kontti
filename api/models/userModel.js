@@ -32,20 +32,36 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
-    lockUntil: {
+    isLocked: {
+      type: Boolean,
+      default: false
+    },
+    lockedAt: {
       type: Date,
+      default: null
+    },
+    lastLoginAttempt: {
+      type: Date,
+      default: null
+    },
+    loginAttempts: [{
+      date: Date,
+      ip: String
+    }],
+    passwordChangeRequired: {
+      type: Boolean,
+      default: true
+    },
+    passwordExpiresAt: {
+      type: Date,
+      default: () => new Date(Date.now() + 10 * 60 * 1000) // 10 minutos desde la creación
+    },
+    createdBy: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true }
 );
 
 export default mongoose.model("User", UserSchema);
-
-/* {
-  "username": "",
-  "email": "",
-  "phone": "",
-  "password": "",
-  "role": "",//options ["admin", "manager", "staff", "externalUser"]
-  "isEmailVerified":""
-} */
