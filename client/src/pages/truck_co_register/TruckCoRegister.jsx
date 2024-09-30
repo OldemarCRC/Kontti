@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./truck_co_register.css";
+import "../../pages/form_register_styles.css"
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
@@ -107,8 +107,7 @@ const TruckCoRegister = () => {
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h5 className="register-message">REGISTRAR EMPRESA TRANSPORTISTA</h5>
-
+            <h1>Registrar empresa de transporte</h1>
             <div className="label-input">
               <label className="form-label" htmlFor="idType">
               Tipo de identificación

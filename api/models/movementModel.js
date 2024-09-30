@@ -3,8 +3,13 @@ const MovementSchema = new mongoose.Schema({
   gateInOrGateOut: {
     type: String,
     required: true,
+    enum: ["In", "Out"],
   },
-  customer: {//naviera en listados
+  idNumber: {
+    type: String,
+    required: false,
+  },
+  customerName: {//naviera en listados
     type: String,
     required: true,
   },
@@ -12,13 +17,33 @@ const MovementSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  truckID: {
+  truckId: {
     type: String,
     required: true,
   },
   truckCo: {
     type: String,
     required: true,
+  },
+  truckDriver: {
+    type: String,
+    required: true,
+  },
+  dateAndTime: {
+    type: Date,
+    required: true,
+  },
+  customsNumber: {
+    type: Number,
+    required: true,
+  },
+  ticaSequence: {
+    type: Number,
+    required: true,
+  },
+  BLNumber: {
+    type: String,
+    required: false,
   },
   containerSize: {
     type: Number,
@@ -32,42 +57,32 @@ const MovementSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  dateAndTime: {
-    type: Date,
-    required: true,
-  },
   originOrDestination: {
     type: String,
     required: true,
   },
-
   portOfDestination: {
     type: String,
     required: false,
   },
-
   exportVessel: {
     type: String,
     required: false,
   },
-
   reeferDamage: {
     type: Boolean,
     default: false,
     require:  false,
   },
-
   boxDamage: {
     type: Boolean,
     default: false,
     require:  false,
   },
-
   damageComments :{
      type:String,
      required: false
   } ,
-  
   sealNumber_1: {
     type: String,
     required: false,
@@ -79,7 +94,6 @@ const MovementSchema = new mongoose.Schema({
   temperature: {
     type: String,
     required: false,
-    
   },
   ventilation: {
     type: String,
@@ -97,7 +111,10 @@ const MovementSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
-  
+  createdBy: {
+    type: String,
+    required: true,
+  },
 },{ collection: 'movements' });
 
 export default mongoose.model("Movement", MovementSchema)

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./customer_register.css";
+import "../../pages/form_register_styles.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
@@ -73,7 +73,7 @@ const CustomerRegister = () => {
           customerContact,
           customerEmail,
           customerPhoneNumber,
-          createdBy:user.username,
+          createdBy: user.username,
         }
       );
 
@@ -105,8 +105,7 @@ const CustomerRegister = () => {
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h5 className="register-message">REGISTRAR CLIENTE</h5>
-
+            <h1>Registrar cliente</h1>
             <div className="label-input">
               <label className="form-label" htmlFor="idType">
                 Tipo de identificación

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "./customs_number_register.css";
+import "../../pages/form_register_styles.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
@@ -16,7 +16,7 @@ const CustomsNumberRegister = () => {
     transportMode: "",
     customsManifestType: "",
     customsLocationCode: "",
-    createdBy:"",
+    createdBy: "",
   };
 
   const [currentDateTime, setCurrentDateTime] = useState({
@@ -45,7 +45,9 @@ const CustomsNumberRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const dateTime = new Date(`${formData.date}T${formData.time}`).toISOString();
+    const dateTime = new Date(
+      `${formData.date}T${formData.time}`
+    ).toISOString();
 
     const dataToUpload = {
       ...formData,
@@ -77,8 +79,8 @@ const CustomsNumberRegister = () => {
 
     const now = new Date();
     setCurrentDateTime({
-      currentDate: now.toISOString().split('T')[0],
-      currentTime: now.toTimeString().split(' ')[0].slice(0, 5),
+      currentDate: now.toISOString().split("T")[0],
+      currentTime: now.toTimeString().split(" ")[0].slice(0, 5),
     });
   }, [user, navigate]);
 
@@ -90,8 +92,7 @@ const CustomsNumberRegister = () => {
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h5 className="register-message">REGISTRAR MANIFIESTO DE ADUANA</h5>
-
+            <h1>Registrar manifiesto de aduana</h1>
             <div className="label-input">
               <label className="form-label" htmlFor="customsNumber">
                 Número de manifiesto

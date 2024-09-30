@@ -260,8 +260,8 @@ function InMovements() {
       <Header />
       <div className="in-movement-container">
         <div className="in-movement-header">
-          <h2>INGRESO DE MERCANCÍAS</h2>
-          <p>Registrar ingreso de mercancías al almacén fiscal.</p>
+          <h2>Ingreso de contenedores</h2>
+          <p>Registrar ingreso de contenedores al estacionamiento transitorio.</p>
         </div>
         <form className="in-movement-form" onSubmit={handleSubmit}>
           <fieldset>

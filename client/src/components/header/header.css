@@ -22,6 +22,3 @@
   /* Esto empuja LogoKontti más a la derecha */
   flex-grow: 0;
 }
-body {
-  padding-top: 60px; /* Asegura que el contenido no quede oculto detrás del header fijo */
-}
