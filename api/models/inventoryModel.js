@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 const InventorySchema = new mongoose.Schema({
-  customer: {
+  customerName: {
     //naviera en listados
     type: String,
     required: true,

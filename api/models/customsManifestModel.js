@@ -6,6 +6,14 @@ const customsManifestSchema = new mongoose.Schema({
       required: true,
       unique: true,
     },
+    mvName: {
+      type: String,
+      required: false,
+    },
+    voyageNumber:{
+      type:String,
+      require:false,
+    },
     officialArrivalDate: {
       type: Date,
       required: true,

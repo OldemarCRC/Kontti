@@ -11,6 +11,8 @@ import Footer from "../../components/footer/Footer";
 const CustomsNumberRegister = () => {
   const initialFormData = {
     customsNumber: "",
+    mvName: "",
+    voyageNumber: "",
     date: "",
     time: "",
     transportMode: "",
@@ -93,6 +95,7 @@ const CustomsNumberRegister = () => {
         <div className="register-form">
           <form onSubmit={handleSubmit}>
             <h1>Registrar manifiesto de aduana</h1>
+
             <div className="label-input">
               <label className="form-label" htmlFor="customsNumber">
                 Número de manifiesto
@@ -105,6 +108,38 @@ const CustomsNumberRegister = () => {
                 placeholder="Número de manifiesto"
                 id="customsNumber"
                 name="customsNumber"
+                required
+              />
+            </div>
+
+            <div className="label-input">
+              <label className="form-label" htmlFor="mvName">
+                Nombre del barco
+              </label>
+              <input
+                value={formData.mvName}
+                onChange={handleChange}
+                type="text"
+                className="form-input"
+                placeholder="Nombre del barco"
+                id="mvName"
+                name="mvName"
+                required
+              />
+            </div>
+
+            <div className="label-input">
+              <label className="form-label" htmlFor="voyageNumber">
+                Viaje
+              </label>
+              <input
+                value={formData.voyageNumber}
+                onChange={handleChange}
+                type="text"
+                className="form-input"
+                placeholder="Viaje"
+                id="voyageNumber"
+                name="voyageNumber"
                 required
               />
             </div>

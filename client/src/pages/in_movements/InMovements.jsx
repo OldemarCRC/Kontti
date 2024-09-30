@@ -289,7 +289,7 @@ function InMovements() {
               </div>
 
               <div className="in-movement-item">
-                <label htmlFor="customer" className="in-movement-label">
+                <label htmlFor="customerName" className="in-movement-label">
                   Cliente
                 </label>
                 <select
