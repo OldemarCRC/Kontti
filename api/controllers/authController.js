@@ -61,8 +61,9 @@ export const register = async (req, res, next) => {
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 5, // límite de 5 intentos por ventana por IP
-  message:
-    "Demasiados intentos de inicio de sesión, por favor intente más tarde.",
+  message: "Demasiados intentos de inicio de sesión, por favor intente más tarde.",
+  standardHeaders: true, // Devolver información de rate limit en los headers
+  legacyHeaders: false, // Desactivar los headers 'X-RateLimit-*'
 });
 
 export const loginSecurityMiddleware = async (req, res, next) => {

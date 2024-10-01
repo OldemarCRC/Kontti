@@ -32,7 +32,7 @@ mongoose.connection.on("connected", () => {
   console.log("mongoDB connected!");
 });
 
-app.set('trust proxy', true);
+app.set('trust proxy', 1); // Confía en el primer proxy (Render)
 //middlewares
 app.use(cors());
 app.use(cookieParser());
