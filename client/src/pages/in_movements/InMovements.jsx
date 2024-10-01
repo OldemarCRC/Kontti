@@ -35,8 +35,6 @@ function InMovements() {
     BLNumber: "",
     ticaSequence: "",
     BLLineNumber: "",
-    quantity: "",
-    packageType: "",
     commodity: "",
     sealNumber_1: "",
     sealNumber_2: "",
@@ -106,13 +104,22 @@ function InMovements() {
 
   useEffect(() => {
     if (!user) {
+      // Si 'user' es null o undefined, redirige al inicio de sesión
       navigate("/");
+    } else if (user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/terminal-map");
     }
+  
+    // Obtener la fecha y hora actual
     const now = new Date();
     const currentDate = now.toISOString().slice(0, 10); // Formato AAAA-MM-DD
     const currentTime = now.toTimeString().slice(0, 5); // Formato HH:MM
+  
+    // Actualizar el estado con la fecha y hora actuales
     setCurrentDateTime({ currentDate, currentTime });
-  }, [user, navigate]);
+  
+  }, [user, navigate, setCurrentDateTime]);
 
   const handleCheckDigit = () => {
     // Asume que el dígito verificador es el último caracter del número de contenedor
@@ -346,6 +353,7 @@ function InMovements() {
                 />
               </div>
 
+
               <div className="in-movement-item">
                 <label htmlFor="BLNumber" className="in-movement-label">
                   BL nro.
@@ -413,6 +421,186 @@ function InMovements() {
                   />
                 </div>
 
+                <div className="in-movement-item">
+                  {" "}
+                  
+                  <label htmlFor="" className="in-movement-label">
+                    Tam
+                  </label>
+                  <select
+                    value={formData.containerSize}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="containerSize"
+                    name="containerSize"
+                    required
+                  >
+                    <option value="">Seleccione tamaño</option>
+                    <option value="40">40</option>
+                    <option value="20">20</option>
+                    <option value="10">10</option>
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="containerType" className="in-movement-label">
+                    Tipo
+                  </label>
+                  <select
+                    value={formData.containerType}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="containerType"
+                    name="containerType"
+                    required
+                  >
+                    <option value="">Seleccione tipo</option>
+                    <option value="RFH">RFH</option>
+                    <option value="RFS">RFS</option>
+                    <option value="DV">DV</option>
+                    <option value="OT">OT</option>
+                    <option value="TK">TK</option>
+                    <option value="FR">FR</option>
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="fullOrEmpty" className="in-movement-label">
+                    Status
+                  </label>
+                  <select
+                    value={formData.fullOrEmpty}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="fullOrEmpty"
+                    name="fullOrEmpty"
+                    required
+                  >
+                    <option value="">Seleccione status</option>
+                    <option value="Empty">Vacío</option>
+                    <option value="Full">Cargado</option>
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="temperature" className="in-movement-label">
+                    Temp
+                  </label>
+                  <input
+                    value={formData.temperature}
+                    onChange={handleChange}
+                    type="text"
+                    className="input-in"
+                    placeholder="Temp"
+                    id="temperature"
+                    name="temperature"
+                    disabled={!isReefer} // Deshabilita si no es reefer
+                  />
+                </div>
+                <div className="in-movement-item">
+                  
+                  <label htmlFor="ventilation" className="in-movement-label">
+                    Vent
+                  </label>
+                  <input
+                    value={formData.ventilation}
+                    onChange={handleChange}
+                    type="text"
+                    className="input-in"
+                    placeholder="Vent"
+                    id="ventilation"
+                    name="ventilation"
+                    disabled={!isReefer} // Deshabilita si no es reefer
+                  />
+                </div>
+
+                <div className="in-movement-item">
+                  <label
+                    htmlFor="portOfDestination"
+                    className="in-movement-label"
+                  >
+                    Puerto de destino
+                  </label>
+                  <select
+                    value={formData.portOfDestination}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="portOfDestination"
+                    name="portOfDestination"
+                  >
+                    <option value="">POD</option>
+                    <option value="NLRTM">Rotterdam, Países Bajos</option>
+                    <option value="DEHAM">Hamburgo, Alemania</option>
+                    <option value="BEAMB">Amberes, Bélgica</option>
+
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="exportVessel" className="in-movement-label">
+                    Barco de exportación
+                  </label>
+                  <select
+                    value={formData.exportVessel}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="exportVessel"
+                    name="exportVessel"
+                  >
+                    <option value="">Barco</option>
+                    <option value="MV Puerto Limón">MV Puerto Limón</option>
+                    <option value="MV Cahuita">MV Cahuita</option>
+                    <option value="MV Costa Rica Carrier">
+                      MV Costa Rica carrier
+                    </option>
+                  </select>
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="TIRNumber" className="in-movement-label">
+                    TIR
+                  </label>
+                  <input
+                    value={formData.TIRNumber}
+                    onChange={handleChange}
+                    type="text"
+                    className="input-in"
+                    placeholder="TIR"
+                    id="TIRNumber"
+                    name="TIRNumber"
+                  />
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="weight" className="in-movement-label">
+                    Peso
+                  </label>
+                  <input
+                    value={formData.weight}
+                    onChange={handleChange}
+                    type="text"
+                    className="input-in"
+                    placeholder="Peso"
+                    id="weight"
+                    name="weight"
+                  />
+                </div>
+
+                <div className="in-movement-item">
+                  <label htmlFor="notes" className="in-movement-label">
+                    Observaciones
+                  </label>
+                  <input
+                    value={formData.notes}
+                    onChange={handleChange}
+                    type="text"
+                    className="input-in"
+                    placeholder="Observaciones"
+                    id="notes"
+                    name="notes"
+                  />
+                </div>
+
               <div className="in-movement-item">
                 <label htmlFor="truckId" className="in-movement-label">
                   Número de placa del camión
@@ -470,57 +658,6 @@ function InMovements() {
               </div>
 
               <div className="in-movement-item">
-                <label htmlFor="commodity" className="in-movement-label">
-                  Mercancía
-                </label>
-                <input
-                  value={formData.commodity}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="Mercancía"
-                  id="commodity"
-                  name="commodity"
-                />
-              </div>
-
-              <div className="in-movement-item">
-                <label htmlFor="quantity" className="in-movement-label">
-                  Bultos
-                </label>
-                <input
-                  value={formData.quantity}
-                  onChange={handleChange}
-                  type="number"
-                  className="input-in"
-                  placeholder="Número de bultos"
-                  id="quantity"
-                  name="quantity"
-                />
-              </div>
-
-              <div className="in-movement-item">
-                <label htmlFor="packageType">Tipo de Bulto</label>
-                <select
-                  id="packageType"
-                  name="packageType"
-                  className="select-in"
-                  value={formData.packageType}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Seleccione un tipo</option>
-                  <option value="BAG">Bolsa</option>
-                  <option value="BOX">Caja</option>
-                  <option value="PKG">Bultos</option>
-                  <option value="UNT">Unidad</option>
-                  <option value="VEH">Vehículo</option>
-                  <option value="PAE">Paletas</option>
-                  <option value="TRY">Bandeja</option>
-                </select>
-              </div>
-
-              <div className="in-movement-item">
                 <label htmlFor="sealNumber_1" className="in-movement-label">
                   Precinto 1
                 </label>
@@ -564,6 +701,7 @@ function InMovements() {
                   name="storageLocation"
                 />
               </div>
+
             </section>
           </fieldset>
           <button type="submit">Confirmar ingreso de mercancía</button>
@@ -587,30 +725,8 @@ export default InMovements;
 
 /*
 
-import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import calculateCheckDigit from "../../services/calculateCheckDigit.js";
-import { toast } from "react-toastify";
-import "./in_movements.css";
-import { uploadDataToMongoDB } from "../../services/uploadService.js";
-import Footer from "../../components/footer/Footer.js";
-import Header from "../../components/header/Header.js";
-
 function InMovements() {
-  const { user } = useContext(AuthContext);
-  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  const [customers, setCustomers] = useState([]);
-  const [customsNumbers, setcustomsNumbers] = useState([]);
-  const [truckCompanies, setTruckCompanies] = useState([]);
-  const [currentDateTime, setCurrentDateTime] = useState({
-    currentDate: "",
-    currentTime: "",
-  });
 
-  const [isReefer, setIsReefer] = useState(false);
-  const [requireTempVent, setRequireTempVent] = useState(false);
 
   const [formData, setFormData] = useState({
     gateInOrGateOut: "In",
@@ -634,40 +750,6 @@ function InMovements() {
     exportVessel: "",
     weight: "",
     notes: "",
-  });
-  // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
-  useEffect(() => {
-    const isReeferContainer =
-      formData.containerType === "RFH" || formData.containerType === "RFS";
-    setIsReefer(isReeferContainer);
-
-    // Requiere temp y vent solo si es reefer y está lleno
-    const requiresTemperatureAndVentilation =
-      isReeferContainer && formData.fullOrEmpty === "Full";
-    setRequireTempVent(requiresTemperatureAndVentilation);
-  }, [formData.containerType, formData.fullOrEmpty]);
-
-  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
-  useEffect(() => {
-    if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión
-      navigate("/");
-    } else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/terminal-map");
-    }
-    // Puedes agregar más condiciones para otros roles si es necesario
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
-
-
-  // Calcula la fecha máxima permitida (hoy)
-  const maxDate = new Date().toISOString().split("T")[0];
-
-  // Calcula la hora máxima permitida (hora actual)
-  const maxTime = new Date().toLocaleTimeString("en-GB", {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
   });
 
   // Validación de fecha y hora futura
@@ -706,24 +788,6 @@ function InMovements() {
       ...prevData,
       [name]: updatedValue,
     }));
-  };
-
-  const handleCheckDigit = () => {
-    // Asume que el dígito verificador es el último caracter del número de contenedor
-    const containerNumber = formData.containerNumber;
-    const actualCheckDigit = parseInt(containerNumber.slice(-1), 10);
-    const calculatedCheckDigit = calculateCheckDigit(
-      containerNumber.slice(0, -1)
-    );
-
-    if (actualCheckDigit !== calculatedCheckDigit) {
-      alert("Número de contenedor incorrecto");
-      // Limpiar el input de containerNumber al establecer su valor a una cadena vacía
-      setFormData({
-        ...formData,
-        containerNumber: "",
-      });
-    }
   };
 
   const handleUpload = async () => {
@@ -844,34 +908,7 @@ function InMovements() {
                     required
                   />
                 </div>
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="customer" className="in-movement-label">
-                    Cliente
-                  </label>
-                  <select
-                    value={formData.customer}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="customer"
-                    name="customer"
-                    required
-                  >
-                    <option value="">Seleccione el cliente</option>
-                    <option value="Cool Carriers">Cool Carriers</option>
-                    <option value="Baltic Reefers">Baltic Reefers</option>
-                    <option value="Seatrade">Seatrade</option>
-                    <option value="Hamburg sud">Hamburg Sud</option>
-                    <option value="Maersk">Maersk</option>
-                    <option value="China Shipping">China Shipping</option>
-                    <option value="APL">APL</option>
-                    <option value="EWL">EWL</option>
-                    <option value="Streamlines">Streamlines</option>
-                    <option value="CMA-CGM">CMA-CGM</option>
-                    <option value="Hapag Lloyd">Hapag Lloyd</option>
-                    <option value=""></option>
-                  </select>
-                </div>
+                
                 <div className="in-movement-item">
                   
                   <label
@@ -891,26 +928,7 @@ function InMovements() {
                     required
                   />
                 </div>
-                <div className="in-movement-item">
-                  
-                  <label
-                    htmlFor="containerNumber"
-                    className="in-movement-label"
-                  >
-                    Número de contenedor
-                  </label>
-                  <input
-                    value={formData.containerNumber}
-                    onChange={handleChange}
-                    onBlur={handleCheckDigit} // Se ejecuta handleCheckDigit cuando el input pierde el foco
-                    type="text"
-                    className="input-in"
-                    placeholder="Contenedor"
-                    id="containerNumber"
-                    name="containerNumber"
-                    required
-                  />
-                </div>
+            
                 <div className="in-movement-item">
                   
                   <label htmlFor="truckID" className="in-movement-label">
@@ -927,89 +945,9 @@ function InMovements() {
                     required
                   />
                 </div>
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="truckCo" className="in-movement-label">
-                    Transportista
-                  </label>
-                  <select
-                    value={formData.truckCo}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="truckCo"
-                    name="truckCo"
-                    required
-                  >
-                    <option value="">Seleccione transportista</option>
-                    <option value="Metrocaribe">Metrocaribe</option>
-                    <option value="THL">THL</option>
-                    <option value="Matamoros">Matamoros</option>
-                    <option value="Alamo">Alamo</option>
-                    <option value="Grant">Grant</option>
-                    <option value="H&H">H&H</option>
-                    <option value="Trans Costa Rica">Trans CR</option>
-                  </select>
-                </div>
-                <div className="in-movement-item">
-                  {" "}
-                  
-                  <label htmlFor="" className="in-movement-label">
-                    Tam
-                  </label>
-                  <select
-                    value={formData.containerSize}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerSize"
-                    name="containerSize"
-                    required
-                  >
-                    <option value="">Seleccione tamaño</option>
-                    <option value="40">40</option>
-                    <option value="20">20</option>
-                    <option value="10">10</option>
-                  </select>
-                </div>
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="containerType" className="in-movement-label">
-                    Tipo
-                  </label>
-                  <select
-                    value={formData.containerType}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerType"
-                    name="containerType"
-                    required
-                  >
-                    <option value="">Seleccione tipo</option>
-                    <option value="RFH">RFH</option>
-                    <option value="RFS">RFS</option>
-                    <option value="DV">DV</option>
-                    <option value="OT">OT</option>
-                    <option value="TK">TK</option>
-                    <option value="FR">FR</option>
-                  </select>
-                </div>
-                <div className="in-movement-item">
                 
-                  <label htmlFor="fullOrEmpty" className="in-movement-label">
-                    Status
-                  </label>
-                  <select
-                    value={formData.fullOrEmpty}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="fullOrEmpty"
-                    name="fullOrEmpty"
-                    required
-                  >
-                    <option value="">Seleccione status</option>
-                    <option value="Empty">Vacío</option>
-                    <option value="Full">Cargado</option>
-                  </select>
-                </div>
+                
+                
                 <div className="in-movement-item">
                   
                   <label htmlFor="sealNumber_1" className="in-movement-label">
@@ -1046,149 +984,8 @@ function InMovements() {
                   />
                 </div>
 
-                <div className="in-movement-item">
                 
-                  <label htmlFor="temperature" className="in-movement-label">
-                    Temp
-                  </label>
-                  <input
-                    value={formData.temperature}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Temp"
-                    id="temperature"
-                    name="temperature"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="ventilation" className="in-movement-label">
-                    Vent
-                  </label>
-                  <input
-                    value={formData.ventilation}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Vent"
-                    id="ventilation"
-                    name="ventilation"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
 
-                <div className="in-movement-item">
-           
-                  <label
-                    htmlFor="portOfDestination"
-                    className="in-movement-label"
-                  >
-                    Puerto de destino
-                  </label>
-                  <select
-                    value={formData.portOfDestination}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="portOfDestination"
-                    name="portOfDestination"
-                  >
-                    <option value="">POD</option>
-                    <option value="NLRTM">Rotterdam, Países Bajos</option>
-                    <option value="DEHAM">Hamburgo, Alemania</option>
-                    <option value="BEAMB">Amberes, Bélgica</option>
-                    <option value="PAMTZ">Manzanillo, Panamá</option>
-                    <option value="HNPTC">Puerto Cortés, Honduras</option>
-                    <option value="BRSSZ">Santos, Brasil</option>
-                    <option value="COCTG">Cartagena, Colombia</option>
-                    <option value="PECHP">Callao, Perú</option>
-                    <option value="USLAX">Los Ángeles, USA</option>
-                    <option value="USLGB">Long Beach, USA</option>
-                    <option value="USNYC">Nueva York, USA</option>
-                    <option value="GBFEL">Felixstowe, Gran Bretaña</option>
-                    <option value="GBLON">Londres, Gran Bretaña</option>
-                    <option value="GBSOU">Southampton, Gran Bretaña</option>
-                    <option value="GBBST">Bristol, Gran Bretaña</option>
-                  </select>
-                </div>
-
-                <div className="in-movement-item">
-                 
-                  <label htmlFor="exportVessel" className="in-movement-label">
-                    Barco de exportación
-                  </label>
-                  <select
-                    value={formData.exportVessel}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="exportVessel"
-                    name="exportVessel"
-                  >
-                    <option value="">Barco</option>
-                    <option value="MV Puerto Limón">MV Puerto Limón</option>
-                    <option value="MV Cahuita">MV Cahuita</option>
-                    <option value="MV Costa Rica carrier">
-                      MV Costa Rica carrier
-                    </option>
-                    <option value="MV Pueblo Nuevo Bay">
-                      MV Pueblo Nuevo Bay
-                    </option>
-                    <option value="MV Cieneguita Hope">
-                      MV Cieneguita Hope
-                    </option>
-                    <option value="MV Maersk Cerro Mocho">
-                      MV Maersk Cerro Mocho
-                    </option>
-                    <option value="MV CMA-CGM Moin">MV CMA-CGM Moin</option>
-                  </select>
-                </div>
-
-                <div className="in-movement-item">
-                 
-                  <label htmlFor="ventilation" className="in-movement-label">
-                    TIR
-                  </label>
-                  <input
-                    value={formData.TIRNumber}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="TIR"
-                    id="TIRNumber"
-                    name="TIRNumber"
-                  />
-                </div>
-                <div className="in-movement-item">
-                 
-                  <label htmlFor="weight" className="in-movement-label">
-                    Peso
-                  </label>
-                  <input
-                    value={formData.weight}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Peso"
-                    id="weight"
-                    name="weight"
-                  />
-                </div>
-                <div className="in-movement-item">
-               
-                  <label htmlFor="notes" className="in-movement-label">
-                    Observaciones
-                  </label>
-                  <input
-                    value={formData.notes}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Observaciones"
-                    id="notes"
-                    name="notes"
-                  />
-                </div>
               </section>
             </fieldset>
             <button type="submit">Confirmar ingreso de contenedor</button>
