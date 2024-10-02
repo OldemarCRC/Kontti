@@ -1,5 +1,5 @@
 import React, { useContext, useState, useEffect } from "react";
-import { useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
@@ -21,7 +21,6 @@ const ChangePassword = () => {
 
   // Navigation
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (!user) {
@@ -47,9 +46,9 @@ const ChangePassword = () => {
 
   // Delay time & Navigation
   const delay = () => {
-    sessionStorage.removeItem("user"); 
-    dispatch({ type: "LOGOUT" }); 
-    navigate("/"); 
+    sessionStorage.removeItem("user");
+    dispatch({ type: "LOGOUT" });
+    navigate("/");
   };
 
   // User Submit for Password Change
@@ -61,15 +60,11 @@ const ChangePassword = () => {
       return;
     }
     try {
-      
-      await axios.put(
-        `${process.env.REACT_APP_API_URL}/auth/change-password`,
-        {
-          userId: user._id,
-          currentPassword: password,
-          newPassword,
-        }
-      );
+      await axios.put(`${process.env.REACT_APP_API_URL}/auth/change-password`, {
+        userId: user._id,
+        currentPassword: password,
+        newPassword,
+      });
       notify(); // Notificar al usuario sobre el cambio exitoso
     } catch (error) {
       console.log("REQUEST ERROR:", error.response ? error.response : error);
@@ -80,13 +75,14 @@ const ChangePassword = () => {
   return (
     <>
       <Header />
-      
+
       <div className="change-password-container">
         <div className="change-password-form">
           <form onSubmit={handleSubmit}>
-            <h5 className="change-password-message">
-              Cambiar contraseña para: {user?.username}
-            </h5>
+            <h4 className="change-password-text">
+              Cambiar contraseña para:
+            </h4>
+            <p className="change-password-text">{user?.username}</p>
             <div className="label-input">
               <label className="form-label" htmlFor="password">
                 Contraseña actual

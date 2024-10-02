@@ -77,7 +77,8 @@ const Login = () => {
         <div className="login-form">
           <form>
             <div>
-              <h3 className="app-name">Kontti Containers Hub App</h3>
+              <h1 className="app-name">Kontti</h1>
+              <h2>Containers Hub App</h2>
             </div> 
             <h5 className="login-message">Inicia sesión en tu cuenta</h5>
             <div className="label-input">
