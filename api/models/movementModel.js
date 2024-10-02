@@ -1,120 +1,189 @@
 import mongoose from "mongoose";
-const MovementSchema = new mongoose.Schema({
-  gateInOrGateOut: {
-    type: String,
-    required: true,
-    enum: ["In", "Out"],
-  },
-  idNumber: {
-    type: String,
-    required: false,
-  },
-  customerName: {//naviera en listados
-    type: String,
-    required: true,
-  },
-  containerNumber: {
-    type: String,
-    required: true,
-  },
-  truckId: {
-    type: String,
-    required: true,
-  },
-  truckCo: {
-    type: String,
-    required: true,
-  },
-  truckDriver: {
-    type: String,
-    required: true,
-  },
-  dateAndTime: {
-    type: Date,
-    required: true,
-  },
-  customsNumber: {
-    type: Number,
-    required: true,
-  },
-  ticaSequence: {
-    type: Number,
-    required: true,
-  },
-  BLNumber: {
-    type: String,
-    required: false,
-  },
-  containerSize: {
-    type: Number,
-    required: true,
-  },
-  containerType: {
-    type: String,
-    required: true,
-  },
-  fullOrEmpty: {///status en listados de movimientos e inventarios
-    type: String,
-    required: true,
-  },
-  originOrDestination: {
-    type: String,
-    required: true,
-  },
-  portOfDestination: {
-    type: String,
-    required: false,
-  },
-  exportVessel: {
-    type: String,
-    required: false,
-  },
-  reeferDamage: {
-    type: Boolean,
-    default: false,
-    require:  false,
-  },
-  boxDamage: {
-    type: Boolean,
-    default: false,
-    require:  false,
-  },
-  damageComments :{
-     type:String,
-     required: false
-  } ,
-  sealNumber_1: {
-    type: String,
-    required: false,
-  },
-  sealNumber_2: {
-    type: String,
-    required: false,
-  },
-  temperature: {
-    type: String,
-    required: false,
-  },
-  ventilation: {
-    type: String,
-    required: false,
-  },
-  TIRNumber: {
-    type: String,
-    required: false,
-  },
-  weight:{
-    type:  Number,
-    required:false
-   },
-  notes: {//observaciones en listados
-    type: String,
-    required: false,
-  },
-  createdBy: {
-    type: String,
-    required: true,
-  },
-},{ collection: 'movements' });
+const MovementSchema = new mongoose.Schema(
+  {
+    movement: {
+      type: String,
+      required: true,
+      enum: ["In", "Out"],
+    },
+    entryType: {
+      type: String,
+      enum: ["import", "customsAux", "fromShipperOrConsignee"],
+      required: function () {
+        return this.movement === "In";
+      },
+    },
+    departureType: {
+      type: String,
+      enum: ["export", "toConsignee", "toCustomsAux"],
+      required: function () {
+        return this.movement === "Out";
+      },
+    },
+    customsNumber: {
+      type: Number,
+      required: function () {
+        return this.entryType === "import" || this.departureType === "export";
+      },
+    },
+    motorVessel: {
+      type: String,
+      required: function () {
+        return this.entryType === "import" || this.departureType === "export";
+      },
+    },
+    dateAndTime: {
+      type: Date,
+      required: true,
+    },
+    customerName: {
+      type: String,
+      required: true,
+    },
+    containerNumber: {
+      type: String,
+      required: true,
+    },
+    containerSize: {
+      type: Number,
+      enum: [10, 20, 40, 45],
+      required: true,
+    },
+    containerType: {
+      type: String,
+      enum: ["DV", "DC", "HC", "RF", "RFH", "OT", "FR"],
+      required: true,
+    },
+    isEmpty: {
+      type: Boolean,
+      required: true,
+    },
+    commodity: {
+      type: String,
+      required: function () {
+        return this.empty === false;
+      },
+    },
+    weight: {
+      type: Number,
+      required: true,
+    },
+    portOfDestination: {
+      type: String,
+      required: function () {
+        return this.departureType === "export";
+      },
+    },
+    portOfOrigin: {
+      type: String,
+      required: function () {
+        return this.entryType === "import";
+      },
+    },
+    consigneeName: {
+      type: String,
+      required: function () {
+        return this.departureType === "toConsignee";
+      },
+    },
+    truckId: {
+      type: String,
+      required: true,
+    },
+    truckCo: {
+      type: String,
+      required: true,
+    },
+    truckDriver: {
+      type: String,
+      required: true,
+    },
+    sealNumber_1: {
+      type: String,
+      required: false,
+    },
+    sealNumber_2: {
+      type: String,
+      required: false,
+    },
+    /*Non-Operating Reefer*/
+    isNOR: {
+      type: Boolean,
+      required: function () {
+        return (
+          !this.isEmpty &&
+          (this.containerType === "RF" || this.containerType === "RFH")
+        );
+      },
+    },
+    temperature: {
+      type: String,
+      required: function () {
+        return !this.isEmpty && !this.isNOR;
+      },
+    },
+    ventilation: {
+      type: String,
+      required: function () {
+        return !this.isEmpty && !this.isNOR;
+      },
+    },
+    TIRNumber: {
+      type: String,
+      required: false,
+    },
 
-export default mongoose.model("Movement", MovementSchema)
+    /*aun no confirmo con el usuario si los siguientes dos atributos son necesarios
+    ticaSequence: {
+      type: Number,
+      required: true,
+    },
+    BLNumber: {
+      type: String,
+      required: false,
+    },
+*/
+    reeferDamage: {
+      type: Boolean,
+      default: false,
+      require: false,
+    },
+    boxDamage: {
+      type: Boolean,
+      default: false,
+      require: false,
+    },
+    damageComments: {
+      type: String,
+      required: false,
+    },
+    notes: {
+      //observaciones en listados
+      type: String,
+      required: false,
+    },
+    createdBy: {
+      type: String,
+      required: true,
+    },
+  },
+  { collection: "movements" }
+);
+
+MovementSchema.pre("validate", function (next) {
+  if (this.movement === "In" && this.departureType) {
+    this.invalidate(
+      "departureType",
+      "departureType should not be set when movement is In"
+    );
+  }
+  if (this.movement === "Out" && this.entryType) {
+    this.invalidate(
+      "entryType",
+      "entryType should not be set when movement is Out"
+    );
+  }
+  next();
+});
+
+export default mongoose.model("Movement", MovementSchema);

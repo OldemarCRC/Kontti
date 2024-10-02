@@ -22,30 +22,36 @@ function InMovements() {
     currentTime: "",
   });
   const [formData, setFormData] = useState({
-    gateInOrGateOut: "In",
-    idNumber: "",
+    movement: "In",
+    entryType: "",
+    customsNumber: "",
+    motorVessel: "",
+    dateAndTime: "",
     customerName: "",
     containerNumber: "",
+    containerSize: "",
+    containerType: "",
+    isEmpty: "",
+    commodity: "",
+    weight: "",
+    portOfOrigin: "",
     truckId: "",
     truckCo: "",
     truckDriver: "",
-    date: "",
-    time: "",
-    customsNumber: "",
-    BLNumber: "",
-    ticaSequence: "",
-    BLLineNumber: "",
-    commodity: "",
     sealNumber_1: "",
     sealNumber_2: "",
-    storageLocation: "",
+    isNOR: "",
+    temperature: "",
+    ventilation: "",
+    TIRNumber: "",
+    notes: "",
     createdBy: "",
   });
 
   // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
   useEffect(() => {
     const isReeferContainer =
-      formData.containerType === "RFH" || formData.containerType === "RFS";
+      formData.containerType === "RFH" || formData.containerType === "RF";
     setIsReefer(isReeferContainer);
 
     // Requiere temp y vent solo si es reefer y está lleno
@@ -110,15 +116,14 @@ function InMovements() {
       // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
       navigate("/terminal-map");
     }
-  
+
     // Obtener la fecha y hora actual
     const now = new Date();
     const currentDate = now.toISOString().slice(0, 10); // Formato AAAA-MM-DD
     const currentTime = now.toTimeString().slice(0, 5); // Formato HH:MM
-  
+
     // Actualizar el estado con la fecha y hora actuales
     setCurrentDateTime({ currentDate, currentTime });
-  
   }, [user, navigate, setCurrentDateTime]);
 
   const handleCheckDigit = () => {
@@ -151,7 +156,10 @@ function InMovements() {
     setFormData({
       ...formData,
       customsNumber: selectedNumber,
-      min_date: selectedManifest ? selectedManifest.officialArrivalDate.split("T")[0] : "", // Fecha mínima
+      motorVessel: selectedManifest ? selectedManifest.motorVessel : "",
+      min_date: selectedManifest
+        ? selectedManifest.officialArrivalDate.split("T")[0]
+        : "", // Fecha mínima
     });
   };
 
@@ -171,9 +179,7 @@ function InMovements() {
         "containerNumber",
         "truckId",
         "truckDriver",
-        "BLNumber",
         "commodity",
-        "storageLocation",
       ];
       const processedValue = fieldsToUpperCase.includes(name)
         ? value.toUpperCase()
@@ -194,45 +200,50 @@ function InMovements() {
     const dataToUpload = {
       ...formData,
       dateAndTime: dateTime,
-      BLLineNumber: parseInt(formData.BLLineNumber, 10),
-      quantity: parseInt(formData.quantity, 10),
+      /*       BLLineNumber: parseInt(formData.BLLineNumber, 10),
+      quantity: parseInt(formData.quantity, 10), */
+      isNOR:false,
       createdBy: user.username,
     };
 
     // Validar que los valores convertidos sean válidos
-    if (isNaN(dataToUpload.BLLineNumber) || dataToUpload.BLLineNumber <= 0) {
+    /*     if (isNaN(dataToUpload.BLLineNumber) || dataToUpload.BLLineNumber <= 0) {
       toast.error("BLLineNumber debe ser un número mayor a cero");
       return;
-    }
+    } */
 
-    if (isNaN(dataToUpload.quantity) || dataToUpload.quantity <= 0) {
+    /*     if (isNaN(dataToUpload.quantity) || dataToUpload.quantity <= 0) {
       toast.error("quantity debe ser un número mayor a cero");
       return;
-    }
+    } */
 
     try {
       await uploadDataToMongoDB(dataToUpload, "movements");
       toast.success("¡Ingreso exitoso!");
       setFormData({
-        gateInOrGateOut: "In",
-        idNumber: "",
+        movement: "In",
+        entryType: "",
+        customsNumber: "",
+        motorVessel: "",
+        dateAndTime: "",
         customerName: "",
         containerNumber: "",
+        containerSize: "",
+        containerType: "",
+        isEmpty: "",
+        commodity: "",
+        weight: "",
+        portOfOrigin: "",
         truckId: "",
         truckCo: "",
         truckDriver: "",
-        date: "",
-        time: "",
-        customsNumber: "",
-        BLNumber: "",
-        ticaSequence: "",
-        BLLineNumber: "",
-        quantity: "",
-        packageType: "",
-        commodity: "",
         sealNumber_1: "",
         sealNumber_2: "",
-        storageLocation: "",
+        isNOR: "",
+        temperature: "",
+        ventilation: "",
+        TIRNumber: "",
+        notes: "",
         createdBy: "",
       });
     } catch (error) {
@@ -268,12 +279,35 @@ function InMovements() {
       <div className="in-movement-container">
         <div className="in-movement-header">
           <h2>Ingreso de contenedores</h2>
-          <p>Registrar ingreso de contenedores al estacionamiento transitorio.</p>
+          <p>
+            Registrar ingreso de contenedores al estacionamiento transitorio.
+          </p>
         </div>
         <form className="in-movement-form" onSubmit={handleSubmit}>
           <fieldset>
             <legend className="legend">Ingresos</legend>
             <section className="data">
+              <div className="in-movement-item">
+                <label htmlFor="entryType" className="in-movement-label">
+                  Tipo de ingreso
+                </label>
+                <select
+                  value={formData.entryType}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="entryType"
+                  name="entryType"
+                  required
+                >
+                  <option value="">Seleccione tipo de ingreso</option>
+                  <option value="import">Importación</option>
+                  <option value="customsAux">Ingreso de otros predios</option>
+                  <option value="fromShipperOrConsignee">
+                    Ingreso de finca
+                  </option>
+                </select>
+              </div>
+
               <div className="in-movement-item">
                 <label htmlFor="customsNumber" className="in-movement-label">
                   No. de manifiesto
@@ -292,6 +326,26 @@ function InMovements() {
                       {manifest.customsNumber}
                     </option>
                   ))}
+                </select>
+              </div>
+
+              <div className="in-movement-item">
+                <label htmlFor="motorVessel" className="in-movement-label">
+                  Barco
+                </label>
+                <select
+                  value={formData.motorVessel}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="motorVessel"
+                  name="motorVessel"
+                >
+                  <option value="">Barco</option>
+                  <option value="MV Puerto Limón">MV Puerto Limón</option>
+                  <option value="MV Cahuita">MV Cahuita</option>
+                  <option value="MV Costa Rica Carrier">
+                    MV Costa Rica carrier
+                  </option>
                 </select>
               </div>
 
@@ -315,7 +369,7 @@ function InMovements() {
                   ))}
                 </select>
               </div>
-              
+
               <div className="in-movement-item">
                 <label htmlFor="date" className="in-movement-label">
                   Fecha
@@ -353,8 +407,7 @@ function InMovements() {
                 />
               </div>
 
-
-              <div className="in-movement-item">
+              {/*  <div className="in-movement-item">
                 <label htmlFor="BLNumber" className="in-movement-label">
                   BL nro.
                 </label>
@@ -367,9 +420,9 @@ function InMovements() {
                   id="BLNumber"
                   name="BLNumber"
                 />
-              </div>
+              </div> */}
 
-              <div className="in-movement-item">
+              {/* <div className="in-movement-item">
                 <label htmlFor="ticaSequence" className="in-movement-label">
                   Secuencia TICA.
                 </label>
@@ -382,9 +435,9 @@ function InMovements() {
                   id="ticaSequence"
                   name="ticaSequence"
                 />
-              </div>
+              </div> */}
 
-              <div className="in-movement-item">
+              {/*  <div className="in-movement-item">
                 <label htmlFor="BLLineNumber" className="in-movement-label">
                   Línea del bl.
                 </label>
@@ -398,208 +451,203 @@ function InMovements() {
                   name="BLLineNumber"
                   min="0"
                 />
-              </div>
-
+              </div> */}
 
               <div className="in-movement-item">
-                  <label
-                    htmlFor="containerNumber"
-                    className="in-movement-label"
-                  >
-                    Número de contenedor
-                  </label>
-                  <input
-                    value={formData.containerNumber}
-                    onChange={handleChange}
-                    onBlur={handleCheckDigit} // Se ejecuta handleCheckDigit cuando el input pierde el foco
-                    type="text"
-                    className="input-in"
-                    placeholder="Contenedor"
-                    id="containerNumber"
-                    name="containerNumber"
-                    required
-                  />
-                </div>
+                <label htmlFor="containerNumber" className="in-movement-label">
+                  Número de contenedor
+                </label>
+                <input
+                  value={formData.containerNumber}
+                  onChange={handleChange}
+                  onBlur={handleCheckDigit} // Se ejecuta handleCheckDigit cuando el input pierde el foco
+                  type="text"
+                  className="input-in"
+                  placeholder="Contenedor"
+                  id="containerNumber"
+                  name="containerNumber"
+                  required
+                />
+              </div>
 
-                <div className="in-movement-item">
-                  {" "}
-                  
-                  <label htmlFor="" className="in-movement-label">
-                    Tam
-                  </label>
-                  <select
-                    value={formData.containerSize}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerSize"
-                    name="containerSize"
-                    required
-                  >
-                    <option value="">Seleccione tamaño</option>
-                    <option value="40">40</option>
-                    <option value="20">20</option>
-                    <option value="10">10</option>
-                  </select>
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="" className="in-movement-label">
+                  Tam
+                </label>
+                <select
+                  value={formData.containerSize}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="containerSize"
+                  name="containerSize"
+                  required
+                >
+                  <option value="">Seleccione tamaño</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="40">40</option>
+                  <option value="45">40</option>
+                </select>
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="containerType" className="in-movement-label">
-                    Tipo
-                  </label>
-                  <select
-                    value={formData.containerType}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerType"
-                    name="containerType"
-                    required
-                  >
-                    <option value="">Seleccione tipo</option>
-                    <option value="RFH">RFH</option>
-                    <option value="RFS">RFS</option>
-                    <option value="DV">DV</option>
-                    <option value="OT">OT</option>
-                    <option value="TK">TK</option>
-                    <option value="FR">FR</option>
-                  </select>
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="containerType" className="in-movement-label">
+                  Tipo
+                </label>
+                <select
+                  value={formData.containerType}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="containerType"
+                  name="containerType"
+                  required
+                >
+                  <option value="">Seleccione tipo</option>
+                  <option value="RFH">RFH</option>
+                  <option value="RF">RF</option>
+                  <option value="HC">HC</option>
+                  <option value="DV">DV</option>
+                  <option value="DC">DC</option>
+                  <option value="OT">OT</option>
+                  <option value="TK">TK</option>
+                  <option value="FR">FR</option>
+                </select>
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="fullOrEmpty" className="in-movement-label">
-                    Status
-                  </label>
-                  <select
-                    value={formData.fullOrEmpty}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="fullOrEmpty"
-                    name="fullOrEmpty"
-                    required
-                  >
-                    <option value="">Seleccione status</option>
-                    <option value="Empty">Vacío</option>
-                    <option value="Full">Cargado</option>
-                  </select>
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="isEmpty" className="in-movement-label">
+                  Status
+                </label>
+                <select
+                  value={formData.isEmpty.toString()}
+                  onChange={(e) => {
+                    const value = e.target.value === "true";
+                    handleChange({
+                      target: {
+                        name: "isEmpty",
+                        value: value,
+                      },
+                    });
+                  }}
+                  className="select-in"
+                  id="isEmpty"
+                  name="isEmpty"
+                  required
+                >
+                  <option value="">Seleccione status</option>
+                  <option value="true">Vacío</option>
+                  <option value="false">Cargado</option>
+                </select>
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="temperature" className="in-movement-label">
-                    Temp
-                  </label>
-                  <input
-                    value={formData.temperature}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Temp"
-                    id="temperature"
-                    name="temperature"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="ventilation" className="in-movement-label">
-                    Vent
-                  </label>
-                  <input
-                    value={formData.ventilation}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Vent"
-                    id="ventilation"
-                    name="ventilation"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="commodity" className="in-movement-label">
+                  Mercancía
+                </label>
+                <input
+                  value={formData.commodity}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="commodity"
+                  id="commodity"
+                  name="commodity"
+                />
+              </div>
 
-                <div className="in-movement-item">
-                  <label
-                    htmlFor="portOfDestination"
-                    className="in-movement-label"
-                  >
-                    Puerto de destino
-                  </label>
-                  <select
-                    value={formData.portOfDestination}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="portOfDestination"
-                    name="portOfDestination"
-                  >
-                    <option value="">POD</option>
-                    <option value="NLRTM">Rotterdam, Países Bajos</option>
-                    <option value="DEHAM">Hamburgo, Alemania</option>
-                    <option value="BEAMB">Amberes, Bélgica</option>
+              <div className="in-movement-item">
+                <label htmlFor="temperature" className="in-movement-label">
+                  Temp
+                </label>
+                <input
+                  value={formData.temperature}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="Temp"
+                  id="temperature"
+                  name="temperature"
+                  disabled={!isReefer} // Deshabilita si no es reefer
+                />
+              </div>
+              <div className="in-movement-item">
+                <label htmlFor="ventilation" className="in-movement-label">
+                  Vent
+                </label>
+                <input
+                  value={formData.ventilation}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="Vent"
+                  id="ventilation"
+                  name="ventilation"
+                  disabled={!isReefer} // Deshabilita si no es reefer
+                />
+              </div>
 
-                  </select>
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="portOfOrigin" className="in-movement-label">
+                  Puerto de origen
+                </label>
+                <select
+                  value={formData.portOfOrigin}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="portOfOrigin"
+                  name="portOfOrigin"
+                >
+                  <option value="">PO</option>
+                  <option value="NLRTM">Rotterdam, Países Bajos</option>
+                  <option value="DEHAM">Hamburgo, Alemania</option>
+                  <option value="BEAMB">Amberes, Bélgica</option>
+                </select>
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="exportVessel" className="in-movement-label">
-                    Barco de exportación
-                  </label>
-                  <select
-                    value={formData.exportVessel}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="exportVessel"
-                    name="exportVessel"
-                  >
-                    <option value="">Barco</option>
-                    <option value="MV Puerto Limón">MV Puerto Limón</option>
-                    <option value="MV Cahuita">MV Cahuita</option>
-                    <option value="MV Costa Rica Carrier">
-                      MV Costa Rica carrier
-                    </option>
-                  </select>
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="TIRNumber" className="in-movement-label">
+                  TIR
+                </label>
+                <input
+                  value={formData.TIRNumber}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="TIR"
+                  id="TIRNumber"
+                  name="TIRNumber"
+                />
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="TIRNumber" className="in-movement-label">
-                    TIR
-                  </label>
-                  <input
-                    value={formData.TIRNumber}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="TIR"
-                    id="TIRNumber"
-                    name="TIRNumber"
-                  />
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="weight" className="in-movement-label">
+                  Peso
+                </label>
+                <input
+                  value={formData.weight}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="Peso"
+                  id="weight"
+                  name="weight"
+                />
+              </div>
 
-                <div className="in-movement-item">
-                  <label htmlFor="weight" className="in-movement-label">
-                    Peso
-                  </label>
-                  <input
-                    value={formData.weight}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Peso"
-                    id="weight"
-                    name="weight"
-                  />
-                </div>
-
-                <div className="in-movement-item">
-                  <label htmlFor="notes" className="in-movement-label">
-                    Observaciones
-                  </label>
-                  <input
-                    value={formData.notes}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Observaciones"
-                    id="notes"
-                    name="notes"
-                  />
-                </div>
+              <div className="in-movement-item">
+                <label htmlFor="notes" className="in-movement-label">
+                  Observaciones
+                </label>
+                <input
+                  value={formData.notes}
+                  onChange={handleChange}
+                  type="text"
+                  className="input-in"
+                  placeholder="Observaciones"
+                  id="notes"
+                  name="notes"
+                />
+              </div>
 
               <div className="in-movement-item">
                 <label htmlFor="truckId" className="in-movement-label">
@@ -701,7 +749,6 @@ function InMovements() {
                   name="storageLocation"
                 />
               </div>
-
             </section>
           </fieldset>
           <button type="submit">Confirmar ingreso de mercancía</button>
@@ -713,15 +760,6 @@ function InMovements() {
 }
 
 export default InMovements;
-
-
-
-
-
-
-
-
-
 
 /*
 

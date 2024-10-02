@@ -2,13 +2,13 @@ import Movement from "../models/movementModel.js";
 import Inventory from "../models/inventoryModel.js";
 
 export const createMovement = async (req, res) => {
-  const { containerNumber, gateInOrGateOut } = req.body;
+  const { containerNumber, movement } = req.body;
   try {
     // Primero, verifica si el contenedor ya existe en el inventario
     const existingInventory = await Inventory.findOne({ containerNumber });
   
    // Verifica si el movimiento es un ingreso
-    if (gateInOrGateOut === "In") {
+    if (movement === "In") {
       //Verifica si el contenedor ya está en el inventario.
       if (existingInventory) {
         return res
@@ -20,7 +20,7 @@ export const createMovement = async (req, res) => {
       const savedMovement = await newMovement.save();
       
 
-      const inventoryData = {
+      /* const inventoryData = {
         customer: savedMovement.customer,
         containerNumber: savedMovement.containerNumber,
         containerSize: savedMovement.containerSize,
@@ -35,16 +35,16 @@ export const createMovement = async (req, res) => {
         temperature: savedMovement.temperature,
         ventilation: savedMovement.ventilation,
         weight: savedMovement.weight,
-        notes: savedMovement.notes,
+        notes: savedMovement.notes, */
         // Añade aquí más campos si son necesarios
-      };
+      /* }; */
       // Crea un nuevo documento en el inventario.
-      const newInventoryItem = new Inventory(inventoryData);
-      await newInventoryItem.save();
+      /* const newInventoryItem = new Inventory(inventoryData);
+      await newInventoryItem.save();*/
       res.status(201).json(savedMovement);
     }
     // Manejo para movimiento de salida
-    else if (gateInOrGateOut === "Out") {
+    else if (movement === "Out") {
       if (!existingInventory) {
         return res
           .status(400)

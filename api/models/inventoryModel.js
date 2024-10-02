@@ -64,13 +64,17 @@ const InventorySchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  portOfOrigin: {
+    type: String,
+    required: false,
+  },
 
   portOfDestination: {
     type: String,
     required: false,
   },
 
-  exportVessel: {
+  motorVessel: {
     type: String,
     required: false,
   },
@@ -96,17 +100,3 @@ const InventorySchema = new mongoose.Schema({
 
 export default mongoose.model("Inventory", InventorySchema);
 
-
-
-
-// Método virtual para calcular 'days' sobre la marcha
-//para mostrar en inventario los dias en predio de un contenedor
-/* inventorySchema.virtual('days').get(function () {
-    const now = new Date();
-    const diff = now - this.gateInDate; // Diferencia en milisegundos
-    return Math.floor(diff / (1000 * 60 * 60 * 24)); // Convertir a días
-  });
-  
-  const Inventory = mongoose.model('Inventory', inventorySchema);
-  
-  export default Inventory; */
