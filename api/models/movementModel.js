@@ -12,6 +12,10 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.movement === "In";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     departureType: {
       type: String,
@@ -19,18 +23,30 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.movement === "Out";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     customsNumber: {
       type: Number,
       required: function () {
         return this.entryType === "import" || this.departureType === "export";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     motorVessel: {
       type: String,
       required: function () {
         return this.entryType === "import" || this.departureType === "export";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     dateAndTime: {
       type: Date,
@@ -60,10 +76,8 @@ const MovementSchema = new mongoose.Schema(
     },
     commodity: {
       type: String,
-      required: function () {
-        return this.empty === false;
+      required: true
       },
-    },
     weight: {
       type: Number,
       required: true,
@@ -73,18 +87,30 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.departureType === "export";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     portOfOrigin: {
       type: String,
       required: function () {
         return this.entryType === "import";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     consigneeName: {
       type: String,
       required: function () {
         return this.departureType === "toConsignee";
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     truckId: {
       type: String,
@@ -115,18 +141,30 @@ const MovementSchema = new mongoose.Schema(
           (this.containerType === "RF" || this.containerType === "RFH")
         );
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     temperature: {
       type: String,
       required: function () {
         return !this.isEmpty && !this.isNOR;
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     ventilation: {
       type: String,
       required: function () {
         return !this.isEmpty && !this.isNOR;
       },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     TIRNumber: {
       type: String,

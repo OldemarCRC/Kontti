@@ -2,7 +2,7 @@ import CustomsManifest from '../models/customsManifestModel.js';
 
 // Controlador para registrar nuevo manifiesto
 export const customsManifestRegister = async (req, res) => {
-    const { customsNumber, officialArrivalDate, transportMode, customsManifestType, customsLocationCode, mvName, voyageNumber, createdBy } = req.body;
+    const { customsNumber, officialArrivalDate, transportMode, customsManifestType, customsLocationCode, motorVessel, voyageNumber, createdBy } = req.body;
 
     try {
         // Verificar si el manifiesto ya existe
@@ -12,7 +12,7 @@ export const customsManifestRegister = async (req, res) => {
         }
 
         // Crear un nuevo manifiesto
-        const newCustomsManifest = new CustomsManifest({ customsNumber, officialArrivalDate, transportMode, customsManifestType, customsLocationCode, mvName, voyageNumber,createdBy });
+        const newCustomsManifest = new CustomsManifest({ customsNumber, officialArrivalDate, transportMode, customsManifestType, customsLocationCode, motorVessel, voyageNumber,createdBy });
         
         // Guardar el manifiesto en la base de datos
         await newCustomsManifest.save();

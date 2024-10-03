@@ -11,7 +11,7 @@ import Footer from "../../components/footer/Footer";
 const CustomsNumberRegister = () => {
   const initialFormData = {
     customsNumber: "",
-    mvName: "",
+    motorVessel: "",
     voyageNumber: "",
     date: "",
     time: "",
@@ -113,17 +113,17 @@ const CustomsNumberRegister = () => {
             </div>
 
             <div className="label-input">
-              <label className="form-label" htmlFor="mvName">
+              <label className="form-label" htmlFor="motorVessel">
                 Nombre del barco
               </label>
               <input
-                value={formData.mvName}
+                value={formData.motorVessel}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
                 placeholder="Nombre del barco"
-                id="mvName"
-                name="mvName"
+                id="motorVessel"
+                name="motorVessel"
                 required
               />
             </div>

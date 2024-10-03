@@ -6,7 +6,7 @@ import usersRoute from "./routes/usersRoute.js";
 import movementRoute from "./routes/movementRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 import customersRoute from "./routes/customersRoute.js";
-import releaseOrderRoute from "./routes/releaseOrderRoute.js";
+import dispatchOrderRoute from "./routes/dispatchOrderRoute.js";
 import truckCompaniesRoute from "./routes/truckCompaniesRoute.js";
 import customsManifestRoute from "./routes/customsManifestRoute.js";
 import cookieParser from "cookie-parser";
@@ -46,7 +46,7 @@ app.use("/api/users", usersRoute);
 app.use("/api/movements", movementRoute);
 app.use("/api/inventory", inventoryRoute);
 app.use("/api/customers", customersRoute);
-app.use("/api/releaseOrder", releaseOrderRoute);
+app.use("/api/dispatchOrder", dispatchOrderRoute);
 app.use("/api/truck-companies", truckCompaniesRoute);
 app.use("/api/customs-manifest", customsManifestRoute);
 

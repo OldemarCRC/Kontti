@@ -1,529 +1,404 @@
 import React, { useState, useEffect, useContext } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-/* import { fetchInventory } from "../../services/fetchInventory.js"; */
+import { AuthContext } from "../../context/AuthContext.jsx";
+import { fetchInventory } from "../../services/fetchInventory";
+import { fetchDispatchOrders } from "../../services/dispatchOrdersService.js";
 import { toast } from "react-toastify";
 import "./container_dispatch.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
+/* import { generatePDF } from "../../services/pdfService.js"; */
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 
-function ContainerDispatch() {
+function DispatchOrder() {
   const { user } = useContext(AuthContext);
-  const navigate = useNavigate(); // Utiliza useNavigate para la redirección
-  /* const [isUploading, setIsUploading] = useState(false); */
- /*  const [inventory, setInventory] = useState([]); */
-  const [isReefer, setIsReefer] = useState(false);
-  const [requireTempVent, setRequireTempVent] = useState(false);
+  const navigate = useNavigate();
+  const [inventoryData, setInventoryData] = useState([]);
+  const [containersNumbers, setContainersNumbers] = useState([]);
+  const [selectedContainerNumber, setSelectedContainerNumber] = useState("");
+  const [selectedInventory, setSelectedInventory] = useState(null);
+  const [dispatchOrders, setDispatchOrders] = useState([]);
+  const [dispatchOrdersAll, setDispatchOrdersAll] = useState([]);
+  const [selectedDispatchOrder, setSelectedDispatchOrder] = useState(null);
+  const [truckCompanies, setTruckCompanies] = useState([]);
 
-  const [formData, setFormData] = useState({
-    customer: "",
+  const initialFormData = {
+    orderNumber: "",
+    idNumber: "",
+    customerName: "",
+    customsNumber: "",
+    ticaSequence: "",
+    BLNumber: "",
+    BLLineNumber: "",
+    commodity: "",
+    DUANumber: "",
+    quantity: "",
+    packageType: "",
     containerNumber: "",
-    truckID: "",
+    truckId: "",
     truckCo: "",
-    gateInOrGateOut: "Out",
-    containerType: "",
-    containerSize: "",
-    fullOrEmpty: "",
-    date: "",
-    time: "",
-    dateAndTime: "",
-    originOrDestination: "",
-    TIRNumber: "",
+    truckDriver: "",
     sealNumber_1: "",
     sealNumber_2: "",
-    temperature: "",
-    ventilation: "",
-    weight: "",
-    notes: "",
-  });
+    storageLocations: "",
+    createdBy: "",
+  };
 
-  // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
-  useEffect(() => {
-    const isReeferContainer =
-      formData.containerType === "RFH" || formData.containerType === "RFS";
-    setIsReefer(isReeferContainer);
+  const [formData, setFormData] = useState(initialFormData);
 
-    // Requiere temp y vent solo si es reefer y está lleno
-    const requiresTemperatureAndVentilation =
-      isReeferContainer && formData.fullOrEmpty === "Full";
-    setRequireTempVent(requiresTemperatureAndVentilation);
-  }, [formData.containerType, formData.fullOrEmpty]);
-
-  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
   useEffect(() => {
     if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión
       navigate("/");
-    } else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/terminal-map");
+    } else {
+      loadInventoryData();
+      loadDispatchOrders();
     }
-    // Puedes agregar más condiciones para otros roles si es necesario
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  }, [user, navigate]);
 
-  // Calcula la fecha máxima permitida (hoy)
-  const maxDate = new Date().toISOString().split("T")[0];
-
-  // Calcula la hora máxima permitida (hora actual)
-  const maxTime = new Date().toLocaleTimeString("en-GB", {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  // Validación de fecha y hora futura
-  const validateDateTime = () => {
-    const currentDateTime = new Date();
-    const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
-
-    if (selectedDateTime > currentDateTime) {
-      toast.error("No se puede seleccionar una fecha y hora futuras.", {
-        autoClose: 8000,
-      });
-      return false;
-    }
-
-    return true;
-  };
-
-/*   const loadInventory = async () => {
-    try {
-      const inventoryData = await fetchInventory();
-      setInventory(inventoryData);
-    } catch (error) {
-      console.error("Error al cargar el inventario: ", error);
-    }
-  }; */
-
-  /* useEffect(() => {
-    loadInventory();
-  }, []); */
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    // Determina si el campo actual debe convertirse a mayúsculas
-    let updatedValue = value;
-    if (
-      [
-        "containerNumber",
-        "truckID",
-        "originOrDestination",
-        "temperature",
-        "ventilation",
-      ].includes(name)
-    ) {
-      updatedValue = value.toUpperCase();
-    }
-
-    // Actualiza el estado con el valor (convertido a mayúsculas si es necesario)
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: updatedValue,
-    }));
-  };
-
-  const handleUpload = async () => {
-    if (!validateDateTime()) {
-      return;
-    }
-
-    // Validación adicional para temperatura y ventilación
-    if (requireTempVent && (!formData.temperature || !formData.ventilation)) {
-      toast.error(
-        "Obligatorio temp y vent, si no es carga refrigerada digitar NOR en ambos campos",
-        { autoClose: 8000 }
-      );
-      return;
-    }
-    // Validación para sealNumber_1 cuando el contenedor está Cargado
-    if (
-      formData.fullOrEmpty === "Full" &&
-      formData.containerType !== "FR" &&
-      !formData.sealNumber_1
-    ) {
-      toast.error(
-        "El número de marchamo 1 es obligatorio para contenedores llenos.",
-        { autoClose: 8000 }
-      );
-      return; // Detiene la ejecución del envío si la validación falla
-    }
-    /* setIsUploading(true); */
-
-    // Combinar la fecha y la hora en un solo campo
-    const dateTime = new Date(`${formData.date}T${formData.time}`);
-
-    const dataToUpload = {
-      ...formData,
-      dateAndTime: dateTime, // Usar el nombre de campo que espera tu backend
-      gateInOrGateOut: "Out",
+  useEffect(() => {
+    const fetchTruckCompanies = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.REACT_APP_API_URL}/truck-companies`
+        );
+        setTruckCompanies(response.data);
+      } catch (error) {
+        console.error("Error cargando los clientes: ", error);
+        toast.error("Error al cargar los clientes.");
+      }
     };
 
+    fetchTruckCompanies();
+  }, []);
+
+  const loadInventoryData = async () => {
     try {
-      // Agrega gateInOrGateOut explícitamente al objeto formData antes de enviarlo
+      const inventory = await fetchInventory();
+      setInventoryData(inventory);
 
-      await uploadDataToMongoDB(dataToUpload);
-      toast.success("¡Salida registrada!");
-      // Restablecer el formulario a su estado inicial aquí
-      setFormData({
-        customer: "",
-        containerNumber: "",
-        truckID: "",
-        truckCo: "",
-        gateInOrGateOut: "Out",
-        containerType: "",
-        containerSize: "",
-        fullOrEmpty: "",
-        originOrDestination: "",
-        TIRNumber: "",
-        sealNumber_1: "",
-        sealNumber_2: "",
-        temperature: "",
-        ventilation: "",
-        weight: "",
-        notes: "",
-      });
-      /* loadInventory(); */
+      const containersNumbers = Array.from(
+        new Set(inventory.map((item) => item.containerNumber))
+      );
+      setContainersNumbers(containersNumbers);
     } catch (error) {
-      toast.error(error.message, { autoClose: 6000 });
-    } /* finally {
-      setIsUploading(false);
-    } */
+      console.error("Error loading inventory data:", error);
+      toast.error("Error loading inventory data");
+    }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita el envío tradicional del formulario
-    handleUpload(); // Aquí llamas a la función que maneja la carga de datos
+  const loadDispatchOrders = async () => {
+    try {
+      const orders = await fetchDispatchOrders();
+      const createdOrders = orders.filter(
+        (order) => order.status === "created"
+      );
+      setDispatchOrdersAll(orders);
+      setDispatchOrders(createdOrders);
+    } catch (error) {
+      console.error("Error loading release orders:", error);
+      toast.error("Error loading release orders");
+    }
   };
+
+  const generateDispatchOrderNumber = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
+    const dateString = `${year}${month}${day}`;
+
+    const todayOrders = dispatchOrdersAll.filter((order) => {
+      const orderDate = new Date(order.creationDateTime);
+      return (
+        orderDate.getFullYear() === year &&
+        orderDate.getMonth() === today.getMonth() &&
+        orderDate.getDate() === today.getDate()
+      );
+    });
+
+    const nextSequence = String(todayOrders.length + 1).padStart(3, "0");
+    return `${dateString}-${nextSequence}`;
+  };
+  const orderNumber = generateDispatchOrderNumber();
+  const handleDispatchOrderChange = (event) => {
+    const selectedOrderId = event.target.value;
+    const selectedOrder = dispatchOrders.find(
+      (order) => order._id === selectedOrderId
+    );
+    setSelectedDispatchOrder(selectedOrder);
+  };
+
+  const handleContainerNumberChange = (event) => {
+    const containerNumber = event.target.value;
+    setSelectedContainerNumber(containerNumber);
+  };
+
+  // Ordena las órdenes de salida de más reciente a más antigua
+  const sortedDispatchOrders = [...dispatchOrders].sort((a, b) => {
+    return b.orderNumber.localeCompare(a.orderNumber);
+  });
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (!selectedInventory) {
+      toast.error("No hay inventario");
+      return;
+    }
+
+    try {
+      const currentDateTime = new Date().toISOString();
+
+      const payload = {
+        ...formData,
+        orderNumber,
+        idNumber: selectedInventory.idNumber,
+        customerName: selectedInventory.customerName,
+        customsNumber: selectedInventory.customsNumber,
+        commodity: selectedInventory.commodity,
+        locationInTerminal: selectedInventory.locationInTerminal, // Corrige el valor de storageLocations
+        containerNumber: selectedContainerNumber,
+        truckId: formData.truckId,
+        truckCo: formData.truckCo,
+        truckDriver: formData.truckDriver,
+        sealNumber_1: formData.sealNumber_1,
+        sealNumber_2: formData.sealNumber_2,
+        createdBy: user.username,
+        creationDateTime: currentDateTime,
+        status: "created",
+      };
+      await uploadDataToMongoDB(payload, "dispatchOrder");
+      toast.success("¡Orden de salida registrada!");
+
+      loadInventoryData();
+      loadDispatchOrders();
+      setFormData(initialFormData);
+    } catch (error) {
+      console.error("Error uploading releaseOrder data:", error);
+      toast.error("Error uploading releaseOrder data");
+    }
+  };
+
+  /*  const handleGeneratePDF = async () => {
+    try {
+      const pdfURL = await generatePDF(selectedReleaseOrder, user.username);
+      toast.success("¡Boleta generada correctamente!");
+      window.open(pdfURL, "_blank");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("Error generating PDF");
+    }
+  }; */
 
   return (
     <>
       <Header />
-      <div className="out-movement-container">
-        <div className="out-movement-header">
-          <h2>DESPACHOS</h2>
-          <p>Despacho de contenedores.</p>
+      <div className="release-order-container">
+        <div className="release-order-header">
+          <h2>Órdenes de salida</h2>
+          <p>Confección de boleta de salida.</p>
         </div>
-        <div className="out-movement-box">
-          <form className="out-movement-form" onSubmit={handleSubmit}>
+        <div className="release-order-box">
+          <form className="release-order-form" onSubmit={handleSubmit}>
             <fieldset>
-              <legend>Datos obligatorios</legend>
+              <legend className="legend">Despachos</legend>
               <section className="data">
-                <div className="out-movement-item">
-                  <label htmlFor="date" className="out-movement-label">
-                    Fecha
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    max={maxDate} // Establece la fecha máxima permitida
-                    className="input-date"
-                    id="date"
-                    name="date"
-                    required
-                  />
-                </div>
-                <div className="out-movement-item">
-                  <label htmlFor="time" className="out-movement-label">
-                    Hora
-                  </label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    max={maxTime} // Establece la hora máxima permitida basada en la fecha seleccionada
-                    className="input-date"
-                    id="time"
-                    name="time"
-                    required
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*customer*/}
-                  <label htmlFor="customer" className="out-movement-label">
-                    Cliente
-                  </label>
-                  <select
-                    value={formData.customer}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="customer"
-                    name="customer"
-                    required
-                  >
-                    <option value="">Seleccione el cliente</option>
-                    <option value="Cool Carriers">Cool Carriers</option>
-                    <option value="Baltic Reefers">Baltic Reefers</option>
-                    <option value="Seatrade">Seatrade</option>
-                    <option value="Hamburg sud">Hamburg Sud</option>
-                    <option value="Maersk">Maersk</option>
-                    <option value="China Shipping">China Shipping</option>
-                    <option value="APL">APL</option>
-                    <option value="EWL">EWL :)</option>
-                    <option value="Streamlines">Streamlines</option>
-                    <option value="CMA-CGM">CMA-CGM</option>
-                    <option value="Hapag Lloyd">Hapag Lloyd</option>
-                    <option value=""></option>
-                  </select>
-                </div>
-                <div className="out-movement-item">
-                  {/*originOrDestination*/}
-                  <label
-                    htmlFor="originOrDestination"
-                    className="out-movement-label"
-                  >
-                    Destino
-                  </label>
-                  <input
-                    value={formData.originOrDestination}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Origen o destino"
-                    id="originOrDestination"
-                    name="originOrDestination"
-                    required
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*containerNumber*/}
+                <div className="release-order-item">
                   <label
                     htmlFor="containerNumber"
-                    className="out-movement-label"
+                    className="release-order-label"
                   >
-                    Número de contenedor
+                    Nro. de Contenedor
                   </label>
-                  <input
-                    value={formData.containerNumber}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Contenedor"
+                  <select
+                    value={selectedContainerNumber}
+                    onChange={handleContainerNumberChange}
+                    className="release-order-select"
                     id="containerNumber"
                     name="containerNumber"
                     required
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*truckID*/}
-                  <label htmlFor="truckID" className="out-movement-label">
-                    Placa
-                  </label>
-                  <input
-                    value={formData.truckID}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Placa"
-                    id="truckID"
-                    name="truckID"
-                    required
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*truckCo*/}
-                  <label htmlFor="truckCo" className="out-movement-label">
-                    Transportista
-                  </label>
-                  <select
-                    value={formData.truckCo}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="truckCo"
-                    name="truckCo"
-                    required
                   >
-                    <option value="">Seleccione transportista</option>
-                    <option value="Metrocaribe">Metrocaribe</option>
-                    <option value="THL">THL</option>
-                    <option value="Matamoros">Matamoros</option>
-                    <option value="Alamo">Alamo</option>
-                    <option value="Grant">Grant</option>
-                    <option value="H&H">H&H</option>
-                    <option value="Trans Costa Rica">Trans CR</option>
+                    <option value="">Seleccione el contenedor</option>
+                    {containersNumbers.map((container, index) => (
+                      <option key={index} value={container}>
+                        {container}
+                      </option>
+                    ))}
                   </select>
                 </div>
-                <div className="out-movement-item">
-                  {/*containerSize*/}
-                  <label htmlFor="" className="out-movement-label">
-                    Tam
-                  </label>
-                  <select
-                    value={formData.containerSize}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerSize"
-                    name="containerSize"
-                    required
-                  >
-                    <option value="">Seleccione tamaño</option>
-                    <option value="40">40</option>
-                    <option value="20">20</option>
-                    <option value="10">10</option>
-                  </select>
-                </div>
-                <div className="out-movement-item">
-                  {/*containerType*/}
-                  <label htmlFor="containerType" className="out-movement-label">
-                    Tipo
-                  </label>
-                  <select
-                    value={formData.containerType}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="containerType"
-                    name="containerType"
-                    required
-                  >
-                    <option value="">Seleccione tipo</option>
-                    <option value="RFH">RFH</option>
-                    <option value="RFS">RFS</option>
-                    <option value="DV">DV</option>
-                    <option value="OT">OT</option>
-                    <option value="TK">TK</option>
-                    <option value="FR">FR</option>
-                  </select>
-                </div>
-                <div className="out-movement-item">
-                  {/*fullOrEmpty*/}
-                  <label htmlFor="fullOrEmpty" className="out-movement-label">
-                    Status
-                  </label>
-                  <select
-                    value={formData.fullOrEmpty}
-                    onChange={handleChange}
-                    className="select-in"
-                    id="fullOrEmpty"
-                    name="fullOrEmpty"
-                    required
-                  >
-                    <option value="">Seleccione status</option>
-                    <option value="Empty">Vacío</option>
-                    <option value="Full">Cargado</option>
-                  </select>
-                </div>
-                <div className="out-movement-item">
-                  {/*sealNumber_1*/}
-                  <label htmlFor="sealNumber_1" className="out-movement-label">
-                    Marchamo 1
-                  </label>
-                  <input
-                    value={formData.sealNumber_1}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Marchamo"
-                    id="sealNumber_1"
-                    name="sealNumber_1"
-                  />
-                </div>
+
+                {selectedInventory && (
+                  <fieldset>
+                    <div className="release-order-item">
+                      <label
+                        htmlFor="customerName"
+                        className="release-order-label"
+                      >
+                        Cliente
+                      </label>
+                      <input
+                      type="text"
+                      className="release-order-input"
+                      id="customerName"
+                      name="customerName"
+                      value={selectedInventory.customerName || ""}
+                      onChange={handleChange}
+                      readOnly
+                    />
+                    </div>
+
+                    <div className="release-order-item">
+                      <label
+                        htmlFor="customerName"
+                        className="release-order-label"
+                      >
+                        Manifiesto
+                      </label>
+                      <p>{selectedInventory.customsNumber}</p>
+                    </div>
+
+                    <div className="release-order-item">
+                      <label
+                        htmlFor="orderNumber"
+                        className="release-order-label"
+                      >
+                        Número de Orden
+                      </label>
+                      <div id="orderNumber" className="order-number-text">
+                        {formData.orderNumber}
+                      </div>
+                    </div>
+                  </fieldset>
+                )}
               </section>
             </fieldset>
-            <fieldset>
-              <legend>Datos opcionales</legend>
-              <section className="optional-data">
-                <div className="out-movement-item">
-                  {/*sealNumber_2*/}
-                  <label htmlFor="sealNumber_2" className="out-movement-label">
-                    Marchamo 2
-                  </label>
-                  <input
-                    value={formData.sealNumber_2}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Marchamo 2"
-                    id="sealNumber_2"
-                    name="sealNumber_2"
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*temperature*/}
-                  <label htmlFor="temperature" className="out-movement-label">
-                    Temp
-                  </label>
-                  <input
-                    value={formData.temperature}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Temp"
-                    id="temperature"
-                    name="temperature"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*ventilation*/}
-                  <label htmlFor="ventilation" className="out-movement-label">
-                    Vent
-                  </label>
-                  <input
-                    value={formData.ventilation}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Vent"
-                    id="ventilation"
-                    name="ventilation"
-                    disabled={!isReefer} // Deshabilita si no es reefer
-                  />
-                </div>
-                <div className="out-movement-item">
-                  {/*TIRNumber*/}
-                  <label htmlFor="ventilation" className="out-movement-label">
-                    TIR
-                  </label>
-                  <input
-                    value={formData.TIRNumber}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="TIR"
-                    id="TIRNumber"
-                    name="TIRNumber"
-                  />
-                </div>
-                {/* <div className="out-movement-item">
-                  {/*weight*/}
-                {/* <label htmlFor="weight" className="out-movement-label">
-                    Peso
-                  </label>
-                  <input
-                    value={formData.weight}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Peso"
-                    id="weight"
-                    name="weight"
-                  />
-                </div> */}
-                <div className="out-movement-item">
-                  {/*notes*/}
-                  <label htmlFor="notes" className="out-movement-label">
-                    Observaciones
-                  </label>
-                  <input
-                    value={formData.notes}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Observaciones"
-                    id="notes"
-                    name="notes"
-                  />
-                </div>
-              </section>
-            </fieldset>
-            <button type="submit">Confirmar salida de contenedor</button>
+
+            <section className="data">
+              <div className="release-order-item">
+                <label htmlFor="truckId" className="release-order-label">
+                  Nro. de Camión/Placa
+                </label>
+                <input
+                  type="text"
+                  className="release-order-input"
+                  id="truckId"
+                  name="truckId"
+                  value={formData.truckId}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="release-order-item">
+                <label htmlFor="truckCo" className="release-order-label">
+                  Empresa de transporte
+                </label>
+                <select
+                  value={formData.truckCo}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="truckCo"
+                  name="truckCo"
+                  required
+                >
+                  <option value="">Seleccione transportista</option>
+                  {truckCompanies.map((truckCompany) => (
+                    <option
+                      key={truckCompany._id}
+                      value={truckCompany.companyName}
+                    >
+                      {truckCompany.companyName}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="release-order-item">
+                <label htmlFor="truckDriver" className="release-order-label">
+                  Nombre del Chofer
+                </label>
+                <input
+                  type="text"
+                  className="release-order-input"
+                  id="truckDriver"
+                  name="truckDriver"
+                  value={formData.truckDriver}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="release-order-item">
+                <label htmlFor="sealNumber_1" className="release-order-label">
+                  Nro. Precinto 1
+                </label>
+                <input
+                  type="text"
+                  className="release-order-input"
+                  id="sealNumber_1"
+                  name="sealNumber_1"
+                  value={formData.sealNumber_1}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="release-order-item">
+                <label htmlFor="sealNumber_2" className="release-order-label">
+                  Nro. Precinto 2
+                </label>
+                <input
+                  type="text"
+                  className="release-order-input"
+                  id="sealNumber_2"
+                  name="sealNumber_2"
+                  value={formData.sealNumber_2}
+                  onChange={handleChange}
+                />
+              </div>
+            </section>
+
+            <button type="submit" className="submit-button">
+              Registrar boleta de salida
+            </button>
           </form>
+
+          <div className="release-order-section">
+            <h3>Despachos por salir</h3>
+            <select
+              value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
+              onChange={handleDispatchOrderChange}
+              className="release-order-select"
+            >
+              <option value="">Seleccione una orden de salida</option>
+              {sortedDispatchOrders.map((order) => (
+                <option key={order._id} value={order._id}>
+                  {order.orderNumber} - {""}
+                </option>
+              ))}
+            </select>
+
+            {/*  {selectedReleaseOrder && (
+               <button
+                onClick={handleGeneratePDF}
+                className="generate-pdf-button"
+              >
+                Generar Boleta
+              </button> 
+            )} */}
+          </div>
         </div>
-        {/*Fin div out-movement-box*/}
       </div>
       <Footer />
     </>
   );
 }
-export default ContainerDispatch;
+
+export default DispatchOrder;

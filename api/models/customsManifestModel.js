@@ -6,7 +6,7 @@ const customsManifestSchema = new mongoose.Schema({
       required: true,
       unique: true,
     },
-    mvName: {
+    motorVessel: {
       type: String,
       required: false,
     },

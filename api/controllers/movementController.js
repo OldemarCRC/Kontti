@@ -6,8 +6,8 @@ export const createMovement = async (req, res) => {
   try {
     // Primero, verifica si el contenedor ya existe en el inventario
     const existingInventory = await Inventory.findOne({ containerNumber });
-  
-   // Verifica si el movimiento es un ingreso
+
+    // Verifica si el movimiento es un ingreso
     if (movement === "In") {
       //Verifica si el contenedor ya está en el inventario.
       if (existingInventory) {
@@ -18,29 +18,35 @@ export const createMovement = async (req, res) => {
       // Si el contenedor no está en el inventario, procede a insertar el nuevo movimiento
       const newMovement = new Movement(req.body);
       const savedMovement = await newMovement.save();
-      
 
-      /* const inventoryData = {
-        customer: savedMovement.customer,
+      const inventoryData = {
+        customerName: savedMovement.customerName,
+        customsNumber: savedMovement.customsNumber,
+        motorVessel: savedMovement.motorVessel,
+        dateAndTime: savedMovement.dateAndTime,
         containerNumber: savedMovement.containerNumber,
         containerSize: savedMovement.containerSize,
         containerType: savedMovement.containerType,
-        fullOrEmpty: savedMovement.fullOrEmpty,
-        dateAndTime: savedMovement.dateAndTime,
-        origin: savedMovement.originOrDestination,
+        isEmpty: savedMovement.isEmpty,
+        commodity: savedMovement.commodity,
+        isNOR: savedMovement.isNOR,
+        weight: savedMovement.weight,
+        consigneeName: savedMovement.consigneeName,
+        portOfOrigin: savedMovement.portOfOrigin,
         portOfDestination: savedMovement.portOfDestination,
-        exportVessel: savedMovement.exportVessel,
         sealNumber_1: savedMovement.sealNumber_1,
         sealNumber_2: savedMovement.sealNumber_2,
         temperature: savedMovement.temperature,
         ventilation: savedMovement.ventilation,
-        weight: savedMovement.weight,
-        notes: savedMovement.notes, */
-        // Añade aquí más campos si son necesarios
-      /* }; */
+        locationInTerminal: savedMovement.locationInTerminal,
+        notes: savedMovement.notes,
+        reeferDamage: savedMovement.reeferDamage,
+        boxDamage: savedMovement.boxDamage,
+        damageComments: savedMovement.damageComments,
+      };
       // Crea un nuevo documento en el inventario.
-      /* const newInventoryItem = new Inventory(inventoryData);
-      await newInventoryItem.save();*/
+      const newInventoryItem = new Inventory(inventoryData);
+      await newInventoryItem.save();
       res.status(201).json(savedMovement);
     }
     // Manejo para movimiento de salida

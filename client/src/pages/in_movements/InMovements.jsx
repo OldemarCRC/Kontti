@@ -13,10 +13,11 @@ function InMovements() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
-  const [customsNumbers, setcustomsNumbers] = useState([]);
+  const [manifests, setManifests] = useState([]);
   const [isReefer, setIsReefer] = useState(false);
-  const [requireTempVent, setRequireTempVent] = useState(false);
   const [truckCompanies, setTruckCompanies] = useState([]);
+  const [isNORActive, setIsNORActive] = useState(false);
+  const [isTempVentActive, setIsTempVentActive] = useState(false);
   const [currentDateTime, setCurrentDateTime] = useState({
     currentDate: "",
     currentTime: "",
@@ -40,7 +41,7 @@ function InMovements() {
     truckDriver: "",
     sealNumber_1: "",
     sealNumber_2: "",
-    isNOR: "",
+    isNOR: null,
     temperature: "",
     ventilation: "",
     TIRNumber: "",
@@ -48,17 +49,27 @@ function InMovements() {
     createdBy: "",
   });
 
-  // Este efecto se ejecuta cada vez que formData.containerType o formData.fullOrEmpty cambian
+  // Este efecto se ejecuta cada vez que formData.containerType cambia
   useEffect(() => {
-    const isReeferContainer =
-      formData.containerType === "RFH" || formData.containerType === "RF";
+    const isReeferContainer = ["RFH", "RF"].includes(formData.containerType);
     setIsReefer(isReeferContainer);
 
-    // Requiere temp y vent solo si es reefer y está lleno
-    const requiresTemperatureAndVentilation =
-      isReeferContainer && formData.fullOrEmpty === "Full";
-    setRequireTempVent(requiresTemperatureAndVentilation);
-  }, [formData.containerType, formData.fullOrEmpty]);
+    const shouldActivateNOR = isReeferContainer && formData.isEmpty === false;
+    setIsNORActive(shouldActivateNOR);
+
+    const shouldActivateTempVent =
+      isReeferContainer &&
+      formData.isEmpty === false &&
+      formData.isNOR === false;
+    setIsTempVentActive(shouldActivateTempVent);
+
+    if (!shouldActivateNOR) {
+      setFormData((prev) => ({ ...prev, isNOR: null }));
+    }
+    if (!shouldActivateTempVent) {
+      setFormData((prev) => ({ ...prev, temperature: "", ventilation: "" }));
+    }
+  }, [formData.containerType, formData.isEmpty, formData.isNOR]);
 
   useEffect(() => {
     const fetchCustomers = async () => {
@@ -77,19 +88,19 @@ function InMovements() {
   }, []);
 
   useEffect(() => {
-    const fetchCustomsNumbers = async () => {
+    const fetchData = async () => {
       try {
         const response = await axios.get(
           `${process.env.REACT_APP_API_URL}/customs-manifest`
         );
-        setcustomsNumbers(response.data);
+        setManifests(response.data);
       } catch (error) {
         console.error("Error cargando los manifiestos: ", error);
         toast.error("Error al cargar los manifiestos.");
       }
     };
 
-    fetchCustomsNumbers();
+    fetchData();
   }, []);
 
   useEffect(() => {
@@ -145,26 +156,29 @@ function InMovements() {
   };
 
   const handleSelectChange = (e) => {
-    const selectedNumber = e.target.value;
-
-    // Encuentra el manifiesto seleccionado para obtener su fecha
-    const selectedManifest = customsNumbers.find(
-      (manifest) => manifest.customsNumber === selectedNumber
+    const { name, value } = e.target;
+    const selectedManifest = manifests.find(
+      (m) => name === "customsNumber" && m.customsNumber === value
     );
 
-    // Actualiza el estado del formulario y establece el límite de fecha mínima
-    setFormData({
-      ...formData,
-      customsNumber: selectedNumber,
-      motorVessel: selectedManifest ? selectedManifest.motorVessel : "",
-      min_date: selectedManifest
-        ? selectedManifest.officialArrivalDate.split("T")[0]
-        : "", // Fecha mínima
-    });
+    if (selectedManifest) {
+      setFormData({
+        ...formData,
+        [name]: value,
+        min_date: selectedManifest.officialArrivalDate.split("T")[0],
+        motorVessel: selectedManifest.motorVessel,
+      });
+    }
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    let updatedValue = value;
+
+    if (name === "isEmpty" || name === "isNOR") {
+      updatedValue = value === "true";
+    }
+
     if (name === "customerName") {
       const selectedCustomer = customers.find(
         (customer) => customer.customerName === value
@@ -173,6 +187,14 @@ function InMovements() {
         ...prev,
         customerName: value,
         idNumber: selectedCustomer?.idNumber || "",
+      }));
+    }
+    if (name === "isEmpty") {
+      const isEmptyValue = value === "true";
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: isEmptyValue,
+        commodity: isEmptyValue ? "Empty" : "",
       }));
     } else {
       const fieldsToUpperCase = [
@@ -184,9 +206,9 @@ function InMovements() {
       const processedValue = fieldsToUpperCase.includes(name)
         ? value.toUpperCase()
         : value;
-      setFormData((prev) => ({
-        ...prev,
-        [name]: processedValue,
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: updatedValue,
       }));
     }
   };
@@ -202,7 +224,7 @@ function InMovements() {
       dateAndTime: dateTime,
       /*       BLLineNumber: parseInt(formData.BLLineNumber, 10),
       quantity: parseInt(formData.quantity, 10), */
-      isNOR:false,
+
       createdBy: user.username,
     };
 
@@ -239,7 +261,7 @@ function InMovements() {
         truckDriver: "",
         sealNumber_1: "",
         sealNumber_2: "",
-        isNOR: "",
+        isNOR: null,
         temperature: "",
         ventilation: "",
         TIRNumber: "",
@@ -321,7 +343,7 @@ function InMovements() {
                   required
                 >
                   <option value="">Seleccione el manifiesto</option>
-                  {customsNumbers.map((manifest) => (
+                  {manifests.map((manifest) => (
                     <option key={manifest._id} value={manifest.customsNumber}>
                       {manifest.customsNumber}
                     </option>
@@ -331,22 +353,9 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="motorVessel" className="in-movement-label">
-                  Barco
+                  Nombre del buque
                 </label>
-                <select
-                  value={formData.motorVessel}
-                  onChange={handleChange}
-                  className="select-in"
-                  id="motorVessel"
-                  name="motorVessel"
-                >
-                  <option value="">Barco</option>
-                  <option value="MV Puerto Limón">MV Puerto Limón</option>
-                  <option value="MV Cahuita">MV Cahuita</option>
-                  <option value="MV Costa Rica Carrier">
-                    MV Costa Rica carrier
-                  </option>
-                </select>
+                <p>{formData.motorVessel}</p>
               </div>
 
               <div className="in-movement-item">
@@ -471,7 +480,7 @@ function InMovements() {
               </div>
 
               <div className="in-movement-item">
-                <label htmlFor="" className="in-movement-label">
+                <label htmlFor="containerSize" className="in-movement-label">
                   Tam
                 </label>
                 <select
@@ -486,7 +495,7 @@ function InMovements() {
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="40">40</option>
-                  <option value="45">40</option>
+                  <option value="45">45</option>
                 </select>
               </div>
 
@@ -520,15 +529,7 @@ function InMovements() {
                 </label>
                 <select
                   value={formData.isEmpty.toString()}
-                  onChange={(e) => {
-                    const value = e.target.value === "true";
-                    handleChange({
-                      target: {
-                        name: "isEmpty",
-                        value: value,
-                      },
-                    });
-                  }}
+                  onChange={handleChange}
                   className="select-in"
                   id="isEmpty"
                   name="isEmpty"
@@ -549,42 +550,65 @@ function InMovements() {
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="commodity"
+                  placeholder="Mercancía"
                   id="commodity"
                   name="commodity"
+                  disabled={formData.isEmpty === true}
                 />
               </div>
 
-              <div className="in-movement-item">
-                <label htmlFor="temperature" className="in-movement-label">
-                  Temp
-                </label>
-                <input
-                  value={formData.temperature}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="Temp"
-                  id="temperature"
-                  name="temperature"
-                  disabled={!isReefer} // Deshabilita si no es reefer
-                />
-              </div>
-              <div className="in-movement-item">
-                <label htmlFor="ventilation" className="in-movement-label">
-                  Vent
-                </label>
-                <input
-                  value={formData.ventilation}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="Vent"
-                  id="ventilation"
-                  name="ventilation"
-                  disabled={!isReefer} // Deshabilita si no es reefer
-                />
-              </div>
+              {isNORActive && (
+                <div className="in-movement-item">
+                  <label htmlFor="isNOR" className="in-movement-label">
+                    Indique si la mercancía es refrigerada
+                  </label>
+                  <select
+                    value={formData.isNOR?.toString() ?? ""}
+                    onChange={handleChange}
+                    className="select-in"
+                    id="isNOR"
+                    name="isNOR"
+                  >
+                    <option value="">Seleccione condición</option>
+                    <option value="false">Carga refrigerada</option>
+                    <option value="true">Carga seca</option>
+                  </select>
+                </div>
+              )}
+              {isTempVentActive && (
+                <>
+                  <div className="in-movement-item">
+                    <label htmlFor="temperature" className="in-movement-label">
+                      Temp
+                    </label>
+                    <input
+                      value={formData.temperature}
+                      onChange={handleChange}
+                      type="text"
+                      className="input-in"
+                      placeholder="Temp"
+                      id="temperature"
+                      name="temperature"
+                      required
+                    />
+                  </div>
+                  <div className="in-movement-item">
+                    <label htmlFor="ventilation" className="in-movement-label">
+                      Vent
+                    </label>
+                    <input
+                      value={formData.ventilation}
+                      onChange={handleChange}
+                      type="text"
+                      className="input-in"
+                      placeholder="Vent"
+                      id="ventilation"
+                      name="ventilation"
+                      required
+                    />
+                  </div>
+                </>
+              )}
 
               <div className="in-movement-item">
                 <label htmlFor="portOfOrigin" className="in-movement-label">
@@ -734,21 +758,6 @@ function InMovements() {
                   name="sealNumber_2"
                 />
               </div>
-
-              <div className="in-movement-item">
-                <label htmlFor="storageLocation" className="in-movement-label">
-                  Ubicación en bodega
-                </label>
-                <input
-                  value={formData.storageLocation}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="Ubicación en bodega"
-                  id="storageLocation"
-                  name="storageLocation"
-                />
-              </div>
             </section>
           </fieldset>
           <button type="submit">Confirmar ingreso de mercancía</button>
@@ -760,280 +769,3 @@ function InMovements() {
 }
 
 export default InMovements;
-
-/*
-
-function InMovements() {
-
-
-  const [formData, setFormData] = useState({
-    gateInOrGateOut: "In",
-    customer: "",
-    containerNumber: "",
-    truckID: "",
-    truckCo: "",
-    containerType: "",
-    containerSize: "",
-    fullOrEmpty: "",
-    date: "",
-    time: "",
-    dateAndTime: "",
-    originOrDestination: "",
-    TIRNumber: "",
-    sealNumber_1: "",
-    sealNumber_2: "",
-    temperature: "",
-    ventilation: "",
-    portOfDestination: "",
-    exportVessel: "",
-    weight: "",
-    notes: "",
-  });
-
-  // Validación de fecha y hora futura
-  const validateDateTime = () => {
-    const currentDateTime = new Date();
-    const selectedDateTime = new Date(`${formData.date}T${formData.time}`);
-
-    if (selectedDateTime > currentDateTime) {
-      toast.error("No se puede seleccionar una fecha y hora futuras.", {
-        autoClose: 8000,
-      });
-      return false;
-    }
-
-    return true;
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    // Determina si el campo actual debe convertirse a mayúsculas
-    let updatedValue = value;
-    if (
-      [
-        "containerNumber",
-        "truckID",
-        "originOrDestination",
-        "temperature",
-        "ventilation",
-      ].includes(name)
-    ) {
-      updatedValue = value.toUpperCase();
-    }
-
-    // Actualiza el estado con el valor (convertido a mayúsculas si es necesario)
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: updatedValue,
-    }));
-  };
-
-  const handleUpload = async () => {
-    if (!validateDateTime()) {
-      return;
-    }
-    // Validación adicional para temperatura y ventilación
-    if (requireTempVent && (!formData.temperature || !formData.ventilation)) {
-      toast.error(
-        "Obligatorio temp y vent, si no es carga refrigerada digitar NOR en ambos campos",
-        { autoClose: 8000 }
-      );
-      return;
-    }
-    // Validación para sealNumber_1 cuando el contenedor está Cargado
-    if (
-      formData.fullOrEmpty === "Full" &&
-      formData.containerType !== "FR" &&
-      !formData.sealNumber_1
-    ) {
-      toast.error(
-        "El número de marchamo 1 es obligatorio para contenedores llenos.",
-        { autoClose: 8000 }
-      );
-      return; // Detiene la ejecución del envío si la validación falla
-    }
-
-    // Combinar la fecha y la hora en un solo campo
-    const dateTime = new Date(`${formData.date}T${formData.time}`);
-    // Eliminar los campos de fecha y hora individuales si ya no son necesarios
-
-    const dataToUpload = {
-      ...formData,
-      dateAndTime: dateTime, // Usar el nombre de campo que espera tu backend
-      gateInOrGateOut: "In",
-    };
-
-    try {
-      // Agrega gateInOrGateOut explícitamente al objeto formData antes de enviarlo
-
-      await uploadDataToMongoDB(dataToUpload);
-      toast.success("¡Ingreso exitoso!");
-      // Restablecer el formulario a su estado inicial aquí
-      setFormData({
-        customer: "",
-        containerNumber: "",
-        truckID: "",
-        truckCo: "",
-        gateInOrGateOut: "In",
-        containerType: "",
-        containerSize: "",
-        fullOrEmpty: "",
-        originOrDestination: "",
-        TIRNumber: "",
-        sealNumber_1: "",
-        sealNumber_2: "",
-        temperature: "",
-        ventilation: "",
-        portOfDestination: "",
-        exportVessel: "",
-        weight: "",
-        notes: "",
-      });
-    } catch (error) {
-      toast.error(error.message, { autoClose: 5000 });
-    } 
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita el envío tradicional del formulario
-    handleUpload(); // Aquí llamas a la función que maneja la carga de datos
-  };
-
-  return (
-    <>
-      <Header />
-      <div className="in-movement-container">
-        <div className="in-movement-header">
-          <h2>INGRESOS</h2>
-          <p>
-            Registrar movimientos de importación o ingresos desde otras
-            ubicaciones.
-          </p>
-        </div>
-        <div className="in-movement-box">
-          <form className="in-movement-form" onSubmit={handleSubmit}>
-            <fieldset>
-              <legend>Datos obligatorios</legend>
-              <section className="data">
-                
-                <div className="in-movement-item">
-                  <label htmlFor="date" className="in-movement-label">
-                    Fecha
-                  </label>
-                  <input
-                    type="date"
-                    value={formData.date}
-                    onChange={handleChange}
-                    max={maxDate} // Establece la fecha máxima permitida
-                    className="input-date"
-                    id="date"
-                    name="date"
-                    required
-                  />
-                </div>
-                <div className="in-movement-item">
-                  <label htmlFor="time" className="in-movement-label">
-                    Hora
-                  </label>
-                  <input
-                    type="time"
-                    value={formData.time}
-                    onChange={handleChange}
-                    max={maxTime} // Establece la hora máxima permitida basada en la fecha seleccionada
-                    className="input-date"
-                    id="time"
-                    name="time"
-                    required
-                  />
-                </div>
-                
-                <div className="in-movement-item">
-                  
-                  <label
-                    htmlFor="originOrDestination"
-                    className="in-movement-label"
-                  >
-                    Origen
-                  </label>
-                  <input
-                    value={formData.originOrDestination}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Origen o destino"
-                    id="originOrDestination"
-                    name="originOrDestination"
-                    required
-                  />
-                </div>
-            
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="truckID" className="in-movement-label">
-                    Placa
-                  </label>
-                  <input
-                    value={formData.truckID}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Placa"
-                    id="truckID"
-                    name="truckID"
-                    required
-                  />
-                </div>
-                
-                
-                
-                <div className="in-movement-item">
-                  
-                  <label htmlFor="sealNumber_1" className="in-movement-label">
-                    Marchamo 1
-                  </label>
-                  <input
-                    value={formData.sealNumber_1}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Marchamo"
-                    id="sealNumber_1"
-                    name="sealNumber_1"
-                  />
-                </div>
-              </section>
-            </fieldset>
-            <fieldset>
-              <legend>Datos opcionales</legend>
-              <section className="optional-data">
-                <div className="in-movement-item">
-                
-                  <label htmlFor="sealNumber_2" className="in-movement-label">
-                    Marchamo 2
-                  </label>
-                  <input
-                    value={formData.sealNumber_2}
-                    onChange={handleChange}
-                    type="text"
-                    className="input-in"
-                    placeholder="Marchamo 2"
-                    id="sealNumber_2"
-                    name="sealNumber_2"
-                  />
-                </div>
-
-                
-
-              </section>
-            </fieldset>
-            <button type="submit">Confirmar ingreso de contenedor</button>
-          </form>
-        </div>
-        
-      </div>
-      <Footer />
-    </>
-  );
-}
-export default InMovements;
-*/
