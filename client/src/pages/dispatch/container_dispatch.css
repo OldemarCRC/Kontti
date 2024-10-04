@@ -1,5 +1,5 @@
 
-  .out-movement-container {
+  .dispatch-order-container {
     display: flex;
     flex-direction: column;
     justify-content: center; /*centra contenido del div verticalmente*/
@@ -7,11 +7,11 @@
     font-size: 12px;
     width: 99vw;
     height: 80vh;
-    padding: 20px 20px;
+    padding: 60px 20px 20px 20px;
    /*  background-color: hwb(0 95% 4%); */
   }
   
-  .out-movement-header {
+  .dispatch-order-header {
     height: 10%;
     color: #046a7c;
     font-size: 1.2rem;
@@ -19,7 +19,7 @@
     margin-bottom: 10px;
   }
   
-  .out-movement-form{
+  .dispatch-order-form{
     padding-top: 50px;
     padding-right: 50px;
   }
@@ -34,7 +34,7 @@
   }
   
   /* Asegúrate de que los contenedores de los elementos del formulario tengan un ancho definido o porcentaje */
-  .out-movement-item {
+  .dispatch-order-item {
     margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
     flex: 1 1 1%;
   }
@@ -67,18 +67,18 @@
     font-weight: bold;
   }
   
-  /* Si tus .out-movement-item están diseñados para estar en columnas en pantallas más anchas */
+  
   @media (max-width: 768px) {
-    .out-movement-container {
+    .dispatch-order-container {
     margin-top: 100px;
     margin-bottom: 200px;
   
     }
-    .out-movement-header p{
+    .dispatch-order-header p{
       display: none;
     }
   
-    .out-movement-item {
+    .dispatch-order-item {
       margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
       flex: 1 1 25%;
     }

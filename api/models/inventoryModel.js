@@ -35,7 +35,7 @@ const InventorySchema = new mongoose.Schema(
     },
     isEmpty: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     commodity: {
       type: String,

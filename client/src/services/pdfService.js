@@ -1,66 +1,67 @@
 import { PDFDocument, StandardFonts } from "pdf-lib";
-/* import logoImageUrl from "../assets/images/almacen_logo4.png"; */
-
-const currentDate = new Date().toLocaleString(); // Obtener la fecha y hora actuales en un formato legible
+import logoImageUrl from "../assets/images/kontti_logo.png";
 
 // Función auxiliar para cargar imágenes
-/* const loadImage = async (url) => {
+const loadImage = async (url) => {
   const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to load image at ${url}`);
   }
   const imageBytes = await response.arrayBuffer();
   return imageBytes;
-}; */
+};
 
 export const generatePDF = async (formData, userName) => {
   try {
     const pdfDoc = await PDFDocument.create();
-    const page = pdfDoc.addPage([
-      612, 792,
-    ]);
+    const page = pdfDoc.addPage([612, 792]);
 
-    /* const logoImageBytes = await loadImage(logoImageUrl);
-    const logoImage = await pdfDoc.embedPng(logoImageBytes); */
-    const { width, height } = page.getSize();
+    const logoImageBytes = await loadImage(logoImageUrl);
+    const logoImage = await pdfDoc.embedPng(logoImageBytes);
+    const { height } = page.getSize();
 
     // Dibujar la imagen en el PDF como marca de agua
-   /*  page.drawImage(logoImage, {
+    page.drawImage(logoImage, {
       x: 0,
       y: 300,
       width: 600,
       height: 196,
       opacity: 0.1, // Ajustar la opacidad para la marca de agua
-    }); */
+    });
 
     // Dibujar el logo en la parte superior
-   /*  const scaledLogo = logoImage.scale(0.4); // Ajustar el tamaño del logo para la parte superior
+    const scaledLogo = logoImage.scale(0.4); // Ajustar el tamaño del logo para la parte superior
     page.drawImage(logoImage, {
       x: 50,
       y: height - scaledLogo.height - 50, // Ajustar la posición del logo en la parte superior
       width: scaledLogo.width,
       height: scaledLogo.height,
-    }); */
+    });
 
     // Ajustar el punto de partida para el texto
     const textYPosition = height - scaledLogo.height - 140;
 
     const {
       orderNumber,
-      creationDateTime,
-      idNumber,
       customerName,
-      BLNumber,
-      ticaSequence,
       customsNumber,
+      containerNumber,
+      containerSize,
+      containerType,
       commodity,
-      quantity,
-      packageType,
-      storageLocations,
+      weight,
+      sealNumber_1,
+      sealNumber_2,
+      temperature,
+      ventilation,
+      locationInTerminal,
+      truckId,
       truckCo,
       truckDriver,
-      truckId,
+      consigneeName,
+      destination,
       createdBy,
+      creationDateTime,
     } = formData;
 
     const creationDate = new Date(creationDateTime);
@@ -99,9 +100,6 @@ export const generatePDF = async (formData, userName) => {
     const subHeaderFontSize = 16;
     const textFontSize = 14;
 
-    // Formatear las ubicaciones de almacenamiento
-    const formattedStorageLocations = storageLocations.join(", ");
-
     // Dibujar el texto con diferentes tamaños de fuente
     page.setFont(font);
     page.setFontSize(headerFontSize);
@@ -120,24 +118,56 @@ export const generatePDF = async (formData, userName) => {
     });
 
     page.setFontSize(textFontSize);
-    page.drawText(`Identificación: ${idNumber}`, { x: 50, y: textYPosition - 100 });
-    page.drawText(`Cliente: ${customerName}`, { x: 50, y: textYPosition - 120 });
-    page.drawText(`BL Number: ${BLNumber}`, { x: 50, y: textYPosition - 140 });
-    page.drawText(`Secuencia TICA: ${ticaSequence}`, { x: 50, y: textYPosition - 160 });
+    page.drawText(`Número de contenedor: ${containerNumber}`, {
+      x: 50,
+      y: textYPosition - 100,
+    });
+    page.drawText(`${containerSize}`, {
+      x: 300,
+      y: textYPosition - 100,
+    });
+    page.drawText(`${containerType}`, {
+      x: 320,
+      y: textYPosition - 100,
+    });
+    page.drawText(`Marchamo 1: ${sealNumber_1}`, {
+      x: 360,
+      y: textYPosition - 100,
+    });
+    page.drawText(`Marchamo 2: ${sealNumber_2}`, {
+      x: 500,
+      y: textYPosition - 100,
+    });
+    page.drawText(`Cliente: ${customerName}`, {
+      x: 50,
+      y: textYPosition - 120,
+    });
+    page.drawText(`Consignatario: ${consigneeName}`, {
+      x: 50,
+      y: textYPosition - 140,
+    });
+    page.drawText(`Destino: ${destination}`, {
+      x: 50,
+      y: textYPosition - 160,
+    });
     page.drawText(`Número de Aduana: ${customsNumber}`, {
       x: 50,
       y: textYPosition - 180,
     });
     page.drawText(`Mercancía: ${commodity}`, { x: 50, y: textYPosition - 200 });
-    page.drawText(`Cantidad: ${quantity}`, {
+    page.drawText(`Peso: ${weight}`, {
       x: 50,
       y: textYPosition - 220,
     });
-    page.drawText(`Tipo de Bultos: ${packageType}`, {
+    page.drawText(`Temperatura: ${temperature}`, {
       x: 50,
       y: textYPosition - 240,
     });
-    page.drawText(`Ubicación en almacén: ${formattedStorageLocations}`, {
+    page.drawText(`Ventilación: ${ventilation}`, {
+      x: 200,
+      y: textYPosition - 240,
+    });
+    page.drawText(`Ubicación en la terminal: ${locationInTerminal}`, {
       x: 50,
       y: textYPosition - 260,
     });

@@ -7,7 +7,7 @@ import { fetchDispatchOrders } from "../../services/dispatchOrdersService.js";
 import { toast } from "react-toastify";
 import "./container_dispatch.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
-/* import { generatePDF } from "../../services/pdfService.js"; */
+import { generatePDF } from "../../services/pdfService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 
@@ -28,21 +28,29 @@ function DispatchOrder() {
     idNumber: "",
     customerName: "",
     customsNumber: "",
-    ticaSequence: "",
-    BLNumber: "",
-    BLLineNumber: "",
-    commodity: "",
-    DUANumber: "",
-    quantity: "",
-    packageType: "",
+    motorVessel: "",
+    dateIn: "",
     containerNumber: "",
+    containerSize: "",
+    containerType: "",
+    isEmpty: "",
+    commodity: "",
+    isNOR: "",
+    weight: "",
+    portOfOrigin: "",
+    sealNumber_1: "",
+    sealNumber_2: "",
+    temperature: "",
+    ventilation: "",
+    locationInTerminal: "",
     truckId: "",
     truckCo: "",
     truckDriver: "",
-    sealNumber_1: "",
-    sealNumber_2: "",
-    storageLocations: "",
+    consigneeName: "",
+    destination: "",
     createdBy: "",
+    creationDateTime: "",
+    DUANumber: "",
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -96,8 +104,8 @@ function DispatchOrder() {
       setDispatchOrdersAll(orders);
       setDispatchOrders(createdOrders);
     } catch (error) {
-      console.error("Error loading release orders:", error);
-      toast.error("Error loading release orders");
+      console.error("Error loading dispatch orders:", error);
+      toast.error("Error loading dispatch orders");
     }
   };
 
@@ -132,6 +140,25 @@ function DispatchOrder() {
   const handleContainerNumberChange = (event) => {
     const containerNumber = event.target.value;
     setSelectedContainerNumber(containerNumber);
+
+    const inventory = inventoryData.find(
+      (item) => item.containerNumber === containerNumber
+    );
+
+    if (inventory) {
+      setSelectedInventory(inventory);
+
+      const orderNumber = generateDispatchOrderNumber();
+      setFormData((prevData) => ({
+        ...prevData,
+        orderNumber,
+      }));
+    } else {
+      console.error(
+        "No se encontró inventario para el contenedor seleccionado"
+      );
+      setSelectedInventory(null);
+    }
   };
 
   // Ordena las órdenes de salida de más reciente a más antigua
@@ -160,17 +187,30 @@ function DispatchOrder() {
       const payload = {
         ...formData,
         orderNumber,
+        departureType: formData.departureType,
         idNumber: selectedInventory.idNumber,
         customerName: selectedInventory.customerName,
         customsNumber: selectedInventory.customsNumber,
-        commodity: selectedInventory.commodity,
-        locationInTerminal: selectedInventory.locationInTerminal, // Corrige el valor de storageLocations
+        motorVessel: selectedInventory.motorVessel,
+        dateIn: selectedInventory.dateAndTime,
         containerNumber: selectedContainerNumber,
+        containerSize: selectedInventory.containerSize,
+        containerType: selectedInventory.containerType,
+        isEmpty: selectedInventory.isEmpty,
+        commodity: selectedInventory.commodity,
+        isNOR: selectedInventory.isNOR,
+        weight: selectedInventory.weight,
+        portOfOrigin: selectedInventory.portOfOrigin,
+        sealNumber_1: formData.sealNumber_1,
+        sealNumber_2: formData.sealNumber_2,
+        temperature: selectedInventory.temperature,
+        ventilation: selectedInventory.ventilation,
+        locationInTerminal: selectedInventory.locationInTerminal,
         truckId: formData.truckId,
         truckCo: formData.truckCo,
         truckDriver: formData.truckDriver,
-        sealNumber_1: formData.sealNumber_1,
-        sealNumber_2: formData.sealNumber_2,
+        consigneeName: formData.consigneeName,
+        destination: formData.destination,
         createdBy: user.username,
         creationDateTime: currentDateTime,
         status: "created",
@@ -182,46 +222,46 @@ function DispatchOrder() {
       loadDispatchOrders();
       setFormData(initialFormData);
     } catch (error) {
-      console.error("Error uploading releaseOrder data:", error);
-      toast.error("Error uploading releaseOrder data");
+      console.error("Error uploading dispatchOrder data:", error);
+      toast.error("Error uploading dispatchOrder data");
     }
   };
 
-  /*  const handleGeneratePDF = async () => {
+  const handleGeneratePDF = async () => {
     try {
-      const pdfURL = await generatePDF(selectedReleaseOrder, user.username);
-      toast.success("¡Boleta generada correctamente!");
+      const pdfURL = await generatePDF(selectedDispatchOrder, user.username);
+      toast.success("¡Despacho generado correctamente!");
       window.open(pdfURL, "_blank");
     } catch (error) {
-      console.error("Error generating PDF:", error);
-      toast.error("Error generating PDF");
+      console.error("Error generando el PDF:", error);
+      toast.error("Error generando el PDF");
     }
-  }; */
+  };
 
   return (
     <>
       <Header />
-      <div className="release-order-container">
-        <div className="release-order-header">
-          <h2>Órdenes de salida</h2>
-          <p>Confección de boleta de salida.</p>
+      <div className="dispatch-order-container">
+        <div className="dispatch-order-header">
+          <h1>Despacho de contenedores</h1>
+          <h2>Confección de boleta de despacho.</h2>
         </div>
-        <div className="release-order-box">
-          <form className="release-order-form" onSubmit={handleSubmit}>
+        <div className="dispatch-order-box">
+          <form className="dispatch-order-form" onSubmit={handleSubmit}>
             <fieldset>
               <legend className="legend">Despachos</legend>
               <section className="data">
-                <div className="release-order-item">
+                <div className="dispatch-order-item">
                   <label
                     htmlFor="containerNumber"
-                    className="release-order-label"
+                    className="dispatch-order-label"
                   >
                     Nro. de Contenedor
                   </label>
                   <select
                     value={selectedContainerNumber}
                     onChange={handleContainerNumberChange}
-                    className="release-order-select"
+                    className="dispatch-order-select"
                     id="containerNumber"
                     name="containerNumber"
                     required
@@ -236,59 +276,230 @@ function DispatchOrder() {
                 </div>
 
                 {selectedInventory && (
-                  <fieldset>
-                    <div className="release-order-item">
+                  <>
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="containerSize"
+                        className="dispatch-order-label"
+                      >
+                        Size
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="containerSize"
+                        name="containerSize"
+                        value={selectedInventory.containerSize || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="containerType"
+                        className="dispatch-order-label"
+                      >
+                        Type
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="containerType"
+                        name="containerType"
+                        value={selectedInventory.containerType || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="commodity"
+                        className="dispatch-order-label"
+                      >
+                        Mercancía
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="commodity"
+                        name="commodity"
+                        value={selectedInventory.commodity || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="temperature"
+                        className="dispatch-order-label"
+                      >
+                        Temperatura
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="temperature"
+                        name="temperature"
+                        value={selectedInventory.temperature || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="ventilation"
+                        className="dispatch-order-label"
+                      >
+                        Ventilación
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="ventilation"
+                        name="ventilation"
+                        value={selectedInventory.ventilation || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
                       <label
                         htmlFor="customerName"
-                        className="release-order-label"
+                        className="dispatch-order-label"
                       >
                         Cliente
                       </label>
                       <input
-                      type="text"
-                      className="release-order-input"
-                      id="customerName"
-                      name="customerName"
-                      value={selectedInventory.customerName || ""}
-                      onChange={handleChange}
-                      readOnly
-                    />
+                        type="text"
+                        className="dispatch-order-input"
+                        id="customerName"
+                        name="customerName"
+                        value={selectedInventory.customerName || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
                     </div>
 
-                    <div className="release-order-item">
+                    <div className="dispatch-order-item">
                       <label
-                        htmlFor="customerName"
-                        className="release-order-label"
+                        htmlFor="customsNumber"
+                        className="dispatch-order-label"
                       >
-                        Manifiesto
+                        Manifiesto de ingreso
                       </label>
-                      <p>{selectedInventory.customsNumber}</p>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="customsNumber"
+                        name="customsNumber"
+                        value={selectedInventory.customsNumber || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
                     </div>
 
-                    <div className="release-order-item">
+                    <div className="dispatch-order-item">
+                      <label
+                        htmlFor="locationInTerminal"
+                        className="dispatch-order-label"
+                      >
+                        Ubicación en la terminal
+                      </label>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="locationInTerminal"
+                        name="locationInTerminal"
+                        value={selectedInventory.locationInTerminal || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
+                    </div>
+
+                    <div className="dispatch-order-item">
                       <label
                         htmlFor="orderNumber"
-                        className="release-order-label"
+                        className="dispatch-order-label"
                       >
-                        Número de Orden
+                        Número de despacho
                       </label>
-                      <div id="orderNumber" className="order-number-text">
-                        {formData.orderNumber}
-                      </div>
+                      <input
+                        type="text"
+                        className="dispatch-order-input"
+                        id="orderNumber"
+                        name="orderNumber"
+                        value={formData.orderNumber || ""}
+                        onChange={handleChange}
+                        readOnly
+                      />
                     </div>
-                  </fieldset>
+                  </>
                 )}
               </section>
             </fieldset>
 
             <section className="data">
-              <div className="release-order-item">
-                <label htmlFor="truckId" className="release-order-label">
+              <div className="dispatch-order-item">
+                <label htmlFor="departureType" className="dispatch-order-label">
+                  Tipo de salida
+                </label>
+                <select
+                  value={formData.departureType}
+                  onChange={handleChange}
+                  className="select-in"
+                  id="departureType"
+                  name="departureType"
+                  required
+                >
+                  <option value="">Seleccione tipo de salida</option>
+                  <option value="export">Exportación</option>
+                  <option value="toConsignee">Al consignatario</option>
+                  <option value="toShipper">Al shipper</option>
+                  <option value="toCustomsAux">Otro predio</option>
+                </select>
+              </div>
+
+              <div className="dispatch-order-item">
+                <label htmlFor="consigneeName" className="dispatch-order-label">
+                  Consignatario
+                </label>
+                <input
+                  type="text"
+                  className="dispatch-order-input"
+                  id="consigneeName"
+                  name="consigneeName"
+                  value={formData.consigneeName}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <div className="dispatch-order-item">
+                <label htmlFor="destination" className="dispatch-order-label">
+                  Destino
+                </label>
+                <input
+                  type="text"
+                  className="dispatch-order-input"
+                  id="destination"
+                  name="destination"
+                  value={formData.destination || ""}
+                  onChange={handleChange}
+                />
+              </div>
+
+              <div className="dispatch-order-item">
+                <label htmlFor="truckId" className="dispatch-order-label">
                   Nro. de Camión/Placa
                 </label>
                 <input
                   type="text"
-                  className="release-order-input"
+                  className="dispatch-order-input"
                   id="truckId"
                   name="truckId"
                   value={formData.truckId}
@@ -297,8 +508,8 @@ function DispatchOrder() {
                 />
               </div>
 
-              <div className="release-order-item">
-                <label htmlFor="truckCo" className="release-order-label">
+              <div className="dispatch-order-item">
+                <label htmlFor="truckCo" className="dispatch-order-label">
                   Empresa de transporte
                 </label>
                 <select
@@ -321,13 +532,13 @@ function DispatchOrder() {
                 </select>
               </div>
 
-              <div className="release-order-item">
-                <label htmlFor="truckDriver" className="release-order-label">
+              <div className="dispatch-order-item">
+                <label htmlFor="truckDriver" className="dispatch-order-label">
                   Nombre del Chofer
                 </label>
                 <input
                   type="text"
-                  className="release-order-input"
+                  className="dispatch-order-input"
                   id="truckDriver"
                   name="truckDriver"
                   value={formData.truckDriver}
@@ -336,30 +547,30 @@ function DispatchOrder() {
                 />
               </div>
 
-              <div className="release-order-item">
-                <label htmlFor="sealNumber_1" className="release-order-label">
+              <div className="dispatch-order-item">
+                <label htmlFor="sealNumber_1" className="dispatch-order-label">
                   Nro. Precinto 1
                 </label>
                 <input
                   type="text"
-                  className="release-order-input"
+                  className="dispatch-order-input"
                   id="sealNumber_1"
                   name="sealNumber_1"
-                  value={formData.sealNumber_1}
+                  value={formData.sealNumber_1 || ""}
                   onChange={handleChange}
                 />
               </div>
 
-              <div className="release-order-item">
-                <label htmlFor="sealNumber_2" className="release-order-label">
+              <div className="dispatch-order-item">
+                <label htmlFor="sealNumber_2" className="dispatch-order-label">
                   Nro. Precinto 2
                 </label>
                 <input
                   type="text"
-                  className="release-order-input"
+                  className="dispatch-order-input"
                   id="sealNumber_2"
                   name="sealNumber_2"
-                  value={formData.sealNumber_2}
+                  value={formData.sealNumber_2 || ""}
                   onChange={handleChange}
                 />
               </div>
@@ -370,29 +581,29 @@ function DispatchOrder() {
             </button>
           </form>
 
-          <div className="release-order-section">
+          <div className="dispatch-order-section">
             <h3>Despachos por salir</h3>
             <select
               value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
               onChange={handleDispatchOrderChange}
-              className="release-order-select"
+              className="dispatch-order-select"
             >
               <option value="">Seleccione una orden de salida</option>
               {sortedDispatchOrders.map((order) => (
                 <option key={order._id} value={order._id}>
-                  {order.orderNumber} - {""}
+                  {order.orderNumber} - {order.containerNumber}
                 </option>
               ))}
             </select>
 
-            {/*  {selectedReleaseOrder && (
-               <button
+            {selectedDispatchOrder && (
+              <button
                 onClick={handleGeneratePDF}
                 className="generate-pdf-button"
               >
                 Generar Boleta
-              </button> 
-            )} */}
+              </button>
+            )}
           </div>
         </div>
       </div>

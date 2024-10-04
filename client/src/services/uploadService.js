@@ -1,7 +1,7 @@
-export const uploadDataToMongoDB = async (dataToSend) => {
+export const uploadDataToMongoDB = async (dataToSend, collection) => {
   try {
     console.log(dataToSend);
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/movements`, {
+    const response = await fetch(`${process.env.REACT_APP_API_URL}/${collection}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -11,16 +11,15 @@ export const uploadDataToMongoDB = async (dataToSend) => {
 
     if (response.ok) {
       const result = await response.json();
-      console.log(`Datos cargados con éxito: ${JSON.stringify(result)}`); // Usar console.log para éxito
       return result;
     } else {
-      const errorResponse = await response.json(); // Intenta parsear la respuesta como JSON
+      const errorResponse = await response.json();
       const errorMessage = errorResponse.message || 'Error desconocido al cargar los datos';
-      throw new Error(errorMessage); // Usa el mensaje de error del backend o un mensaje por defecto
+      throw new Error(errorMessage);
     }
   } catch (error) {
-    console.error(error.message); // Usar console.error para capturar errores
-    throw new Error(error.message); // Relanzar el error con el mensaje específico para que pueda ser capturado por el llamador
+    console.error(error.message);
+    throw new Error(error.message);
   }
 };
 

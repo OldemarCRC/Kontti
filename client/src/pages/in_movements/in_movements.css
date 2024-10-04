@@ -9,7 +9,7 @@
     to bottom,
     rgba(255, 255, 255, 0.8),
     rgba(255, 255, 255, 0.8)
-  ),url('../home/images/inventory.png');
+  ),url('../../assets/images/inventory.png');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

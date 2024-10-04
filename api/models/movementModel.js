@@ -19,7 +19,7 @@ const MovementSchema = new mongoose.Schema(
     },
     departureType: {
       type: String,
-      enum: ["export", "toConsignee", "toCustomsAux"],
+      enum: ["export", "toConsignee", "toShipper", "toCustomsAux"],
       required: function () {
         return this.movement === "Out";
       },
@@ -72,7 +72,7 @@ const MovementSchema = new mongoose.Schema(
     },
     isEmpty: {
       type: Boolean,
-      required: true,
+      required: false,
     },
     commodity: {
       type: String,
@@ -96,6 +96,16 @@ const MovementSchema = new mongoose.Schema(
       type: String,
       required: function () {
         return this.entryType === "import";
+      },
+      set: function(v) {
+        if (v === "") return undefined;
+        return v;
+      }
+    },
+    destination: {
+      type: String,
+      required: function () {
+        return this.movement === "Out";
       },
       set: function(v) {
         if (v === "") return undefined;
@@ -135,36 +145,15 @@ const MovementSchema = new mongoose.Schema(
     /*Non-Operating Reefer*/
     isNOR: {
       type: Boolean,
-      required: function () {
-        return (
-          !this.isEmpty &&
-          (this.containerType === "RF" || this.containerType === "RFH")
-        );
-      },
-      set: function(v) {
-        if (v === "") return undefined;
-        return v;
-      }
+      required: false
     },
     temperature: {
       type: String,
-      required: function () {
-        return !this.isEmpty && !this.isNOR;
-      },
-      set: function(v) {
-        if (v === "") return undefined;
-        return v;
-      }
+      required: false
     },
     ventilation: {
       type: String,
-      required: function () {
-        return !this.isEmpty && !this.isNOR;
-      },
-      set: function(v) {
-        if (v === "") return undefined;
-        return v;
-      }
+      required: false
     },
     TIRNumber: {
       type: String,
