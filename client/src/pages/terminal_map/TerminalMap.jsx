@@ -93,7 +93,6 @@ function TerminalMap() {
     <>
       <Header />
       <div className="terminal-map">
-        <div className="terminal-filters">aqui van los filtros</div>
         <div className="terminal-container">
           <div className="zones-container">
             {zones.map((zone) => (

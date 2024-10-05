@@ -96,28 +96,72 @@
     background-color 0.3s ease;
 }
 
+.option-card-tm-container {
+  position: absolute;
+  top: 620px;
+  left: 610px;
+  width: 400px;
+  height: 212px;
+  
+}
+
+.option-card-tm {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 210px 212px 210px;
+  border-color: transparent transparent rgb(200, 196, 196) transparent;
+  cursor: pointer;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.option-card-tm p {
+  position: absolute;
+  top: 90px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #0871cd;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  width: 200px;
+}
+
+.option-card-tm:hover {
+  transform: translateX(-50%) translateY(-10px);
+  border-color: transparent transparent #8fbccc transparent;
+}
+
+.option-card-tm:hover p {
+  color: white;
+}
+
 .option-card-in {
   position: absolute;
   top: 250px;
-  left: 200px;
+  left: 230px;
 }
 
 .option-card-out {
   position: absolute;
   top: 250px;
-  left: 628px;
+  left: 658px;
 }
 
 .option-card-di {
   position: absolute;
   top: 466px;
-  left: 414px;
+  left: 444px;
 }
 
 .option-card-qp {
   position: absolute;
   top: 466px;
-  left: 843px;
+  left: 873px;
 }
 
 .option-card-in p,

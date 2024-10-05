@@ -21,8 +21,11 @@ const Navbar = () => {
         <div className="navbar-option-page" onClick={() => handleNavigate("/out-movements")}>
           <h3 className="navbar-option-text">Salidas</h3>
         </div>
-        <div className="navbar-option-page" onClick={() => handleNavigate("/inventory")}>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/query-page")}>
           <h3 className="navbar-option-text">Consultas</h3>
+        </div>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/terminal-map")}>
+          <h3 className="navbar-option-text">Plano de estibas</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/data-management")}>
           <h3 className="navbar-option-text">Gestión de datos</h3>
@@ -33,4 +36,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-  

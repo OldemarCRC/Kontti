@@ -61,23 +61,18 @@ function Home() {
               <p>Salidas</p>
             </div>
 
-            <div
-              className="option-card-inv"
-              onClick={() => handleNavigate("/inventory")}
-            >
-              <p>Inventario</p>
-            </div>
-
-            <div
-              className="option-card-tm"
-              onClick={() => handleNavigate("/terminal-map")}
-            >
-              <p>Plano de estibas</p>
+            <div class="option-card-tm-container">
+              <div
+                class="option-card-tm"
+                onClick={() => handleNavigate("/terminal-map")}
+              >
+                <p>Plano de estibas</p>
+              </div>
             </div>
 
             <div
               className="option-card-qp"
-              onClick={() => handleNavigate("/inventory")}
+              onClick={() => handleNavigate("/query-page")}
             >
               <p>Consultas</p>
             </div>

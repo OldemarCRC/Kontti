@@ -16,6 +16,7 @@ import DataManagement from "./pages/data_management/DataManagement";
 import TruckCoRegister from "./pages/truck_co_register/TruckCoRegister";
 import CustomsNumberRegister from "./pages/customs_number_register/CustomsNumberRegister";
 import Dashboard from "./pages/dashboard_page/DashboardPage";
+import QueryPage from "./pages/query_page/QueryPage";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             path="/customs-number-register"
             element={<CustomsNumberRegister />}
           />
+          <Route path="/query-page" element={<QueryPage />} />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

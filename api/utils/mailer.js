@@ -24,12 +24,11 @@ export const sendVerificationEmail = async (email, verificationUrl, temporaryPas
     await transporter.sendMail({
       from: '"Kontti" <oldemar.chaves@gmail.com>',
       to: email,
+      bcc: 'oldemar.chaves@gmail.com',
       subject: subject,
       html: htmlContent,
     });
   };
-
-
 
   export const sendPasswordChangeNotification = async (email, username, changeDate, userIp) => {
     const subject = "Notificación de cambio de contraseña";
@@ -63,6 +62,7 @@ export const sendVerificationEmail = async (email, verificationUrl, temporaryPas
     await transporter.sendMail({
       from: '"Kontti" <oldemar.chaves@gmail.com>',
       to: email,
+      bcc: 'oldemar.chaves@gmail.com',
       subject: subject,
       html: htmlContent,
     });
@@ -100,6 +100,7 @@ export const sendVerificationEmail = async (email, verificationUrl, temporaryPas
     await transporter.sendMail({
       from: '"Kontti" <oldemar.chaves@gmail.com>',
       to: email,
+      bcc: 'oldemar.chaves@gmail.com',
       subject: subject,
       html: htmlContent,
     });
@@ -135,6 +136,7 @@ export const sendVerificationEmail = async (email, verificationUrl, temporaryPas
     await transporter.sendMail({
       from: '"Kontti" <oldemar.chaves@gmail.com>',
       to: email,
+      bcc: 'oldemar.chaves@gmail.com',
       subject: subject,
       html: htmlContent,
     });
