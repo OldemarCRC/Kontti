@@ -62,14 +62,14 @@ function Home() {
             </div>
 
             <div
-              className="option-card-qp"
+              className="option-card-inv"
               onClick={() => handleNavigate("/inventory")}
             >
               <p>Inventario</p>
             </div>
 
             <div
-              className="option-card-qp"
+              className="option-card-tm"
               onClick={() => handleNavigate("/terminal-map")}
             >
               <p>Plano de estibas</p>

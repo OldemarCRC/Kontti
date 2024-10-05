@@ -133,7 +133,8 @@ const UserRegister = () => {
                 <option value="">Selecciona un rol</option>
                 <option value="admin">Kontti staff</option>
                 <option value="manager">Jefe de planta</option>
-                <option value="dispatcher">Personal de oficina</option>
+                <option value="dispatcher">Personal de oficina logística</option>
+                <option value="accounting">Personal de oficina administrativa</option>
                 <option value="gate">Chequeador de puerta</option>
                 <option value="operator">Operador de stacker</option>
                 <option value="externalUser">Agente externo</option>

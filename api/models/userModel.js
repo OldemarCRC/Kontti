@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "manager", "dispatcher", "operator", "externalUser", "gate","surveyor"],
+      enum: ["admin", "manager", "dispatcher", "operator", "externalUser", "gate","surveyor", "accounting",],
     },
     isEmailVerified: {
       type: Boolean,

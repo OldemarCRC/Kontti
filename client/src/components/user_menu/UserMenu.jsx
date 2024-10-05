@@ -39,11 +39,18 @@ const UserMenu = () => {
               </span>
               <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                 {user.role === "admin" && (
-                  <li className="user-menu-list">
-                    <Link className="dropdown-item" to="/user-register">
-                      Registrar usuario
-                    </Link>
-                  </li>
+                  <>
+                    <li className="user-menu-list">
+                      <Link className="dropdown-item" to="/dashboard">
+                        Dashboard
+                      </Link>
+                    </li>
+                    <li className="user-menu-list">
+                      <Link className="dropdown-item" to="/user-register">
+                        Registrar usuario
+                      </Link>
+                    </li>
+                  </>
                 )}
                 <li className="user-menu-list">
                   <Link className="dropdown-item" to="/change-password">
@@ -69,4 +76,3 @@ const UserMenu = () => {
 };
 
 export default UserMenu;
-

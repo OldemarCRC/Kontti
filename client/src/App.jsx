@@ -15,6 +15,7 @@ import CustomerRegister from "./pages/customer_register/CustomerRegister";
 import DataManagement from "./pages/data_management/DataManagement";
 import TruckCoRegister from "./pages/truck_co_register/TruckCoRegister";
 import CustomsNumberRegister from "./pages/customs_number_register/CustomsNumberRegister";
+import Dashboard from "./pages/dashboard_page/DashboardPage";
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
           <Route path="/customer-register" element={<CustomerRegister />} />
           <Route path="/data-management" element={<DataManagement />} />
           <Route path="/truck-co-register" element={<TruckCoRegister />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route
             path="/customs-number-register"
             element={<CustomsNumberRegister />}
