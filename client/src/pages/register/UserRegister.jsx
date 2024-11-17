@@ -12,6 +12,7 @@ import Footer from "../../components/footer/Footer";
 const UserRegister = () => {
   const initialFormData = {
     username: "",
+    fullName: "",
     email: "",
     role: "",
     phone: "",
@@ -37,7 +38,7 @@ const UserRegister = () => {
   };
 
   const notify = () => {
-    toast.success("¡Registro exitoso, usuario debe verificar su correo!", {
+    toast.success("Registration successful, user must verify their email!", {
       onClose: () => delay(),
     });
   };
@@ -50,25 +51,35 @@ const UserRegister = () => {
   // User Submit for Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const { username, email, role, phone, createdBy } = formData;
 
+    const token = sessionStorage.getItem("userToken");
+    if (!token) {
+      console.error("No token found in sessionStorage");
+      return;
+    }
+
+    const { username, fullName, email, role, phone, createdBy } = formData;
+    const payload = { username, fullName, email, role, phone, createdBy };
     try {
-      await axios.post(`${process.env.REACT_APP_API_URL}/auth/register`, {
-        username,
-        email,
-        role,
-        phone,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/auth/register`,
+        payload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       notify();
       // Limpiar el formulario después del registro exitoso
       setFormData(initialFormData);
     } catch (error) {
       console.log(
-        "ERROR EN LA SOLICITUD:",
+        "ERROR IN THE REQUEST:",
         error.response ? error.response : error
       );
-      toast.error("¡Registro fallido!");
+      toast.error("Registration failed!");
     }
   };
 
@@ -87,17 +98,32 @@ const UserRegister = () => {
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h5 className="register-message">Registrar usuario</h5>
+            <h5 className="register-message">Register user</h5>
+            <div className="label-input">
+              <label className="form-label" htmlFor="fullName">
+              User's full name
+              </label>
+              <input
+                value={formData.fullName}
+                onChange={handleChange}
+                type="text"
+                className="form-input"
+                placeholder="User´s full name"
+                id="fullName"
+                name="fullName"
+                required
+              />
+            </div>
             <div className="label-input">
               <label className="form-label" htmlFor="username">
-                Nombre de usuario
+              User name
               </label>
               <input
                 value={formData.username}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Nombre de usuario"
+                placeholder="User name"
                 id="username"
                 name="username"
                 required
@@ -105,14 +131,14 @@ const UserRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
-                Correo electrónico
+              Email
               </label>
               <input
                 value={formData.email}
                 onChange={handleChange}
                 type="email"
                 className="form-input"
-                placeholder="correo electrónico"
+                placeholder="Email"
                 id="email"
                 name="email"
                 required
@@ -120,7 +146,7 @@ const UserRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
-                Rol del usuario
+              User role
               </label>
               <select
                 value={formData.role}
@@ -130,27 +156,26 @@ const UserRegister = () => {
                 name="role"
                 required
               >
-                <option value="">Selecciona un rol</option>
+                <option value="">Select a role</option>
                 <option value="admin">Kontti staff</option>
-                <option value="manager">Jefe de planta</option>
-                <option value="dispatcher">Personal de oficina logística</option>
-                <option value="accounting">Personal de oficina administrativa</option>
-                <option value="gate">Chequeador de puerta</option>
-                <option value="operator">Operador de stacker</option>
-                <option value="externalUser">Agente externo</option>
-                <option value="surveyor">Inspector de daños</option>
+                <option value="manager">Container terminal manager</option>
+                <option value="dispatcher">Logistic´s assistant</option>
+                <option value="gate">Gate talli</option>
+                <option value="operator">Stacker operator</option>
+                <option value="externalUser">External user</option>
+                <option value="surveyor">Container surveyor</option>
               </select>
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
-                Teléfono
+                Phone
               </label>
               <input
                 value={formData.phone}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Número de teléfono"
+                placeholder="Phone´s number"
                 id="phone"
                 name="phone"
               />
@@ -158,7 +183,7 @@ const UserRegister = () => {
 
             <div className="register-button">
               <button className="lbtn" type="submit">
-                Registrar
+                Register
               </button>
             </div>
           </form>

@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema(
   {
+    fullName: {
+      type: String,
+      required: true,
+    },
     username: {
       type: String,
       required: true,
@@ -22,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     role: {
       type: String,
       required: true,
-      enum: ["admin", "manager", "dispatcher", "operator", "externalUser", "gate","surveyor", "accounting",],
+      enum: ["admin", "manager", "dispatcher", "operator", "externalUser", "gate", "surveyor", "accounting",],
     },
     isEmailVerified: {
       type: Boolean,
@@ -48,6 +52,11 @@ const UserSchema = new mongoose.Schema(
       date: Date,
       ip: String
     }],
+    isOnLine: {
+      type: Boolean,
+      default: false,
+      required: true
+    },
     passwordChangeRequired: {
       type: Boolean,
       default: true

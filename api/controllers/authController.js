@@ -1,4 +1,5 @@
 import User from "../models/userModel.js";
+import mongoose from "mongoose";
 import rateLimit from "express-rate-limit";
 import bcrypt from "bcryptjs";
 import { createError } from "../utils/error.js";
@@ -8,40 +9,70 @@ import {
   sendPasswordChangeNotification,
   sendLoginNotification,
   sendFailLoginNotification,
+  sendDBConnectionFailureNotification,
 } from "../utils/mailer.js";
 import { generateRandomPassword } from "../utils/passwordUtils.js";
 
+
+export const isMongoConnected = async (req, res, next) => {
+  const isDatabaseConnected = () => mongoose.connection.readyState === 1;
+  const date = new Date().toLocaleString();
+  const ipAddress = req.ip;
+  if (!isDatabaseConnected()) {
+    try {
+      await sendDBConnectionFailureNotification(date, ipAddress);
+    } catch (err) {
+      console.error(
+        "Error sending database connection failure notification: ",
+        err
+      );
+    }
+    return res.status(500).json({ message: "Database is not connected." });
+  }
+  next();
+};
+
+
 export const register = async (req, res, next) => {
   try {
-    // Generar una contraseña aleatoria
     const temporaryPassword = generateRandomPassword();
     const salt = bcrypt.genSaltSync(10);
     const hash = bcrypt.hashSync(temporaryPassword, salt);
-    /* const userForEmail = req.body.username; */
+
+    const {
+      fullName,
+      username,
+      email,
+      role,
+      phone,
+      createdBy,
+    } = req.body;
+
     const newUser = new User({
-      username: req.body.username,
-      email: req.body.email,
+      fullName,
+      username,
+      email,
       password: hash,
-      role: req.body.role,
-      phone: req.body.phone,
+      role,
+      phone,
+      createdBy,
       passwordChangeRequired: true,
       passwordExpiresAt: new Date(Date.now() + 1440 * 60 * 1000), // 24 horas desde ahora
     });
 
     const user = await newUser.save();
 
-    // Generar un token de verificación
     const verificationToken = jwt.sign(
       { userId: user._id },
       process.env.JWT,
-      { expiresIn: "1d" } // El token expira en 1 día
+      { expiresIn: "1d" }
     );
 
     // Crear URL de verificación
     const verificationUrl = `https://kontti-client.onrender.com/account-verification?token=${verificationToken}`;
 
-    // Enviar correo electrónico de verificación con la contraseña temporal
     await sendVerificationEmail(
+      user.fullName,
       user.email,
       verificationUrl,
       temporaryPassword,
@@ -51,7 +82,7 @@ export const register = async (req, res, next) => {
     res
       .status(200)
       .send(
-        "El usuario ha sido creado. El usuario debe revisar su correo para verificar la cuenta y cambiar su contraseña temporal."
+        "The user has been created. The user must check his/her email to verify the account and change his/her temporary password."
       );
   } catch (err) {
     next(err);
@@ -61,7 +92,7 @@ export const register = async (req, res, next) => {
 export const loginLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutos
   max: 5, // límite de 5 intentos por ventana por IP
-  message: "Demasiados intentos de inicio de sesión, por favor intente más tarde.",
+  message: "Too many login attempts, please try again later.",
   standardHeaders: true, // Devolver información de rate limit en los headers
   legacyHeaders: false, // Desactivar los headers 'X-RateLimit-*'
 });
@@ -81,7 +112,7 @@ export const loginSecurityMiddleware = async (req, res, next) => {
     if (user.isLocked) {
       return res
         .status(403)
-        .json({ message: "Usuario bloqueado. Contacte al administrador." });
+        .json({ message: "User blocked. Contact the administrator." });
     }
 
     // Verificar intentos recientes
@@ -95,7 +126,7 @@ export const loginSecurityMiddleware = async (req, res, next) => {
       await user.save();
       return res
         .status(429)
-        .json({ message: "Demasiados intentos. Usuario bloqueado." });
+        .json({ message: "Too many attempts. User blocked." });
     }
   } else {
     // Si el usuario no existe, aún registramos el intento para prevenir enumeración
@@ -115,13 +146,13 @@ export const login = async (req, res, next) => {
     if (!user) {
       // Incrementamos el retraso incluso para usuarios no existentes
       await new Promise((resolve) => setTimeout(resolve, 1000));
-      return next(createError(404, "Usuario o contraseña incorrectos."));
+      return next(createError(404, "Incorrect username or password."));
     }
 
     // Verificar si el usuario está bloqueado
     if (user.isLocked) {
       return next(
-        createError(403, "Usuario bloqueado. Contacte al administrador.")
+        createError(403, "User blocked. Contact the administrator.")
       );
     }
 
@@ -132,7 +163,7 @@ export const login = async (req, res, next) => {
       return next(
         createError(
           403,
-          "Tu contraseña temporal ha expirado. Contacta al administrador."
+          "Your temporary password has expired. Please contact the administrator."
         )
       );
     }
@@ -142,7 +173,7 @@ export const login = async (req, res, next) => {
       return next(
         createError(
           403,
-          "Por favor verifique su correo antes de intentar iniciar sesión."
+          "Please check your email before trying to log in."
         )
       );
     }
@@ -160,53 +191,67 @@ export const login = async (req, res, next) => {
       const failLoginattemptDate = new Date().toLocaleString();
       const userIp =
         req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-        try {
-          await sendFailLoginNotification(user.email, user.username, failLoginattemptDate, userIp);
-        } catch (err) {
-          console.error("Error enviando notificación de fallo de inicio de sesión: ", err);
-        }
+      try {
+        await sendFailLoginNotification(user.email, user.fullName, user.username, failLoginattemptDate, userIp);
+      } catch (err) {
+        console.error("Error sending login failure notification: ", err);
+      }
+
+      // Actualizar loginAttempts array
+      user.loginAttempts.push({ date: new Date(), ip: userIp });
 
       if (user.attempts >= 3) {
         user.isLocked = true;
         user.lockedAt = new Date();
-        await user.save();
-        return next(
-          createError(
-            403,
-            "Usuario bloqueado debido a múltiples intentos fallidos. Contacte al administrador."
-          )
-        );
       }
 
       await user.save();
 
       // Incrementar el retraso con cada intento fallido
-      await new Promise((resolve) => setTimeout(resolve, user.attempts * 1000));
+      await new Promise((resolve) => setTimeout(resolve, user.attempts * 1000)); // Retraso para mitigar ataques de fuerza bruta
 
-      return next(createError(400, "Usuario o contraseña incorrectos."));
+      return next(createError(400, "Incorrect username or password."));
     }
 
-    // Resetear los intentos si el login es exitoso
-    user.attempts = 0;
-    user.lastLoginAttempt = new Date();
-    await user.save();
+    if (isPasswordCorrect) {
+      const token = jwt.sign(
+        { id: user._id, role: user.role, username: user.username },
+        process.env.JWT,
+        { expiresIn: "1d" }
+      );
 
-    const loginDate = new Date().toLocaleString();
-    const userIp =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    await sendLoginNotification(user.email, user.username, loginDate, userIp);
+      const userIp =
+        req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+      const loginDate = new Date().toLocaleString();
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT, {
-      expiresIn: "1d",
-    });
+      try {
+        await sendLoginNotification(
+          user.email,
+          user.fullName,
+          user.username,
+          loginDate,
+          userIp
+        );
+      } catch (err) {
+        console.error("Error sending login notification: ", err);
+      }
 
-    const { password, ...otherDetails } = user._doc;
-    res
-      .cookie("access_token", token, {
-        httpOnly: true,
-      })
-      .status(200)
-      .json({ details: { ...otherDetails } });
+      user.attempts = 0;
+      user.isLocked = false;
+      user.lockedAt = null;
+      user.isOnLine = true;
+      user.loginAttempts = [];
+      user.lastLoginAttempt = new Date();
+      await user.save();
+
+      const { password, ...otherDetails } = user._doc;
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+        })
+        .status(200)
+        .json({ details: { ...otherDetails, token } }); // Devolver el token en la respuesta
+    }
   } catch (err) {
     console.log(err);
     next(err);
@@ -215,21 +260,19 @@ export const login = async (req, res, next) => {
 
 export const verifyEmail = async (req, res, next) => {
   try {
-    const { token } = req.query; // Obtener el token de la URL
+    const { token } = req.query;
 
     if (!token) {
-      return next(createError(400, "Token no proporcionado."));
+      return next(createError(400, "Token not provided."));
     }
 
-    // Verificar el token utilizando jwt.verify
     jwt.verify(token, process.env.JWT, async (err, decoded) => {
       if (err) {
-        console.log("Error al verificar el token:", err);
-        return next(createError(400, "Token inválido o expirado."));
+        console.log("Error verifying token:", err);
+        return next(createError(400, "Invalid or expired token."));
       }
 
       const userId = decoded.userId;
-      // Buscar el usuario por ID y actualizar isEmailVerified a true
       const user = await User.findByIdAndUpdate(
         userId,
         { isEmailVerified: true },
@@ -237,15 +280,13 @@ export const verifyEmail = async (req, res, next) => {
       );
 
       if (!user) {
-        return next(createError(404, "Usuario no encontrado."));
+        return next(createError(404, "User not found."));
       }
 
-      // Redirigir al usuario a la página de inicio de sesión o página de éxito
-      // O simplemente enviar una respuesta de éxito
       res
         .status(200)
         .send(
-          "Correo electrónico verificado exitosamente. Ahora puedes iniciar sesión."
+          "Email successfully verified. You can now log in."
         );
     });
   } catch (err) {
@@ -255,40 +296,40 @@ export const verifyEmail = async (req, res, next) => {
 
 export const changePassword = async (req, res, next) => {
   try {
-    const userId = req.body.userId; // O obtener el ID de usuario de alguna otra manera, e.g., a través de un token JWT
+    const userId = req.userId;
     const { currentPassword, newPassword } = req.body;
+
+    if (!userId || !currentPassword || !newPassword) {
+      return next(createError(400, "Invalid input"));
+    }
+
     const user = await User.findById(userId);
     if (!user) {
-      return next(createError(404, "¡Usuario no existe!"));
+      return next(createError(404, "User does not exist"));
     }
 
-    // Verificar si la contraseña actual es correcta
     const isMatch = await bcrypt.compare(currentPassword, user.password);
     if (!isMatch) {
-      return next(createError(400, "¡Contraseña actual no es correcta!"));
+      return next(createError(400, "Current password is incorrect"));
     }
 
-    // Generar hash de la nueva contraseña
-    const salt = bcrypt.genSaltSync(10);
-    const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
-
-    // Actualizar la contraseña del usuario
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
     user.password = hashedNewPassword;
     user.passwordChangeRequired = false;
     user.passwordExpiresAt = null;
     await user.save();
 
     const changeDate = new Date().toLocaleString();
-    const userIp =
-      req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+    const userIp = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
     await sendPasswordChangeNotification(
       user.email,
+      user.fullName,
       user.username,
       changeDate,
       userIp
     );
 
-    res.status(200).send("¡Contraseña ha sido cambiada exitosamente!");
+    res.status(200).send("Password has been successfully changed");
   } catch (err) {
     next(err);
   }

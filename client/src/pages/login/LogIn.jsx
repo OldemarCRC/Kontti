@@ -26,13 +26,13 @@ const Login = () => {
 
   // Notifying if login was Successful
   const notify = () => {
-    toast.success("¡Inicio de sesión exitoso!");
+    toast.success("Login successful!");
   };
 
   // Checking username and password
   useEffect(() => {
     if (error) {
-      toast.error("Inicio de sesión fallido");
+      toast.error("Login failed");
     }
   }, [error]);
 
@@ -45,26 +45,31 @@ const Login = () => {
         credentials
       );
       if (res.data.details.isEmailVerified) {
-        dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-        sessionStorage.setItem("user", JSON.stringify(res.data.details)); // Asegúrate de usar JSON.stringify aquí
+
+        const token = res.data.details.token;
+        const userDetails = res.data.details;
+
+        dispatch({ type: "LOGIN_SUCCESS", payload: userDetails });
+        sessionStorage.setItem("userToken", token); // Guardar el token
+        sessionStorage.setItem("user", JSON.stringify(userDetails)); // Asegúrate de usar JSON.stringify aquí
 
         // Redireccionar según el rol del usuario
         let destinationRoute = "/home"; // Ruta predeterminada
-        if (res.data.details.role === "operator") {
+        if (userDetails.role === "operator") {
           destinationRoute = "/map"; // Ruta específica para operadores
         }
         notify();
         setTimeout(() => navigate(destinationRoute), 2000);
       } else {
         const errorMessage =
-          "Por favor, verifica tu correo electrónico antes de iniciar sesión.";
+          "Please verify your email before logging in.";
         toast.error(errorMessage);
         dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
       }
     } catch (err) {
       // Este bloque ahora manejará todos los mensajes de error.
       const errorMessage =
-        err.response?.data?.message || "Inicio de sesión fallido.";
+        err.response?.data?.message || "Login failed.";
       toast.error(errorMessage);
       dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
     }
@@ -79,11 +84,11 @@ const Login = () => {
             <div>
               <h1 className="app-name">Kontti</h1>
               <h2>Containers Hub App</h2>
-            </div> 
-            <h5 className="login-message">Inicia sesión en tu cuenta</h5>
+            </div>
+            <h5 className="login-message">Log in to your account</h5>
             <div className="label-input">
               <label form="username" className="login-label">
-                Nombre de usuario
+                User name
               </label>
               <input
                 value={credentials.username}
@@ -96,7 +101,7 @@ const Login = () => {
             </div>
             <div className="label-input">
               <label form="passowrd" className="login-label">
-                Contraseña
+                Password
               </label>
               <input
                 value={credentials.password}
@@ -116,10 +121,10 @@ const Login = () => {
               >
                 {loading && (
                   <div className="" role="status">
-                    <span className="visually-hidden">Cargando...</span>
+                    <span className="visually-hidden">Loading...</span>
                   </div>
                 )}
-                Iniciar sesión
+                Login
               </button>
               <br />
             </div>

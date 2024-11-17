@@ -8,7 +8,7 @@ import "./change_password.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
-// User Registration
+
 const ChangePassword = () => {
   const [formData, setFormData] = useState({
     password: "",
@@ -16,10 +16,8 @@ const ChangePassword = () => {
     confirmNewPassword: "",
   });
 
-  // AuthContext Authentication
-  const { user, dispatch } = useContext(AuthContext);
 
-  // Navigation
+  const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +26,7 @@ const ChangePassword = () => {
     }
   }, [user, navigate]);
 
-  // Handling changes
+
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -37,35 +35,46 @@ const ChangePassword = () => {
     }));
   };
 
-  // Notifying if registration was Successful
   const notify = () => {
     toast.success("Password changed successfully!", {
-      onClose: () => delay(), // Llama a delay cuando la notificación se cierra
+      onClose: () => delay(),
     });
   };
 
-  // Delay time & Navigation
   const delay = () => {
     sessionStorage.removeItem("user");
     dispatch({ type: "LOGOUT" });
     navigate("/");
   };
 
-  // User Submit for Password Change
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const token = sessionStorage.getItem("userToken");
+    if (!token) {
+      console.error("No token found in sessionStorage");
+      return;
+    }
     const { password, newPassword, confirmNewPassword } = formData;
     if (newPassword !== confirmNewPassword) {
       toast.error("New passwords do not match!");
       return;
     }
     try {
-      await axios.put(`${process.env.REACT_APP_API_URL}/auth/change-password`, {
-        userId: user._id,
-        currentPassword: password,
-        newPassword,
-      });
-      notify(); // Notificar al usuario sobre el cambio exitoso
+      await axios.put(
+        `${process.env.REACT_APP_API_URL}/auth/change-password`,
+        {
+          userId: user._id,
+          currentPassword: password,
+          newPassword,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      notify();
     } catch (error) {
       console.log("REQUEST ERROR:", error.response ? error.response : error);
       toast.error("Password change unsuccessful!");
@@ -80,19 +89,19 @@ const ChangePassword = () => {
         <div className="change-password-form">
           <form onSubmit={handleSubmit}>
             <h4 className="change-password-text">
-              Cambiar contraseña para:
+              Change password for:
             </h4>
             <p className="change-password-text">{user?.username}</p>
             <div className="label-input">
               <label className="form-label" htmlFor="password">
-                Contraseña actual
+                Current password
               </label>
               <input
                 value={formData.password}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="Contraseña actual"
+                placeholder="Current password"
                 id="password"
                 name="password"
                 required
@@ -100,14 +109,14 @@ const ChangePassword = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="newPassword">
-                Nueva contraseña
+                New password
               </label>
               <input
                 value={formData.newPassword}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="Nueva contraseña"
+                placeholder="New password"
                 id="newPassword"
                 name="newPassword"
                 required
@@ -115,14 +124,14 @@ const ChangePassword = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="confirmNewPassword">
-                Confirmar nueva contraseña
+                Confirm new password
               </label>
               <input
                 value={formData.confirmNewPassword}
                 onChange={handleChange}
                 type="password"
                 className="form-input"
-                placeholder="Confirmar nueva contraseña"
+                placeholder="Confirm new password"
                 id="confirmNewPassword"
                 name="confirmNewPassword"
                 required
@@ -130,7 +139,7 @@ const ChangePassword = () => {
             </div>
             <div className="change-password-button">
               <button className="lbtn" type="submit">
-                Cambiar contraseña
+                Confirm password change
               </button>
             </div>
           </form>

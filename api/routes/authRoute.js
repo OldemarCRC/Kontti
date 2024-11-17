@@ -1,11 +1,12 @@
 import express from "express";
-import { loginLimiter, loginSecurityMiddleware, login, register, verifyEmail, changePassword } from "../controllers/authController.js";
+import { isMongoConnected, loginLimiter, loginSecurityMiddleware, login, register, verifyEmail, changePassword } from "../controllers/authController.js";
+import { verifyToken } from "../utils/verifyToken.js";
 
 const router = express.Router();
 
-router.post("/register", register)
-router.post("/login", loginLimiter, loginSecurityMiddleware, login)
+router.post("/register", verifyToken, register)
+router.post("/login", isMongoConnected, loginLimiter, loginSecurityMiddleware, login)
 router.get("/verify-email", verifyEmail);
-router.put("/change-password", changePassword);
+router.put("/change-password", verifyToken, changePassword);
 
 export default router
