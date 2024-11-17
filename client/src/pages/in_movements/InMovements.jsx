@@ -125,7 +125,7 @@ function InMovements() {
       navigate("/");
     } else if (user.role === "operator") {
       // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/terminal-map");
+      navigate("/map");
     }
 
     // Obtener la fecha y hora actual

@@ -12,6 +12,9 @@ function DataManagement() {
   useEffect(() => {
     if (!user) {
       navigate("/");
+    }else if(user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/map");
     }
   }, [user, navigate]);
 

@@ -24,6 +24,9 @@ const Navbar = () => {
         <div className="navbar-option-page" onClick={() => handleNavigate("/query-page")}>
           <h3 className="navbar-option-text">Consultas</h3>
         </div>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/map")}>
+          <h3 className="navbar-option-text">Mapa de terminal</h3>
+        </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/terminal-map")}>
           <h3 className="navbar-option-text">Plano de estibas</h3>
         </div>

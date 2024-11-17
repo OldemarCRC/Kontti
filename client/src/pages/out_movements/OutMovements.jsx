@@ -28,7 +28,11 @@ function OutMovements() {
   useEffect(() => {
     if (!user) {
       navigate("/");
-    } else {
+    } else if (user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/map");
+    }
+    else {
       const now = new Date();
       const currentDate = now.toISOString().slice(0, 10); // Formato AAAA-MM-DD
       const currentTime = now.toTimeString().slice(0, 5); // Formato HH:MM

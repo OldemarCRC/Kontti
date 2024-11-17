@@ -51,7 +51,7 @@ const Login = () => {
         // Redireccionar según el rol del usuario
         let destinationRoute = "/home"; // Ruta predeterminada
         if (res.data.details.role === "operator") {
-          destinationRoute = "/terminal-map"; // Ruta específica para operadores
+          destinationRoute = "/map"; // Ruta específica para operadores
         }
         notify();
         setTimeout(() => navigate(destinationRoute), 2000);

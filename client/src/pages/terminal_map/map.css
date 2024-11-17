@@ -1,0 +1,131 @@
+.map-page {
+  display: flex;
+}
+
+.location-container {
+  flex: 1;
+  padding-top: 4%;
+}
+
+.map-container {
+  flex: 3;
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%; /* Asume una relación de aspecto 16:9, ajusta según tu imagen */
+  background-image: url('../../assets/images/tecsol_1.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* .stack-view {
+  flex: 3;
+} */
+
+.map-stack {
+  position: absolute;
+  width: 5%; /* Ajusta según necesites */
+  aspect-ratio: 2 / 1; /* Mantiene la forma cuadrada para A y B */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vw; /* Tamaño de fuente responsive */
+  border: 2px solid;
+  background-color: rgb(239, 239, 81);
+  border-color: rgb(7, 234, 196);
+}
+
+/* Zona A */
+.map-stack-a1 { top: 73%; left: 35%; transform: rotate(6deg);}
+.map-stack-a2 { top: 67%; left: 36%; transform: rotate(6deg); }
+.map-stack-a3 { top: 60%; left: 36.5%; transform: rotate(6deg);  }
+.map-stack-a4 { top: 54%; left: 37%; transform: rotate(6deg); }
+.map-stack-a5 { top: 48%; left: 37.5%; transform: rotate(6deg);  }
+.map-stack-a6 { top: 42%; left: 38%; transform: rotate(6deg);}
+.map-stack-a7 { top: 36%; left: 38.5%; transform: rotate(6deg);}
+
+/* Zona B */
+.map-stack-b1 { top: 73.5%; left: 42.5%; transform: rotate(6deg);}
+.map-stack-b2 { top: 67.5%; left: 43%; transform: rotate(6deg); }
+.map-stack-b3 { top: 61%; left: 43.5%; transform: rotate(6deg);}
+.map-stack-b4 { top: 54.5%; left: 44%; transform: rotate(6deg);}
+.map-stack-b5 { top: 48.5%; left: 44.5%; transform: rotate(6deg);}
+.map-stack-b6 { top: 42.5%; left: 45%; transform: rotate(6deg);}
+.map-stack-b7 { top: 36.5%; left: 45.5%; transform: rotate(6deg);}
+
+/* Zona C */
+.map-stack-c {
+  width: 12%; /* Más ancho que los divs A y B */
+  aspect-ratio: 4 / 1; /* Hace que los divs C sean rectangulares */
+  background-color: rgb(239, 239, 81);
+  border-color: rgb(7, 234, 196);
+}
+
+.map-stack-c1 { top: 76%; left: 54%; transform: rotate(6deg); }
+.map-stack-c2 { top: 70%; left: 54.5%; transform: rotate(6deg); }
+.map-stack-c3 { top: 64%; left: 55%; transform: rotate(6deg); }
+.map-stack-c4 { top: 57%; left: 55.5%; transform: rotate(6deg); }
+
+.map-stack:hover {
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .map-stack {
+    font-size: 3vw; /* Aumenta el tamaño de fuente en pantallas más pequeñas */
+  }
+  
+  .map-stack-c {
+    width: 20%; /* Puedes ajustar esto para pantallas más pequeñas si es necesario */
+  }
+}
+
+
+
+.location-container{
+  display: flex;
+  flex-direction: column;
+  }
+  
+  .location-header{
+  text-align: center;
+  margin-top: 15px;
+  }
+  
+  .location-form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+  
+  fieldset{
+      display: flex;
+      flex-direction: column;
+      
+      align-items: center;
+  }
+  
+  .location-item{
+      display: flex;
+      flex-direction: column;
+      width: 30vw;
+      height: 80px;
+      align-content: center;
+      justify-content: center;
+  }
+  
+  .container-location{
+      display: flex;
+      flex-direction: column;
+      font-size: 20px;
+  }
+  
+  .location-select{
+      font-size: 15px;
+  }
+  
+  .position-button{
+      font-size: 15px;
+      
+  }

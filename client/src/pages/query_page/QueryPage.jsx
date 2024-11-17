@@ -57,7 +57,11 @@ const QueryPage = () => {
   useEffect(() => {
     if (!user) {
       navigate("/");
-    } else {
+    }else if (user.role === "operator") {
+      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+      navigate("/map");
+    }
+    else {
       const loadData = async () => {
         try {
           const inventoryData = await fetchInventory();

@@ -21,7 +21,7 @@ function Home() {
       navigate("/");
     } else if (user.role === "operator") {
       // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/terminal-map");
+      navigate("/map");
     }
     // Puedes agregar más condiciones para otros roles si es necesario
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias

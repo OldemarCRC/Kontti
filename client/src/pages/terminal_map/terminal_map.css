@@ -23,13 +23,13 @@
 
 .stack-details {
   flex: 4; /* Toma una mayor fracción del espacio disponible */
-  padding: 10px;
+  padding: 60px 10px 10px 10px;
   overflow-y: auto; /* Para desplazamiento si el contenido es muy largo */
 }
 
 .containers-without-position {
   flex: 1;
-  padding: 5px;
+  padding: 10px;
   overflow-y: auto;
 }
 
@@ -83,29 +83,36 @@
   height: calc(
     100% / 8
   ); /* Calcula la altura para que 8 stacks quepan dentro de C */
+  
 }
 
 .column {
   flex: 1; /* Los divs de column se expandirán para llenar el espacio disponible */
   border: 1px solid #39393b; /* Borde para las columnas */
   margin: 0 2px; /* Margen entre columnas */
-  width: 20px;
+  width: 10px;
   
 }
 
 .stack-view {
   display: flex;
   flex-direction: row;
+  width: 480px; /*para el ancho de las columnas de stacks*/
 }
 
 .height {
   border: 1px solid rgb(144, 136, 136);
-  background-color: #b6b3b3;
+  /* background-color: #b6b3b3; */
+  background-image: url('../../assets/images/container.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
   height: 100px;
   font-size: smaller;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
     -10px -10px 20px rgba(255, 255, 255, 0.5);
     transition: transform 0.6s ease; /* Agrega transición suave */
+    color: blue;
 }
 
 .empty-slot{
