@@ -11,7 +11,7 @@ export const sendVerificationEmail = async (fullName, email, verificationUrl, te
       <p>You have 24 hours to change your password before your account is locked.</p>
       <p>Click the button below to verify your account:</p>
       <a href="${verificationUrl}" style="padding: 10px 20px; background-color: #276ba6; color: white; text-decoration: none;">Verify account</a>
-      <p>f you did not create an account using this email address, please ignore this message.</p>
+      <p>If you did not create an account using this email address, please ignore this message.</p>
     `;
   
     const transporter = nodemailer.createTransport({
