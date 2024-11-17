@@ -70,7 +70,7 @@ export const sendVerificationEmail = async (fullName, email, verificationUrl, te
   };
 
   export const sendLoginNotification = async (email, fullName, username, loginDate, userIp) => {
-    const subject = "Notificación de inicio de sesión";
+    const subject = "Login Notification";
     const htmlContent = `
       <h1>Hello <strong>${fullName}</strong>!</h1>
     
