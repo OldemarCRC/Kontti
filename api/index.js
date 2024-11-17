@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 import authRoute from "./routes/authRoute.js";
 import usersRoute from "./routes/usersRoute.js";
 import movementRoute from "./routes/movementRoute.js";
+import onLineUsersRouter from "./routes/onLineUsersRoute.js";
 import inventoryRoute from "./routes/inventoryRoute.js";
 import customersRoute from "./routes/customersRoute.js";
 import dispatchOrderRoute from "./routes/dispatchOrderRoute.js";
@@ -49,6 +50,7 @@ app.use("/api/customers", customersRoute);
 app.use("/api/dispatchOrder", dispatchOrderRoute);
 app.use("/api/truck-companies", truckCompaniesRoute);
 app.use("/api/customs-manifest", customsManifestRoute);
+app.use("/api", onLineUsersRouter);
 
 app.use((err, req, res, next) => {
   const errorStatus = err.status || 500;

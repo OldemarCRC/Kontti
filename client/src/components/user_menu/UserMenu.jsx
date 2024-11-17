@@ -1,4 +1,5 @@
 import "./user_menu.css";
+import axios from 'axios';
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
@@ -7,18 +8,29 @@ import "react-toastify/dist/ReactToastify.css";
 
 const UserMenu = () => {
   const { user, dispatch } = useContext(AuthContext);
+  const handleLogout = async () => {
+    try {
+      // Obtén la información del usuario de la sesión
+      const user = JSON.parse(sessionStorage.getItem("user"));
 
-  const notify = () => {
-    toast.success("Logged out");
-  };
+      // Envía la solicitud al backend para marcar al usuario como desconectado
+      await axios.post(`${process.env.REACT_APP_API_URL}/logout`, {
+        userId: user._id,
+      });
 
-  const handleLogout = () => {
-    notify();
-    setTimeout(() => {
-      sessionStorage.removeItem("user");
-      dispatch({ type: "LOGOUT" });
-      window.location.reload();
-    }, 800);
+      // Notifica al usuario sobre el logout exitoso
+      toast.success("Logged out");
+
+      // Limpia la sesión y actualiza el estado en el frontend
+      setTimeout(() => {
+        sessionStorage.removeItem("user");
+        dispatch({ type: "LOGOUT" });
+        window.location.reload();
+      }, 800);
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("There was an issue logging out. Please try again.");
+    }
   };
 
   return (
@@ -47,14 +59,14 @@ const UserMenu = () => {
                     </li>
                     <li className="user-menu-list">
                       <Link className="dropdown-item" to="/user-register">
-                        Registrar usuario
+                        Register user
                       </Link>
                     </li>
                   </>
                 )}
                 <li className="user-menu-list">
                   <Link className="dropdown-item" to="/change-password">
-                    Cambiar contraseña
+                    Change password
                   </Link>
                 </li>
                 <li className="user-menu-list">
@@ -63,7 +75,7 @@ const UserMenu = () => {
                     onClick={handleLogout}
                     style={{ cursor: "pointer" }}
                   >
-                    Cerrar sesión
+                    Log out
                   </span>
                 </li>
               </ul>
