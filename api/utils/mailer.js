@@ -86,7 +86,7 @@ export const sendVerificationEmail = async (fullName, email, verificationUrl, te
       <li><strong>IP Address:</strong> ${userIp}</li>
     </ul>
 
-    <p>Thank you for usin Kontti.</p>
+    <p>Thank you for using Kontti.</p>
 
     `;
   
