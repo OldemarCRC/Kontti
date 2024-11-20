@@ -13,26 +13,27 @@ const Navbar = () => {
     <nav className="navbar">
       <div className="navbar-options-container">
         <div className="navbar-option-page" onClick={() => handleNavigate("/in-movements")}>
-          <h3 className="navbar-option-text">Ingresos</h3>
+          <h3 className="navbar-option-text">Incomings</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/containers-dispatch")}>
-          <h3 className="navbar-option-text">Despachos</h3>
+          <h3 className="navbar-option-text">Dispatches</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/out-movements")}>
-          <h3 className="navbar-option-text">Salidas</h3>
+          <h3 className="navbar-option-text">Outgoings</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/query-page")}>
-          <h3 className="navbar-option-text">Consultas</h3>
+          <h3 className="navbar-option-text">Queries</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/map")}>
-          <h3 className="navbar-option-text">Mapa de terminal</h3>
+          <h3 className="navbar-option-text">Terminal Map</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/terminal-map")}>
-          <h3 className="navbar-option-text">Plano de estibas</h3>
+          <h3 className="navbar-option-text">Stevedore Plan</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/data-management")}>
-          <h3 className="navbar-option-text">Gestión de datos</h3>
+          <h3 className="navbar-option-text">Data Management</h3>
         </div>
+
       </div>
     </nav>
   );

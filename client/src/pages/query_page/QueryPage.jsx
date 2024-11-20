@@ -13,7 +13,7 @@ import Header from "../../components/header/Header.js";
 import { format } from "date-fns"; // Importa date-fns
 import "./query_page.css";
 
-const QueryPage = () => {
+function QueryPage() {
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
   const [inventory, setInventory] = useState([]);
@@ -53,52 +53,60 @@ const QueryPage = () => {
     temperature: "Temp",
     ventilation: "Vent",
   };
+  
+  const token = sessionStorage.getItem("userToken");
 
   useEffect(() => {
     if (!user) {
       navigate("/");
-    }else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
+    } else if (user.role === "operator") {
       navigate("/map");
     }
     else {
-      const loadData = async () => {
-        try {
-          const inventoryData = await fetchInventory();
-          const currentDate = new Date();
-
-          // Calcular días transcurridos
-          const updatedInventoryData = inventoryData.map((item) => {
-            const entryDate = new Date(item.dateAndTime);
-            const daysInTerminal = Math.floor(
-              (currentDate - entryDate) / (1000 * 60 * 60 * 24)
-            );
-            return { ...item, daysInTerminal };
-          });
-
-          setInventory(updatedInventoryData);
-          setFilteredInventory(updatedInventoryData);
-
-          const dispatchOrdersData = await fetchDispatchOrders();
-          setDispatchOrders(dispatchOrdersData);
-          setFilteredDispatchOrders(dispatchOrdersData);
-
-          const movementsData = await fetchMovements();
-          setMovements(movementsData);
-          setFilteredMovements(movementsData);
-
-          // Extraer clientes únicos del inventario
-          const uniqueCustomers = [
-            ...new Set(inventoryData.map((item) => item.customerName)),
-          ];
-          setCustomers(uniqueCustomers);
-        } catch (error) {
-          toast.error(error.message);
-        }
-      };
       loadData();
     }
   }, [user, navigate]);
+
+
+  const loadData = async () => {
+    try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const inventoryData = await fetchInventory(token);
+      const currentDate = new Date();
+
+      // Calcular días transcurridos
+      const updatedInventoryData = inventoryData.map((item) => {
+        const entryDate = new Date(item.dateAndTime);
+        const daysInTerminal = Math.floor(
+          (currentDate - entryDate) / (1000 * 60 * 60 * 24)
+        );
+        return { ...item, daysInTerminal };
+      });
+
+      setInventory(updatedInventoryData);
+      setFilteredInventory(updatedInventoryData);
+
+      const dispatchOrdersData = await fetchDispatchOrders(token);
+      setDispatchOrders(dispatchOrdersData);
+      setFilteredDispatchOrders(dispatchOrdersData);
+
+      const movementsData = await fetchMovements(token);
+      setMovements(movementsData);
+      setFilteredMovements(movementsData);
+
+      // Extraer clientes únicos del inventario
+      const uniqueCustomers = [
+        ...new Set(inventoryData.map((item) => item.customerName)),
+      ];
+      setCustomers(uniqueCustomers);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
 
   const handleFilter = (filterType, value) => {
     if (activeSection === "inventory") {
@@ -215,24 +223,24 @@ const QueryPage = () => {
                 </tr>
               </thead>
               <tbody>
-              {filteredInventory.map((item) => (
+                {filteredInventory.map((item) => (
                   <tr key={item._id}>
-                      <td>{item.customerName}</td>
-                      <td>{formatDateTime(item.dateAndTime)}</td>
-                      <td>{item.customsNumber}</td>
-                      <td>{item.portOfOrigin}</td>
-                      <td>{item.containerNumber}</td>
-                      <td>{item.containerSize}</td>
-                      <td>{item.containerType}</td>
-                      <td>{item.weight}</td>
-                      <td>{item.temperature}</td>
-                      <td>{item.ventilation}</td>
-                      <td>{item.portOfDestination}</td>
-                      <td>{item.daysInTerminal}</td>
-                    </tr>
-                    ))}
+                    <td>{item.customerName}</td>
+                    <td>{formatDateTime(item.dateAndTime)}</td>
+                    <td>{item.customsNumber}</td>
+                    <td>{item.portOfOrigin}</td>
+                    <td>{item.containerNumber}</td>
+                    <td>{item.containerSize}</td>
+                    <td>{item.containerType}</td>
+                    <td>{item.weight}</td>
+                    <td>{item.temperature}</td>
+                    <td>{item.ventilation}</td>
+                    <td>{item.portOfDestination}</td>
+                    <td>{item.daysInTerminal}</td>
+                  </tr>
+                ))}
               </tbody>
-            
+
             </table>
           </div>
         )}

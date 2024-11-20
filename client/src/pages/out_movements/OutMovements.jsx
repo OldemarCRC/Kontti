@@ -4,7 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 import { fetchDispatchOrders } from "../../services/dispatchOrdersService";
 import { updateDispatchOrderStatus } from "../../services/updateDispatchOrderStatus";
-import { uploadDataToMongoDB } from "../../services/uploadService.js"; // Servicio para crear movimiento
+import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import "./out_movements.css";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
@@ -25,11 +25,12 @@ function OutMovements() {
   const [dispatchOrders, setDispatchOrders] = useState([]);
   const [selectedDispatchOrder, setSelectedDispatchOrder] = useState(null);
 
+  const token = sessionStorage.getItem("userToken");
+
   useEffect(() => {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
       navigate("/map");
     }
     else {
@@ -43,14 +44,18 @@ function OutMovements() {
 
   const loadDispatchOrders = async () => {
     try {
-      const orders = await fetchDispatchOrders();
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const orders = await fetchDispatchOrders(token);
       const createdOrders = orders.filter(
         (order) => order.status === "created"
       );
       setDispatchOrders(createdOrders);
     } catch (error) {
-      console.error("Error cargando los despachos:", error);
-      toast.error("Error cargando los despachos");
+      console.error("Error Loading Dispatchs:", error);
+      toast.error("Error Loading Dispatchs");
     }
   };
 
@@ -69,10 +74,14 @@ function OutMovements() {
 
   const handleConfirmRelease = async () => {
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
       const { date, time } = formData;
 
       if (!date || !time) {
-        return toast.error("Por favor, ingrese la fecha y la hora de salida");
+        return toast.error("Please enter the departure date and time");
       }
 
       const dateAndTime = new Date(`${date}T${time}:00`);
@@ -83,7 +92,7 @@ function OutMovements() {
         dateAndTime,
         createdBy: user.username,
       };
-      await uploadDataToMongoDB(movementData, "movements");
+      await uploadDataToMongoDB(token, movementData, "movements");
 
       await updateDispatchOrderStatus(
         selectedDispatchOrder.orderNumber,
@@ -92,12 +101,12 @@ function OutMovements() {
 
       loadDispatchOrders();
       setSelectedDispatchOrder(null);
-      setFormData({ date: "", time: "", createdBy: "",});
+      setFormData({ date: "", time: "", createdBy: "", });
 
-      toast.success("¡Salida de contenedor confirmada!");
+      toast.success("Container exit movement successfully generated!");
     } catch (error) {
-      console.error("Error al confirmar la salida:", error);
-      toast.error("Error al confirmar la salida");
+      console.error("Error confirming container exit movement:", error);
+      toast.error("Error confirming container exit movement");
     }
   };
 
@@ -108,8 +117,8 @@ function OutMovements() {
       <Header />
       <div className="out-movement-container">
         <div className="out-movement-header">
-          <h1>Salidas</h1>
-          <p>Registrar salidas de contenedores de la terminal.</p>
+          <h1>Container Departure</h1>
+          <p>Register container departure from the terminal.</p>
         </div>
         <div className="out-movement-box">
           <form
@@ -117,16 +126,16 @@ function OutMovements() {
             onSubmit={(e) => e.preventDefault()}
           >
             <fieldset>
-              <legend className="legend">Salidas de contenedores</legend>
+              <legend className="legend">Container departures</legend>
               <div className="release-orders-section">
-                <h2>Confirmación de salida de contenedores</h2>
-                <h3>Seleccione el despacho a confirmar</h3>
+                <h2>Container departure confirmation</h2>
+                <h3>Select the dispatch to confirm</h3>
                 <select
                   value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
                   onChange={handleDispatchOrderChange}
                   className="select-in"
                 >
-                  <option value="">Seleccione un despacho</option>
+                  <option value="">Select a dispatch</option>
                   {dispatchOrders.map((order) => (
                     <option key={order._id} value={order._id}>
                       {order.containerNumber} - {order.orderNumber} - {order.consigneeName}
@@ -137,7 +146,7 @@ function OutMovements() {
                 {selectedDispatchOrder && (
                   <>
                     <div>
-                      <label htmlFor="date">Fecha de salida:</label>
+                      <label htmlFor="date">Departure date:</label>
                       <input
                         type="date"
                         id="date"
@@ -151,7 +160,7 @@ function OutMovements() {
                     </div>
 
                     <div>
-                      <label htmlFor="time">Hora de salida:</label>
+                      <label htmlFor="time">Departure time:</label>
                       <input
                         type="time"
                         id="time"
@@ -167,59 +176,59 @@ function OutMovements() {
                       />
                     </div>
                     <div className="order-details">
-                      <h4>Detalles del despacho</h4>
-                      
+                      <h4>Dispatch details</h4>
+
                       <p>
-                        <strong>Cliente:</strong>{" "}
+                        <strong>Customer:</strong>{" "}
                         {selectedDispatchOrder.customerName}
                       </p>
-                   
+
                       <p>
-                        <strong>Número de Orden:</strong>{" "}
+                        <strong>Dispatch order number:</strong>{" "}
                         {selectedDispatchOrder.orderNumber}
                       </p>
                       <p>
-                        <strong>Número de Aduana:</strong>{" "}
+                        <strong>Manifest number:</strong>{" "}
                         {selectedDispatchOrder.customsNumber}
                       </p>
-                     
-                    
+
+
                       <p>
-                        <strong>Mercancía:</strong>{" "}
+                        <strong>Goods:</strong>{" "}
                         {selectedDispatchOrder.commodity}
                       </p>
                       <p>
-                        <strong>Peso:</strong>{" "}
+                        <strong>Weight:</strong>{" "}
                         {selectedDispatchOrder.weight}
                       </p>
-                   
+
                       <p>
-                        <strong>Transportista:</strong>{" "}
+                        <strong>Trucking Company:</strong>{" "}
                         {selectedDispatchOrder.truckCo}
                       </p>
                       <p>
-                        <strong>Placa del camión:</strong>{" "}
+                        <strong>Truck license plate Nr.:</strong>{" "}
                         {selectedDispatchOrder.truckId}
                       </p>
                       <p>
-                        <strong>Conductor:</strong>{" "}
+                        <strong>Truck driver:</strong>{" "}
                         {selectedDispatchOrder.truckDriver}
                       </p>
                       <p>
-                        <strong>Número de Contenedor:</strong>{" "}
+                        <strong>Container number:</strong>{" "}
                         {selectedDispatchOrder.containerNumber}
                       </p>
                       <p>
-                        <strong>Número de precinto 1:</strong>{" "}
+                        <strong>Seal Nr. 1:</strong>{" "}
                         {selectedDispatchOrder.sealNumber_1}
                       </p>
                       <p>
-                        <strong>Número de precinto 2:</strong>{" "}
+                        <strong>Seal Nr. 2:</strong>{" "}
                         {selectedDispatchOrder.sealNumber_2}
                       </p>
                     </div>
                     <button onClick={handleConfirmRelease}>
-                      Confirmar salida de contenedor
+                      Confirm container departure
                     </button>
                   </>
                 )}

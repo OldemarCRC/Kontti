@@ -8,6 +8,9 @@ import "./in_movements.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
+import fetchCustomers from "../../services/fetchCustomers.js";
+import fetchCustomsManifests from "../../services/fetchCustomsManifests.js";
+import fetchTruckCompanies from "../../services/fetchTruckCompanies.js";
 
 function InMovements() {
   const { user } = useContext(AuthContext);
@@ -49,7 +52,9 @@ function InMovements() {
     createdBy: "",
   });
 
-  // Este efecto se ejecuta cada vez que formData.containerType cambia
+
+  const token = sessionStorage.getItem("userToken");
+
   useEffect(() => {
     const isReeferContainer = ["RFH", "RF"].includes(formData.containerType);
     setIsReefer(isReeferContainer);
@@ -72,73 +77,70 @@ function InMovements() {
   }, [formData.containerType, formData.isEmpty, formData.isNOR]);
 
   useEffect(() => {
-    const fetchCustomers = async () => {
+    const loadCustomers = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/customers`
-        );
-        setCustomers(response.data);
+        if (!token) {
+          console.error("No token found in sessionStorage");
+          return;
+        }
+        const customers = await fetchCustomers(token);
+        setCustomers(customers);
       } catch (error) {
-        console.error("Error cargando los clientes: ", error);
-        toast.error("Error al cargar los clientes.");
+        toast.error("Error loading customers.");
       }
     };
-
-    fetchCustomers();
+    loadCustomers();
   }, []);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const loadCustomsManifests = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/customs-manifest`
-        );
-        setManifests(response.data);
+        if (!token) {
+          console.error("No token found in sessionStorage");
+          return;
+        }
+        const manifests = await fetchCustomsManifests(token);
+        setManifests(manifests);
       } catch (error) {
-        console.error("Error cargando los manifiestos: ", error);
-        toast.error("Error al cargar los manifiestos.");
+        console.error("Error loading manifests: ", error);
+        toast.error("Error loading manifests.");
       }
     };
-
-    fetchData();
+    loadCustomsManifests();
   }, []);
 
   useEffect(() => {
-    const fetchTruckCompanies = async () => {
+    const loadTruckCompanies = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/truck-companies`
-        );
-        setTruckCompanies(response.data);
+        if (!token) {
+          console.error("No token found in sessionStorage");
+          return;
+        }
+        const truckCompanies = await fetchTruckCompanies(token);
+        setTruckCompanies(truckCompanies);
       } catch (error) {
-        console.error("Error cargando los clientes: ", error);
-        toast.error("Error al cargar los clientes.");
+        console.error("Error loading Truck Companies: ", error);
+        toast.error("Error loading Truck Companies.");
       }
     };
-
-    fetchTruckCompanies();
+    loadTruckCompanies();
   }, []);
 
   useEffect(() => {
     if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión
       navigate("/");
     } else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
       navigate("/map");
     }
 
-    // Obtener la fecha y hora actual
     const now = new Date();
     const currentDate = now.toISOString().slice(0, 10); // Formato AAAA-MM-DD
     const currentTime = now.toTimeString().slice(0, 5); // Formato HH:MM
 
-    // Actualizar el estado con la fecha y hora actuales
     setCurrentDateTime({ currentDate, currentTime });
   }, [user, navigate, setCurrentDateTime]);
 
   const handleCheckDigit = () => {
-    // Asume que el dígito verificador es el último caracter del número de contenedor
     const containerNumber = formData.containerNumber;
     const actualCheckDigit = parseInt(containerNumber.slice(-1), 10);
     const calculatedCheckDigit = calculateCheckDigit(
@@ -146,8 +148,7 @@ function InMovements() {
     );
 
     if (actualCheckDigit !== calculatedCheckDigit) {
-      alert("Número de contenedor incorrecto");
-      // Limpiar el input de containerNumber al establecer su valor a una cadena vacía
+      alert("Incorrect container number");
       setFormData({
         ...formData,
         containerNumber: "",
@@ -240,8 +241,12 @@ function InMovements() {
     } */
 
     try {
-      await uploadDataToMongoDB(dataToUpload, "movements");
-      toast.success("¡Ingreso exitoso!");
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      await uploadDataToMongoDB(token, dataToUpload, "movements");
+      toast.success("Successful data entry!");
       setFormData({
         movement: "In",
         entryType: "",
@@ -269,26 +274,22 @@ function InMovements() {
         createdBy: "",
       });
     } catch (error) {
-      console.error("Error subiendo datos:", error);
-      let errorMessage = "Error al ingresar el movimiento.";
+      console.error("Error loading movement entry data:", error);
+      let errorMessage = "Error loading movement entry data.";
 
       if (error.response) {
-        // Error de respuesta del servidor
         if (error.response.data && error.response.data.message) {
           errorMessage = error.response.data.message;
         } else if (error.response.status === 400) {
-          errorMessage = "Datos inválidos enviados al servidor.";
+          errorMessage = "Invalid data sent to the server.";
         } else if (error.response.status === 500) {
-          errorMessage = "Error interno del servidor.";
+          errorMessage = "Internal server error.";
         }
       } else if (error.request) {
-        // La solicitud fue hecha pero no se recibió respuesta
-        errorMessage = "No se pudo conectar con el servidor.";
+        errorMessage = "Could not connect to the server.";
       } else {
-        // Algo sucedió al configurar la solicitud que provocó un error
         errorMessage = error.message || errorMessage;
       }
-
       toast.error(errorMessage);
     }
   };
@@ -300,18 +301,18 @@ function InMovements() {
       <Header />
       <div className="in-movement-container">
         <div className="in-movement-header">
-          <h2>Ingreso de contenedores</h2>
+          <h2>Container Movement Entry</h2>
           <p>
-            Registrar ingreso de contenedores al estacionamiento transitorio.
+          Register Container Entry to Container Terminal.
           </p>
         </div>
         <form className="in-movement-form" onSubmit={handleSubmit}>
           <fieldset>
-            <legend className="legend">Ingresos</legend>
+            <legend className="legend">Container Entries</legend>
             <section className="data">
               <div className="in-movement-item">
                 <label htmlFor="entryType" className="in-movement-label">
-                  Tipo de ingreso
+                  Type of Entry
                 </label>
                 <select
                   value={formData.entryType}
@@ -321,18 +322,18 @@ function InMovements() {
                   name="entryType"
                   required
                 >
-                  <option value="">Seleccione tipo de ingreso</option>
-                  <option value="import">Importación</option>
-                  <option value="customsAux">Ingreso de otros predios</option>
+                  <option value="">Select Type of Entry</option>
+                  <option value="import">Import</option>
+                  <option value="customsAux">Entry from Other Container Terminals</option>
                   <option value="fromShipperOrConsignee">
-                    Ingreso de finca
+                    Entry from Customers
                   </option>
                 </select>
               </div>
 
               <div className="in-movement-item">
                 <label htmlFor="customsNumber" className="in-movement-label">
-                  No. de manifiesto
+                  Customs manifest number
                 </label>
                 <select
                   value={formData.customsNumber}
@@ -342,7 +343,7 @@ function InMovements() {
                   name="customsNumber"
                   required
                 >
-                  <option value="">Seleccione el manifiesto</option>
+                  <option value="">Select the customs manifest</option>
                   {manifests.map((manifest) => (
                     <option key={manifest._id} value={manifest.customsNumber}>
                       {manifest.customsNumber}
@@ -353,14 +354,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="motorVessel" className="in-movement-label">
-                  Nombre del buque
+                  Vessel name
                 </label>
                 <p>{formData.motorVessel}</p>
               </div>
 
               <div className="in-movement-item">
                 <label htmlFor="customerName" className="in-movement-label">
-                  Cliente
+                  Customer
                 </label>
                 <select
                   value={formData.customerName}
@@ -370,7 +371,7 @@ function InMovements() {
                   name="customerName"
                   required
                 >
-                  <option value="">Seleccione el cliente</option>
+                  <option value="">Select customer</option>
                   {customers.map((customer) => (
                     <option key={customer._id} value={customer.customerName}>
                       {customer.customerName}
@@ -381,7 +382,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="date" className="in-movement-label">
-                  Fecha
+                  Date
                 </label>
                 <input
                   type="date"
@@ -398,7 +399,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="time" className="in-movement-label">
-                  Hora
+                  Time
                 </label>
                 <input
                   type="time"
@@ -464,15 +465,15 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="containerNumber" className="in-movement-label">
-                  Número de contenedor
+                  Sea Container Number
                 </label>
                 <input
                   value={formData.containerNumber}
                   onChange={handleChange}
-                  onBlur={handleCheckDigit} // Se ejecuta handleCheckDigit cuando el input pierde el foco
+                  onBlur={handleCheckDigit}
                   type="text"
                   className="input-in"
-                  placeholder="Contenedor"
+                  placeholder="Container"
                   id="containerNumber"
                   name="containerNumber"
                   required
@@ -481,7 +482,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="containerSize" className="in-movement-label">
-                  Tam
+                  Container Size
                 </label>
                 <select
                   value={formData.containerSize}
@@ -491,7 +492,7 @@ function InMovements() {
                   name="containerSize"
                   required
                 >
-                  <option value="">Seleccione tamaño</option>
+                  <option value="">Select Container Size</option>
                   <option value="10">10</option>
                   <option value="20">20</option>
                   <option value="40">40</option>
@@ -501,7 +502,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="containerType" className="in-movement-label">
-                  Tipo
+                  Container Type
                 </label>
                 <select
                   value={formData.containerType}
@@ -511,7 +512,7 @@ function InMovements() {
                   name="containerType"
                   required
                 >
-                  <option value="">Seleccione tipo</option>
+                  <option value="">Select Container Type</option>
                   <option value="RFH">RFH</option>
                   <option value="RF">RF</option>
                   <option value="HC">HC</option>
@@ -535,22 +536,22 @@ function InMovements() {
                   name="isEmpty"
                   required
                 >
-                  <option value="">Seleccione status</option>
-                  <option value="true">Vacío</option>
-                  <option value="false">Cargado</option>
+                  <option value="">Select Container Status</option>
+                  <option value="true">Empty</option>
+                  <option value="false">Full</option>
                 </select>
               </div>
 
               <div className="in-movement-item">
                 <label htmlFor="commodity" className="in-movement-label">
-                  Mercancía
+                  Commodity
                 </label>
                 <input
                   value={formData.commodity}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Mercancía"
+                  placeholder="Commodity"
                   id="commodity"
                   name="commodity"
                   disabled={formData.isEmpty === true}
@@ -560,7 +561,7 @@ function InMovements() {
               {isNORActive && (
                 <div className="in-movement-item">
                   <label htmlFor="isNOR" className="in-movement-label">
-                    Indique si la mercancía es refrigerada
+                    Indicate if the goods are refrigerated
                   </label>
                   <select
                     value={formData.isNOR?.toString() ?? ""}
@@ -569,9 +570,9 @@ function InMovements() {
                     id="isNOR"
                     name="isNOR"
                   >
-                    <option value="">Seleccione condición</option>
-                    <option value="false">Carga refrigerada</option>
-                    <option value="true">Carga seca</option>
+                    <option value="">Select condition</option>
+                    <option value="false">Refrigerated cargo</option>
+                    <option value="true">Dry cargo</option>
                   </select>
                 </div>
               )}
@@ -579,7 +580,7 @@ function InMovements() {
                 <>
                   <div className="in-movement-item">
                     <label htmlFor="temperature" className="in-movement-label">
-                      Temp
+                      Temperature
                     </label>
                     <input
                       value={formData.temperature}
@@ -594,7 +595,7 @@ function InMovements() {
                   </div>
                   <div className="in-movement-item">
                     <label htmlFor="ventilation" className="in-movement-label">
-                      Vent
+                      Ventilation
                     </label>
                     <input
                       value={formData.ventilation}
@@ -612,7 +613,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="portOfOrigin" className="in-movement-label">
-                  Puerto de origen
+                  Port of Origin (PO)
                 </label>
                 <select
                   value={formData.portOfOrigin}
@@ -621,7 +622,7 @@ function InMovements() {
                   id="portOfOrigin"
                   name="portOfOrigin"
                 >
-                  <option value="">PO</option>
+                  <option value="">Select Port of Origin</option>
                   <option value="NLRTM">Rotterdam, Países Bajos</option>
                   <option value="DEHAM">Hamburgo, Alemania</option>
                   <option value="BEAMB">Amberes, Bélgica</option>
@@ -645,14 +646,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="weight" className="in-movement-label">
-                  Peso
+                  Weight
                 </label>
                 <input
                   value={formData.weight}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Peso"
+                  placeholder="Weight"
                   id="weight"
                   name="weight"
                 />
@@ -660,14 +661,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="notes" className="in-movement-label">
-                  Observaciones
+                  Remarks
                 </label>
                 <input
                   value={formData.notes}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Observaciones"
+                  placeholder="Remarks"
                   id="notes"
                   name="notes"
                 />
@@ -675,14 +676,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="truckId" className="in-movement-label">
-                  Número de placa del camión
+                  Truck Plate Number
                 </label>
                 <input
                   value={formData.truckId}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Placa"
+                  placeholder="Truck Plate Number"
                   id="truckId"
                   name="truckId"
                   required
@@ -691,7 +692,7 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="truckCo" className="in-movement-label">
-                  Empresa de transporte
+                Transportation Company
                 </label>
                 <select
                   value={formData.truckCo}
@@ -701,7 +702,7 @@ function InMovements() {
                   name="truckCo"
                   required
                 >
-                  <option value="">Seleccione transportista</option>
+                  <option value="">Select Transportation Company</option>
                   {truckCompanies.map((truckCompany) => (
                     <option
                       key={truckCompany._id}
@@ -715,14 +716,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="truckDriver" className="in-movement-label">
-                  Nombre del chofer
+                  Driver´s name
                 </label>
                 <input
                   value={formData.truckDriver}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Conductor"
+                  placeholder="Driver´s name"
                   id="truckDriver"
                   name="truckDriver"
                   required
@@ -731,14 +732,14 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="sealNumber_1" className="in-movement-label">
-                  Precinto 1
+                  Seal Nr. 1
                 </label>
                 <input
                   value={formData.sealNumber_1}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Marchamo"
+                  placeholder="Seal Nr. 1"
                   id="sealNumber_1"
                   name="sealNumber_1"
                 />
@@ -746,21 +747,21 @@ function InMovements() {
 
               <div className="in-movement-item">
                 <label htmlFor="sealNumber_2" className="in-movement-label">
-                  Precinto 2
+                  Seal Nr. 2
                 </label>
                 <input
                   value={formData.sealNumber_2}
                   onChange={handleChange}
                   type="text"
                   className="input-in"
-                  placeholder="Marchamo 2"
+                  placeholder="Seal Nr. 2"
                   id="sealNumber_2"
                   name="sealNumber_2"
                 />
               </div>
             </section>
           </fieldset>
-          <button type="submit">Confirmar ingreso de mercancía</button>
+          <button type="submit">Confirm sea container´s entry</button>
         </form>
       </div>
       <Footer />

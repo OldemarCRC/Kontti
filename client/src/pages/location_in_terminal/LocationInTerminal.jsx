@@ -44,35 +44,32 @@ function LocationInTerminal() {
     setFilteredInventory(filteredData); // Actualiza los contenedores filtrados
   };
 
-  // Actualiza `setSelectedContainer` para también actualizar `formData.containerNumber`
+
   const handleContainerSelection = (containerNumber) => {
-    setSelectedContainer(containerNumber); // Actualiza el contenedor seleccionado
+    setSelectedContainer(containerNumber);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      containerNumber: containerNumber, // Asegúrate de que el número de contenedor se actualice en formData
+      containerNumber: containerNumber,
     }));
   };
 
   useEffect(() => {
-    // Función para verificar la existencia de la posición actual en el inventario
+
     const checkPositionInInventory = () => {
       const currentPosition = formData.locationInTerminal;
 
       if (currentPosition.length === 4) {
-        // Asegúrate de que se haya completado una posición válida
-        // Buscar en el inventario si existe un contenedor con la posición actual
         const exists = inventory.some(
           (container) => container.locationInTerminal === currentPosition
         );
         setIsSubmitDisabled(exists);
         if (exists) {
-          // Mostrar mensaje de error si la posición ya existe
+
           alert(
             "La posición especificada ya está ocupada por otro contenedor.",
           );
         }
         } else {
-          // Deshabilitar el botón si la posición no está completamente definida
           setIsSubmitDisabled(true);
         }
       };
@@ -82,7 +79,6 @@ function LocationInTerminal() {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Concatenar la nueva selección con los valores existentes
     let newLocationString = formData.locationInTerminal;
 
     if (name === "locationZone") {

@@ -36,7 +36,7 @@ function Home() {
       <div className="home">
         <div className="text-and-options">
           <h2 className="home-header">
-            Registro de movimientos e inventario de contenedores
+            Record of container movements and inventory.
           </h2>
 
           <div className="home-options-container">
@@ -44,21 +44,21 @@ function Home() {
               className="option-card-in"
               onClick={() => handleNavigate("/in-movements")}
             >
-              <p>Ingresos</p>
+              <p>Incomings</p>
             </div>
 
             <div
               className="option-card-di"
               onClick={() => handleNavigate("/containers-dispatch")}
             >
-              <p>Despachos</p>
+              <p>Dispatches</p>
             </div>
 
             <div
               className="option-card-out"
               onClick={() => handleNavigate("/out-movements")}
             >
-              <p>Salidas</p>
+              <p>Outgoings</p>
             </div>
 
             <div class="option-card-tm-container">
@@ -66,7 +66,7 @@ function Home() {
                 class="option-card-tm"
                 onClick={() => handleNavigate("/terminal-map")}
               >
-                <p>Plano de estibas</p>
+                <p>Stack plan</p>
               </div>
             </div>
 
@@ -74,14 +74,14 @@ function Home() {
               className="option-card-qp"
               onClick={() => handleNavigate("/query-page")}
             >
-              <p>Consultas</p>
+              <p>Queries</p>
             </div>
           </div>
           {/*Fin options-container */}
         </div>
         {/*Fin div text-and-options*/}
         <aside className="links-units-inquiry">
-          <h3>Enlaces de interés</h3>
+          <h3>Useful Links</h3>
 
           <ul>
             <li>
@@ -120,7 +120,7 @@ function Home() {
               >
                 <img
                   className="logo-link"
-                  src={cai_logo} // Reemplaza con la ruta correcta de tu imagen
+                  src={cai_logo}
                   alt="CAI logo"
                 />
               </a>
@@ -134,7 +134,7 @@ function Home() {
               >
                 <img
                   className="logo-link"
-                  src={triton_logo} // Reemplaza con la ruta correcta de tu imagen
+                  src={triton_logo}
                   alt="Triton logo"
                 />
               </a>
@@ -148,13 +148,12 @@ function Home() {
               >
                 <img
                   className="logo-link"
-                  src={tica_logo} // Reemplaza con la ruta correcta de tu imagen
+                  src={tica_logo}
                   alt="tica logo"
                 />
               </a>
             </li>
 
-            {/* Agrega más enlaces según sea necesario */}
           </ul>
         </aside>
       </div>

@@ -10,18 +10,12 @@ const UserMenu = () => {
   const { user, dispatch } = useContext(AuthContext);
   const handleLogout = async () => {
     try {
-      // Obtén la información del usuario de la sesión
       const user = JSON.parse(sessionStorage.getItem("user"));
-
-      // Envía la solicitud al backend para marcar al usuario como desconectado
       await axios.post(`${process.env.REACT_APP_API_URL}/logout`, {
         userId: user._id,
       });
-
-      // Notifica al usuario sobre el logout exitoso
       toast.success("Logged out");
 
-      // Limpia la sesión y actualiza el estado en el frontend
       setTimeout(() => {
         sessionStorage.removeItem("user");
         dispatch({ type: "LOGOUT" });

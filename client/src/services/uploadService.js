@@ -1,10 +1,10 @@
-export const uploadDataToMongoDB = async (dataToSend, collection) => {
+export const uploadDataToMongoDB = async (token, dataToSend, collection) => {
   try {
-    console.log(dataToSend);
     const response = await fetch(`${process.env.REACT_APP_API_URL}/${collection}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(dataToSend),
     });
@@ -23,10 +23,7 @@ export const uploadDataToMongoDB = async (dataToSend, collection) => {
   }
 };
 
-
-
-// Función para actualizar la localización del contenedor en el inventario
-export const updateContainerLocation = async (dataToSend) => {
+export const updateContainerLocation = async (token, dataToSend) => {
   try {
     const response = await fetch(`${process.env.REACT_APP_API_URL}/inventory/location`, {
       method: 'PATCH', // Cambia el método a PATCH para indicar una actualización parcial

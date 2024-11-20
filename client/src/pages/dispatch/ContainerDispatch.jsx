@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.jsx";
 import { fetchInventory } from "../../services/fetchInventory";
@@ -10,6 +9,7 @@ import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import { generatePDF } from "../../services/pdfService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
+import fetchTruckCompanies from "../../services/fetchTruckCompanies.js";
 
 function DispatchOrder() {
   const { user } = useContext(AuthContext);
@@ -54,38 +54,43 @@ function DispatchOrder() {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const token = sessionStorage.getItem("userToken");
 
   useEffect(() => {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
       navigate("/map");
-    }else {
+    } else {
       loadInventoryData();
       loadDispatchOrders();
     }
   }, [user, navigate]);
 
   useEffect(() => {
-    const fetchTruckCompanies = async () => {
+    const loadTruckCompanies = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/truck-companies`
-        );
-        setTruckCompanies(response.data);
+        if (!token) {
+          console.error("No token found in sessionStorage");
+          return;
+        }
+        const truckCompanies = await fetchTruckCompanies(token);
+        setTruckCompanies(truckCompanies);
       } catch (error) {
-        console.error("Error cargando los clientes: ", error);
-        toast.error("Error al cargar los clientes.");
+        console.error("Error loading Truck Companies: ", error);
+        toast.error("Error loading Truck Companies.");
       }
     };
-
-    fetchTruckCompanies();
+    loadTruckCompanies();
   }, []);
 
   const loadInventoryData = async () => {
     try {
-      const inventory = await fetchInventory();
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const inventory = await fetchInventory(token);
       setInventoryData(inventory);
 
       const containersNumbers = Array.from(
@@ -100,7 +105,11 @@ function DispatchOrder() {
 
   const loadDispatchOrders = async () => {
     try {
-      const orders = await fetchDispatchOrders();
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const orders = await fetchDispatchOrders(token);
       const createdOrders = orders.filter(
         (order) => order.status === "created"
       );
@@ -158,13 +167,12 @@ function DispatchOrder() {
       }));
     } else {
       console.error(
-        "No se encontró inventario para el contenedor seleccionado"
+        "No inventory found for the selected container."
       );
       setSelectedInventory(null);
     }
   };
 
-  // Ordena las órdenes de salida de más reciente a más antigua
   const sortedDispatchOrders = [...dispatchOrders].sort((a, b) => {
     return b.orderNumber.localeCompare(a.orderNumber);
   });
@@ -180,11 +188,16 @@ function DispatchOrder() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!selectedInventory) {
-      toast.error("No hay inventario");
+      toast.error("No inventory");
       return;
     }
 
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        toast.error("No token found in sessionStorage");
+        return;
+      }
       const currentDateTime = new Date().toISOString();
 
       const payload = {
@@ -218,8 +231,8 @@ function DispatchOrder() {
         creationDateTime: currentDateTime,
         status: "created",
       };
-      await uploadDataToMongoDB(payload, "dispatchOrder");
-      toast.success("¡Orden de salida registrada!");
+      await uploadDataToMongoDB(token, payload, "dispatchOrder");
+      toast.success("Dispatch order registered!");
 
       loadInventoryData();
       loadDispatchOrders();
@@ -232,12 +245,16 @@ function DispatchOrder() {
 
   const handleGeneratePDF = async () => {
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
       const pdfURL = await generatePDF(selectedDispatchOrder, user.username);
-      toast.success("¡Despacho generado correctamente!");
+      toast.success("Dispatch generated successfully!");
       window.open(pdfURL, "_blank");
     } catch (error) {
-      console.error("Error generando el PDF:", error);
-      toast.error("Error generando el PDF");
+      console.error("Error generating the PDF:", error);
+      toast.error("Error generating the PDF");
     }
   };
 
@@ -246,20 +263,20 @@ function DispatchOrder() {
       <Header />
       <div className="dispatch-order-container">
         <div className="dispatch-order-header">
-          <h1>Despacho de contenedores</h1>
-          <h2>Confección de boleta de despacho.</h2>
+          <h1>Container Dispatch</h1>
+          <h2>Preparation of Dispatch Order.</h2>
         </div>
         <div className="dispatch-order-box">
           <form className="dispatch-order-form" onSubmit={handleSubmit}>
             <fieldset>
-              <legend className="legend">Despachos</legend>
+              <legend className="legend">Dispatch</legend>
               <section className="data">
                 <div className="dispatch-order-item">
                   <label
                     htmlFor="containerNumber"
                     className="dispatch-order-label"
                   >
-                    Nro. de Contenedor
+                    Container number
                   </label>
                   <select
                     value={selectedContainerNumber}
@@ -269,7 +286,7 @@ function DispatchOrder() {
                     name="containerNumber"
                     required
                   >
-                    <option value="">Seleccione el contenedor</option>
+                    <option value="">Select the container</option>
                     {containersNumbers.map((container, index) => (
                       <option key={index} value={container}>
                         {container}
@@ -285,7 +302,7 @@ function DispatchOrder() {
                         htmlFor="containerSize"
                         className="dispatch-order-label"
                       >
-                        Size
+                        Container Size
                       </label>
                       <input
                         type="text"
@@ -303,7 +320,7 @@ function DispatchOrder() {
                         htmlFor="containerType"
                         className="dispatch-order-label"
                       >
-                        Type
+                        Container Type
                       </label>
                       <input
                         type="text"
@@ -321,7 +338,7 @@ function DispatchOrder() {
                         htmlFor="commodity"
                         className="dispatch-order-label"
                       >
-                        Mercancía
+                        Commodity
                       </label>
                       <input
                         type="text"
@@ -339,7 +356,7 @@ function DispatchOrder() {
                         htmlFor="temperature"
                         className="dispatch-order-label"
                       >
-                        Temperatura
+                        Temperature
                       </label>
                       <input
                         type="text"
@@ -357,7 +374,7 @@ function DispatchOrder() {
                         htmlFor="ventilation"
                         className="dispatch-order-label"
                       >
-                        Ventilación
+                        Ventilation
                       </label>
                       <input
                         type="text"
@@ -375,7 +392,7 @@ function DispatchOrder() {
                         htmlFor="customerName"
                         className="dispatch-order-label"
                       >
-                        Cliente
+                        Customer
                       </label>
                       <input
                         type="text"
@@ -393,7 +410,7 @@ function DispatchOrder() {
                         htmlFor="customsNumber"
                         className="dispatch-order-label"
                       >
-                        Manifiesto de ingreso
+                        Manifest number
                       </label>
                       <input
                         type="text"
@@ -411,7 +428,7 @@ function DispatchOrder() {
                         htmlFor="locationInTerminal"
                         className="dispatch-order-label"
                       >
-                        Ubicación en la terminal
+                        Location in Terminal
                       </label>
                       <input
                         type="text"
@@ -429,7 +446,7 @@ function DispatchOrder() {
                         htmlFor="orderNumber"
                         className="dispatch-order-label"
                       >
-                        Número de despacho
+                        Dispatch number
                       </label>
                       <input
                         type="text"
@@ -449,7 +466,7 @@ function DispatchOrder() {
             <section className="data">
               <div className="dispatch-order-item">
                 <label htmlFor="departureType" className="dispatch-order-label">
-                  Tipo de salida
+                  Type of Dispatch
                 </label>
                 <select
                   value={formData.departureType}
@@ -459,17 +476,17 @@ function DispatchOrder() {
                   name="departureType"
                   required
                 >
-                  <option value="">Seleccione tipo de salida</option>
-                  <option value="export">Exportación</option>
-                  <option value="toConsignee">Al consignatario</option>
-                  <option value="toShipper">Al shipper</option>
-                  <option value="toCustomsAux">Otro predio</option>
+                  <option value="">Select the type of Dispatch</option>
+                  <option value="export">Export</option>
+                  <option value="toConsignee">To the Consignee</option>
+                  <option value="toShipper">To the Shipper</option>
+                  <option value="toCustomsAux">To another terminals</option>
                 </select>
               </div>
 
               <div className="dispatch-order-item">
                 <label htmlFor="consigneeName" className="dispatch-order-label">
-                  Consignatario
+                  Consignee
                 </label>
                 <input
                   type="text"
@@ -484,7 +501,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="destination" className="dispatch-order-label">
-                  Destino
+                  Destination
                 </label>
                 <input
                   type="text"
@@ -498,7 +515,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="truckId" className="dispatch-order-label">
-                  Nro. de Camión/Placa
+                  Truck Number/License Plate
                 </label>
                 <input
                   type="text"
@@ -513,7 +530,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="truckCo" className="dispatch-order-label">
-                  Empresa de transporte
+                  Transportation Company
                 </label>
                 <select
                   value={formData.truckCo}
@@ -537,7 +554,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="truckDriver" className="dispatch-order-label">
-                  Nombre del Chofer
+                  Driver´s name
                 </label>
                 <input
                   type="text"
@@ -552,7 +569,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="sealNumber_1" className="dispatch-order-label">
-                  Nro. Precinto 1
+                  Seal Nr. 1
                 </label>
                 <input
                   type="text"
@@ -566,7 +583,7 @@ function DispatchOrder() {
 
               <div className="dispatch-order-item">
                 <label htmlFor="sealNumber_2" className="dispatch-order-label">
-                  Nro. Precinto 2
+                  Seal Nr. 2
                 </label>
                 <input
                   type="text"
@@ -580,18 +597,18 @@ function DispatchOrder() {
             </section>
 
             <button type="submit" className="submit-button">
-              Registrar boleta de salida
+              Register Dispatch Order
             </button>
           </form>
 
           <div className="dispatch-order-section">
-            <h3>Despachos por salir</h3>
+            <h3>Pending Dispatch Orders</h3>
             <select
               value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
               onChange={handleDispatchOrderChange}
               className="dispatch-order-select"
             >
-              <option value="">Seleccione una orden de salida</option>
+              <option value="">Select Dispatch Order</option>
               {sortedDispatchOrders.map((order) => (
                 <option key={order._id} value={order._id}>
                   {order.orderNumber} - {order.containerNumber}
@@ -604,7 +621,7 @@ function DispatchOrder() {
                 onClick={handleGeneratePDF}
                 className="generate-pdf-button"
               >
-                Generar Boleta
+                Generate Dispatch Slip
               </button>
             )}
           </div>
