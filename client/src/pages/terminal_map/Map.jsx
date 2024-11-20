@@ -42,12 +42,18 @@ const Map = () => {
   // Define la función para cargar el inventario
   const loadInventory = async () => {
     try {
-      const inventoryData = await fetchInventory();
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const inventoryData = await fetchInventory(token);
       setInventory(inventoryData);
     } catch (error) {
       console.error("Error al cargar el inventario: ", error);
     }
   };
+
+  const token = sessionStorage.getItem("userToken");
 
   // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
   useEffect(() => {
@@ -141,7 +147,11 @@ const Map = () => {
     };
 
     try {
-      await updateContainerLocation(dataToUpload);
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      await updateContainerLocation(token, dataToUpload);
       toast.success("¡Posición actualizada!", { autoClose: 5000 });
       // Restablecer el formulario a su estado inicial aquí
       setFormData({

@@ -1,6 +1,6 @@
 export async function fetchMovements(token) {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/movements/movements`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/movements`, {
         headers: {
             'Authorization': `Bearer ${token}`
         }

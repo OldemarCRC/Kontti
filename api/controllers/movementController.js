@@ -111,32 +111,13 @@ export const getMovement = async (req, res, next) => {
   }
 };
 
-export const getMovements = async (req, res, next) => {
-  Object.keys(req.query).forEach((key) => {
-    if (req.query[key] === "") {
-      delete req.query[key];
-    }
-  });
-
-  console.log(req.query);
+export const getMovements = async (req, res) => {
+  try{
+  const movements = await Movement.find();
+  res.status(200).json(movements);
+}catch (error) {
+  console.error("Error al obtener los movimientos:", error);
+  res.status(500).json({ message: "Error al obtener los movimientos" });
+}
 };
 
-/*
-export const createMovement = async (req, res) => {
-  try {
-    // Verifica si el cuerpo de la solicitud es un array
-    if (Array.isArray(req.body)) {
-      // Inserta múltiples documentos
-      const movements = await Movement.insertMany(req.body);
-      res.status(201).json(movements);
-    } else {
-      // Inserta un solo documento
-      const newMovement = new Movement(req.body);
-      await newMovement.save();
-      res.status(201).json(newMovement);
-    }
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-*/
