@@ -67,7 +67,6 @@ function QueryPage() {
     }
   }, [user, navigate]);
 
-
   const loadData = async () => {
     try {
       if (!token) {

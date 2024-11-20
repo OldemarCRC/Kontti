@@ -12,7 +12,6 @@ const zones = [
   { id: "A", stacks: [7, 6, 5, 4, 3, 2, 1] },
   { id: "B", stacks: [7, 6, 5, 4, 3, 2, 1] },
   { id: "C", stacks: [8, 7, 6, 5, 4, 3, 2, 1] },
-  // Más zonas si es necesario...
 ];
 
 function TerminalMap() {
@@ -21,21 +20,24 @@ function TerminalMap() {
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  // Función para cargar o actualizar el inventario
+
   const loadInventory = async () => {
-    setIsLoading(true); // Indica que se está cargando el inventario
+    setIsLoading(true);
     try {
-      const fetchedInventory = await fetchInventory(); // Suponiendo que fetchInventory es tu función que obtiene los datos
-      setInventoryData(fetchedInventory); // Actualiza el estado con los nuevos datos
-      setIsLoading(false); // Finaliza el estado de carga
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      const fetchedInventory = await fetchInventory(token);
+      setInventoryData(fetchedInventory);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error fetching inventory:", error);
-      setIsLoading(false); // Asegúrate de finalizar el estado de carga incluso si hay un error
+      setIsLoading(false);
     }
   };
 
   const [filteredInventory, setFilteredInventory] = useState([]);
-  // Estado para el número de contenedor seleccionado
   const [selectedContainer, setSelectedContainer] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [formData, setFormData] = useState({
@@ -43,22 +45,19 @@ function TerminalMap() {
     locationInTerminal: "",
   });
 
-  // Maneja el cambio en el input de búsqueda
   const handleSearchChange = (e) => {
     const value = e.target.value;
-    setSelectedContainer(value); // Actualiza el contenedor seleccionado con el valor actual
+    setSelectedContainer(value);
 
-    // Filtra el inventario basado en la entrada del usuario
     const filteredData = inventory.filter((container) =>
       container.containerNumber.startsWith(value.toUpperCase())
     );
-    setFilteredInventory(filteredData); // Actualiza los contenedores filtrados
+    setFilteredInventory(filteredData);
   };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Concatenar la nueva selección con los valores existentes
     let newLocationString = formData.locationInTerminal;
 
     if (name === "locationZone") {
@@ -79,32 +78,28 @@ function TerminalMap() {
     }));
   };
 
-
-  // Actualiza `setSelectedContainer` para también actualizar `formData.containerNumber`
   const handleContainerSelection = (containerNumber) => {
-    setSelectedContainer(containerNumber); // Actualiza el contenedor seleccionado
+    setSelectedContainer(containerNumber);
     setFormData((prevFormData) => ({
       ...prevFormData,
-      containerNumber: containerNumber, // Asegúrate de que el número de contenedor se actualice en formData
+      containerNumber: containerNumber,
     }));
   };
 
+  const token = sessionStorage.getItem("userToken");
+
   useEffect(() => {
-    loadInventory(); // Carga inicial del inventario
+    loadInventory();
   }, []);
 
-  // Verifica si el usuario ha iniciado sesión y redirige según el rol del usuario
   useEffect(() => {
     if (!user) {
-      // Si 'user' es null o undefined, redirige al inicio de sesión
       navigate("/");
-    } 
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
-
+    }
+  }, [user, navigate]);
 
   const [selectedStack, setSelectedStack] = useState("INITIAL_VIEW");
 
-  // Calcula la cantidad de contenedores para cada stack
   const countContainersInStack = (zoneId, stackNumber) => {
     return inventoryData.filter(
       (container) =>
@@ -113,7 +108,6 @@ function TerminalMap() {
     ).length;
   };
 
-  // Filtramos los contenedores sin posición definida o sin el campo `locationInTerminal`
   const containersWithoutPosition = inventoryData.filter(
     (container) =>
       !container.locationInTerminal ||
@@ -124,14 +118,12 @@ function TerminalMap() {
   const columnsC = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"];
   const heights = [/* 6, 5, */ 4, 3, 2, 1];
 
-  // Agregamos una función para encontrar contenedores por ubicación
   const findContainerByLocation = (location) => {
     return inventoryData.find(
       (container) => container.locationInTerminal === location
     );
   };
 
-  // Generar una vista de stack vacía para la renderización inicial
   const renderInitialStackView = () => (
     <div className="stack-view">
       {columnsAtoB.map((column) => (
@@ -148,66 +140,68 @@ function TerminalMap() {
 
   const handleUpload = async () => {
     /*  setIsUploading(true); */
- 
-     const dataToUpload = {
-       ...formData,
-     };
- 
-     try {
-       await updateContainerLocation(dataToUpload);
-       toast.success("¡Posición actualizada!", { autoClose: 5000 });
-       // Restablecer el formulario a su estado inicial aquí
-       setFormData({
-         containerNumber: "",
-         locationInTerminal: "",
-       });
-       loadInventory();
-     } catch (error) {
-       toast.error(error.message, { autoClose: 5000 });
-     } /* finally {
+
+    const dataToUpload = {
+      ...formData,
+    };
+
+    try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      await updateContainerLocation(token, dataToUpload);
+      toast.success("¡Posición actualizada!", { autoClose: 5000 });
+      setFormData({
+        containerNumber: "",
+        locationInTerminal: "",
+      });
+      loadInventory();
+    } catch (error) {
+      toast.error(error.message, { autoClose: 5000 });
+    } /* finally {
        setIsUploading(false);
      } */
-   };
+  };
 
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita el envío tradicional del formulario
-    handleUpload(); // Aquí llamas a la función que maneja la carga de datos
+    e.preventDefault();
+    handleUpload();
   };
 
   return (
     <>
       <Header />
       <>
-      <div className="terminal-map">
-        <div className="terminal-container">
-          <div className="zones-container">
-            {zones.map((zone) => (
-              <div
-                key={zone.id}
-                className={`zone zone-${zone.id.toLowerCase()}`}
-              >
-                {zone.stacks.map((stack) => {
-                  // Cuenta los contenedores para el stack actual
-                  const containerCount = countContainersInStack(zone.id, stack);
-                  return (
-                    <div
-                      key={`${zone.id}${stack}`}
-                      className="stack"
-                      onClick={() => setSelectedStack(`${zone.id}${stack}`)}
-                    >
-                      {`${zone.id}${stack} (${containerCount} cont)`}
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-          {selectedStack && (
-            <div className="stack-details">
-              {selectedStack === "INITIAL_VIEW"
-                ? renderInitialStackView()
-                : selectedStack && (
+        <div className="terminal-map">
+          <div className="terminal-container">
+            <div className="zones-container">
+              {zones.map((zone) => (
+                <div
+                  key={zone.id}
+                  className={`zone zone-${zone.id.toLowerCase()}`}
+                >
+                  {zone.stacks.map((stack) => {
+                    const containerCount = countContainersInStack(zone.id, stack);
+                    return (
+                      <div
+                        key={`${zone.id}${stack}`}
+                        className="stack"
+                        onClick={() => setSelectedStack(`${zone.id}${stack}`)}
+                      >
+                        {`${zone.id}${stack} (${containerCount} cont)`}
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+            {selectedStack && (
+              <div className="stack-details">
+                {selectedStack === "INITIAL_VIEW"
+                  ? renderInitialStackView()
+                  : selectedStack && (
                     <div className="stack-view">
                       {(selectedStack.startsWith("C")
                         ? columnsC
@@ -219,14 +213,13 @@ function TerminalMap() {
                             const container = findContainerByLocation(location);
                             return (
                               <div
-                                className={`${
-                                  container ? "height" : "empty-slot"
-                                }`}
+                                className={`${container ? "height" : "empty-slot"
+                                  }`}
                                 key={`${column}${height}`}
                               >
                                 {container ? (
                                   <>
-                                     {container.containerNumber} {/*-{" "}
+                                    {container.containerNumber} {/*-{" "}
                                     {container.portOfDestination} -{" "}
                                     {container.exportVessel} */}
                                   </>
@@ -240,195 +233,193 @@ function TerminalMap() {
                       ))}
                     </div>
                   )}
-              <div className="stack-title">Stack {selectedStack}</div>
+                <div className="stack-title">Stack {selectedStack}</div>
+              </div>
+            )}
+            <div className="location-in-terminal">
             </div>
-          )}
-          <div className="location-in-terminal">
+            <div className="containers-without-position">
+              {containersWithoutPosition.length > 0 ? (
+                <>
+                  <button onClick={loadInventory} disabled={isLoading}>
+                    {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
+                  </button>
+                  <h4>Lista de contenedores sin ubicación en sistema</h4>
+                  <ol>
+                    {containersWithoutPosition.map((container) => (
+                      <li key={container.containerNumber}>
+                        {container.containerNumber}
+                      </li>
+                    ))}
+                  </ol>
+                </>
+              ) : (
+                <>
+                  <button onClick={loadInventory} disabled={isLoading}>
+                    {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
+                  </button>
+                  <p>Todos los contenedores tienen posición en sistema.</p>
+                </>
+              )}
+            </div>
           </div>
-          <div className="containers-without-position">
-            {containersWithoutPosition.length > 0 ? (
-              <>
-                <button onClick={loadInventory} disabled={isLoading}>
-                  {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
-                </button>
-                <h4>Lista de contenedores sin ubicación en sistema</h4>
-                <ol>
-                  {containersWithoutPosition.map((container) => (
-                    <li key={container.containerNumber}>
+        </div>
+        <div className="location-container">
+
+
+          <form className="location-form" onSubmit={handleSubmit}>
+            <fieldset>
+              <legend>Actualizar posición</legend>
+              <div>
+                <label htmlFor="containerSearch">Número de contenedor:</label>
+                <input
+                  id="containerSearch"
+                  type="text"
+                  value={selectedContainer}
+                  onChange={handleSearchChange}
+                  autoComplete="off"
+                />
+                <ul>
+                  {filteredInventory.map((container) => (
+                    <li
+                      key={container.containerNumber}
+                      onClick={() =>
+                        handleContainerSelection(container.containerNumber)
+                      }
+                      style={{ cursor: "pointer" }}
+                    >
                       {container.containerNumber}
                     </li>
                   ))}
-                </ol>
-              </>
-            ) : (
-              <>
-                <button onClick={loadInventory} disabled={isLoading}>
-                  {isLoading ? "Actualizando..." : "Actualizar des-ubicados"}
-                </button>
-                <p>Todos los contenedores tienen posición en sistema.</p>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-      <div className="location-container">
-       
+                </ul>
+              </div>
 
-        <form className="location-form" onSubmit={handleSubmit}>
-          <fieldset>
-            <legend>Actualizar posición</legend>
-            <div>
-              <label htmlFor="containerSearch">Número de contenedor:</label>
-              <input
-                id="containerSearch"
-                type="text"
-                value={selectedContainer}
-                onChange={handleSearchChange}
-                autoComplete="off" // Desactiva la autocompletación del navegador
-              />
-              <ul>
-                {filteredInventory.map((container) => (
-                  <li
-                    key={container.containerNumber}
-                    onClick={() =>
-                      handleContainerSelection(container.containerNumber)
-                    }
-                    style={{ cursor: "pointer" }}
+              <div className="container-location">
+                <div className="container-location-item">
+                  {/*containerType*/}
+                  <label htmlFor="containerType" className="in-movement-label">
+                    Zona
+                  </label>
+                  <select
+                    value={formData.locationInTerminal.charAt(0)}
+                    onChange={handleChange}
+                    type="text"
+                    className="location-select"
+                    id="locationZone"
+                    name="locationZone"
+                    required
                   >
-                    {container.containerNumber}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="container-location">
-              <div className="container-location-item">
-                {/*containerType*/}
-                <label htmlFor="containerType" className="in-movement-label">
-                  Zona
-                </label>
-                <select
-                  value={formData.locationInTerminal.charAt(0)}
-                  onChange={handleChange}
-                  type="text"
-                  className="location-select"
-                  id="locationZone"
-                  name="locationZone"
-                  required
-                >
-                  <option value="">Zona</option>
-                  <option value="A">A</option>
-                  <option value="B">B</option>
-                  <option value="C">C</option>
-                  {/* <option value="M">M</option>
+                    <option value="">Zona</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    {/* <option value="M">M</option>
                   <option value="T">T</option> */}
-                  {/* <option value=""></option> */}
-                </select>
-              </div>
+                    {/* <option value=""></option> */}
+                  </select>
+                </div>
 
-              <div className="container-location-item">
-                {/*containerType*/}
-                <label htmlFor="containerType" className="in-movement-label">
-                  Stack
-                </label>
-                <select
-                  value={formData.locationInTerminal.charAt(1)}
-                  onChange={handleChange}
-                  type="number"
-                  className="location-select"
-                  id="locationStack"
-                  name="locationStack"
-                  required
-                >
-                  <option value="">Stack</option>
-                  {[...Array(8).keys()].map((i) => {
-                    const stackNumber = i + 1;
-                    // Desactivar opciones de stack > 7 si la zona es A o B
-                    const isDisabled =
-                      (formData.locationInTerminal.charAt(0) === "A" ||
-                        formData.locationInTerminal.charAt(0) === "B") &&
-                      stackNumber > 7;
-
-                    return (
-                      <option
-                        key={stackNumber}
-                        value={stackNumber}
-                        disabled={isDisabled}
-                      >
-                        {stackNumber}
-                      </option>
-                    );
-                  })}
-                </select>
-              </div>
-
-              <div className="container-location-item">
-                {/*containerType*/}
-                <label htmlFor="containerType" className="in-movement-label">
-                  Columna
-                </label>
-                <select
-                  value={formData.locationInTerminal.charAt(2)}
-                  onChange={handleChange}
-                  type="text"
-                  className="location-select"
-                  id="locationColumn"
-                  name="locationColumn"
-                  required
-                >
-                  <option value="">Columna</option>
-                  {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map(
-                    (column, index) => {
-                      // Desactivar opciones de columna F-J si la zona es A o B
+                <div className="container-location-item">
+                  {/*containerType*/}
+                  <label htmlFor="containerType" className="in-movement-label">
+                    Stack
+                  </label>
+                  <select
+                    value={formData.locationInTerminal.charAt(1)}
+                    onChange={handleChange}
+                    type="number"
+                    className="location-select"
+                    id="locationStack"
+                    name="locationStack"
+                    required
+                  >
+                    <option value="">Stack</option>
+                    {[...Array(8).keys()].map((i) => {
+                      const stackNumber = i + 1;
+                      // Desactivar opciones de stack > 7 si la zona es A o B
                       const isDisabled =
                         (formData.locationInTerminal.charAt(0) === "A" ||
                           formData.locationInTerminal.charAt(0) === "B") &&
-                        index >= 5;
+                        stackNumber > 7;
 
                       return (
                         <option
-                          key={column}
-                          value={column}
+                          key={stackNumber}
+                          value={stackNumber}
                           disabled={isDisabled}
                         >
-                          {column}
+                          {stackNumber}
                         </option>
                       );
-                    }
-                  )}
-                </select>
-              </div>
+                    })}
+                  </select>
+                </div>
 
-              <div className="container-location-item">
-                <label htmlFor="containerType" className="in-movement-label">
-                  Altura
-                </label>
-                <select
-                  value={formData.locationInTerminal.charAt(3)}
-                  onChange={handleChange}
-                  type="number"
-                  className="location-select"
-                  id="locationHeight"
-                  name="locationHeight"
-                  required
-                >
-                  <option value="">Altura</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                </select>
-              </div>
-            </div>
-            {/*Fin container-location*/}
-          </fieldset>
-          <button type="submit" disabled={isSubmitDisabled} className="position-button">
-            Confirmar posición
-          </button>
-        </form>
+                <div className="container-location-item">
+                  {/*containerType*/}
+                  <label htmlFor="containerType" className="in-movement-label">
+                    Columna
+                  </label>
+                  <select
+                    value={formData.locationInTerminal.charAt(2)}
+                    onChange={handleChange}
+                    type="text"
+                    className="location-select"
+                    id="locationColumn"
+                    name="locationColumn"
+                    required
+                  >
+                    <option value="">Columna</option>
+                    {["A", "B", "C", "D", "E", "F", "G", "H", "I", "J"].map(
+                      (column, index) => {
+                        const isDisabled =
+                          (formData.locationInTerminal.charAt(0) === "A" ||
+                            formData.locationInTerminal.charAt(0) === "B") &&
+                          index >= 5;
 
-      </div>
+                        return (
+                          <option
+                            key={column}
+                            value={column}
+                            disabled={isDisabled}
+                          >
+                            {column}
+                          </option>
+                        );
+                      }
+                    )}
+                  </select>
+                </div>
+
+                <div className="container-location-item">
+                  <label htmlFor="containerType" className="in-movement-label">
+                    Altura
+                  </label>
+                  <select
+                    value={formData.locationInTerminal.charAt(3)}
+                    onChange={handleChange}
+                    type="number"
+                    className="location-select"
+                    id="locationHeight"
+                    name="locationHeight"
+                    required
+                  >
+                    <option value="">Altura</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                  </select>
+                </div>
+              </div>
+              {/*Fin container-location*/}
+            </fieldset>
+            <button type="submit" disabled={isSubmitDisabled} className="position-button">
+              Confirmar posición
+            </button>
+          </form>
+        </div>
       </>
       <Footer />
     </>

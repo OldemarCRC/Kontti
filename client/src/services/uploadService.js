@@ -29,6 +29,7 @@ export const updateContainerLocation = async (token, dataToSend) => {
       method: 'PATCH', // Cambia el método a PATCH para indicar una actualización parcial
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(dataToSend),
     });
