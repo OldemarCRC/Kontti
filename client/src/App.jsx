@@ -9,8 +9,7 @@ import Home from "./pages/home/Home";
 import UserRegister from "./pages/register/UserRegister";
 import AccountVerification from "./pages/account_verification/AccountVerification";
 import ChangePassword from "./pages/change_password/ChangePassword";
-import TerminalMap from "./pages/terminal_map/TerminalMap";
-import Map from "./pages/terminal_map/Map";
+import StackView from "./pages/stack_view/StackView";
 import ContainerDispatch from "./pages/dispatch/ContainerDispatch";
 import CustomerRegister from "./pages/customer_register/CustomerRegister";
 import DataManagement from "./pages/data_management/DataManagement";
@@ -36,7 +35,7 @@ function App() {
           <Route path="/out-movements" element={<OutMovements />} />
           <Route path="/containers-dispatch" element={<ContainerDispatch />} />
           <Route path="/inventory" element={<ContainersInventory />} />
-          <Route path="/terminal-map" element={<TerminalMap />} />
+          <Route path="/stack-view" element={<StackView />} />
           <Route path="/customer-register" element={<CustomerRegister />} />
           <Route path="/data-management" element={<DataManagement />} />
           <Route path="/truck-co-register" element={<TruckCoRegister />} />
@@ -46,7 +45,6 @@ function App() {
             element={<CustomsNumberRegister />}
           />
           <Route path="/query-page" element={<QueryPage />} />
-          <Route path="/map" element={<Map />} />
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>

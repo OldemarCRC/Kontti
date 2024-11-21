@@ -21,7 +21,7 @@ function Home() {
       navigate("/");
     } else if (user.role === "operator") {
       // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/map");
+      navigate("/stack-view");
     }
     // Puedes agregar más condiciones para otros roles si es necesario
   }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
@@ -64,9 +64,9 @@ function Home() {
             <div class="option-card-tm-container">
               <div
                 class="option-card-tm"
-                onClick={() => handleNavigate("/terminal-map")}
+                onClick={() => handleNavigate("/stack-view")}
               >
-                <p>Stack plan</p>
+                <p>Stack view</p>
               </div>
             </div>
 

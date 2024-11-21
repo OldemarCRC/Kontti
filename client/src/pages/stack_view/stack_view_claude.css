@@ -1,0 +1,108 @@
+.terminal-map {
+    padding: 100px 20px 20px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    background-color: #f0f0f0;
+  }
+  
+  .terminal-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    max-width: 1200px;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .zones-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 1rem;
+    width: 100%;
+    margin-bottom: 2rem;
+  }
+  
+  .zone {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+  }
+  
+  .stack {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .stack-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-gap: 1rem;
+    width: 100%;
+    margin-top: 2rem;
+  }
+  
+  .stack-view {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+    grid-gap: 0.5rem;
+    padding: 1rem;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+  }
+  
+  .height, .empty-slot {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    background-color: #e0e0e0;
+    border-radius: 4px;
+  }
+  
+  .stack-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 1rem;
+  }
+  
+  @media (max-width: 768px) {
+    .zones-container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  
+    .stack-view {
+      grid-template-columns: repeat(auto-fit, minmax(30px, 1fr));
+    }
+  
+    .height, .empty-slot {
+      height: 40px;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .zones-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .stack-view {
+      grid-template-columns: repeat(auto-fit, minmax(20px, 1fr));
+    }
+  
+    .height, .empty-slot {
+      height: 30px;
+    }
+  }

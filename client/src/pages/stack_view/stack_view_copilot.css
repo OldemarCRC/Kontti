@@ -1,0 +1,181 @@
+.terminal-stack-view {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
+    align-items: center;
+    padding: 100px 20px 20px 20px;
+  }
+  
+  .zones-container {
+    flex: 2; /* Toma una fracción del espacio disponible */
+    overflow-y: auto; /* Permite desplazamiento si las zonas ocupan más altura de la disponible */
+    padding: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .zone {
+    display: flex;
+    flex-direction: column;
+    gap: 2px; /* Espacio entre stacks */
+    background-color: transparent;
+  }
+  
+  /* Estilos para las zonas A y B */
+  .zone-a,
+  .zone-b {
+    width: 150px; /* Ancho para las zonas A y B */
+    height: 266px; /* Altura para las zonas A y B */
+
+  }
+  
+  /* Estilos para la zona C */
+  .zone-c {
+    width: 200px; /* Ancho doble para la zona C */
+    height: 300px; /* Altura igual para la zona C */
+
+  }
+
+  .stack {
+    align-items: center;
+    display: flex;
+    justify-content: center; /* Distribuye los stacks horizontalmente */
+    border: 1px solid #666; /* Borde para los stacks */
+    padding: 5px;
+    height: calc(
+      100% / 7
+    ); /* Calcula la altura para que 7 stacks quepan dentro de A y B */
+    background-color: rgb(209, 206, 206);
+  }
+  
+  .containers-without-position {
+    margin-bottom: 20px;
+  }
+  
+  /* Estilos para el formulario de actualización de posición */
+  .location-form {
+    display: flex;
+    flex-direction: column;
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .location-form fieldset {
+    border: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .location-form legend {
+    font-size: 1.5em;
+    margin-bottom: 10px;
+  }
+  
+  .container-location {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  
+  .container-location-item {
+    flex: 1;
+    min-width: 120px;
+  }
+  
+  .location-form button {
+    align-self: flex-end;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .location-form button:hover {
+    background-color: #0056b3;
+  }
+
+  .stack-details {
+    margin-top: 20px; /*recien incluido*/
+    flex: 4; /* Toma una mayor fracción del espacio disponible */
+    padding: 60px 10px 10px 10px;
+    overflow-y: auto; /* Para desplazamiento si el contenido es muy largo */
+    width: 100%;/*recien incluido*/
+  }
+
+  .stack-title {
+    text-align: center;
+    font-size: larger;
+    font-weight: bolder;
+    color: red;
+    margin-top: 20px;
+  }
+
+  .column {
+    display: flex; /*recien incluido*/
+    flex-direction: column; /*recien incluido*/
+    align-items: center; /*recien incluido*/
+    flex: 1; /* Los divs de column se expandirán para llenar el espacio disponible */
+    border: 1px solid #39393b; /* Borde para las columnas */
+    margin: 0 2px; /* Margen entre columnas */
+    width: 10px;
+    
+  }
+
+  .stack-view {
+    display: flex;
+    flex-direction: row;
+    width: 480px; /*para el ancho de las columnas de stacks*/
+    
+  }
+  
+  .height {
+    border: 1px solid rgb(144, 136, 136);
+    /* background-color: #b6b3b3; */
+    background-image: url('../../assets/images/container.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 100px;
+    font-size: smaller;
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
+      -10px -10px 20px rgba(255, 255, 255, 0.5);
+      transition: transform 0.6s ease; /* Agrega transición suave */
+      color: blue;
+  }
+  
+  .empty-slot{
+    text-align: center;
+    color: #b6b3b3;
+    height: 100px;
+    font-size: smaller;
+    border: none;
+    background-color: transparent;
+  }
+
+  .stack:hover {
+    background-color: rgb(74, 227, 227);
+    box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
+      -10px -10px 20px rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 768px) {
+    .terminal-container {
+      flex-direction: column;
+    }
+  
+    .stack-view {
+      flex-direction: column;
+    }
+  
+    .column {
+      margin-bottom: 10px;
+    }
+  }
+  

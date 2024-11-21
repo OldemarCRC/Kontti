@@ -24,16 +24,12 @@ const Navbar = () => {
         <div className="navbar-option-page" onClick={() => handleNavigate("/query-page")}>
           <h3 className="navbar-option-text">Queries</h3>
         </div>
-        <div className="navbar-option-page" onClick={() => handleNavigate("/map")}>
-          <h3 className="navbar-option-text">Terminal Map</h3>
-        </div>
-        <div className="navbar-option-page" onClick={() => handleNavigate("/terminal-map")}>
-          <h3 className="navbar-option-text">Stevedore Plan</h3>
+        <div className="navbar-option-page" onClick={() => handleNavigate("/stack-view")}>
+          <h3 className="navbar-option-text">Stack View</h3>
         </div>
         <div className="navbar-option-page" onClick={() => handleNavigate("/data-management")}>
           <h3 className="navbar-option-text">Data Management</h3>
         </div>
-
       </div>
     </nav>
   );
