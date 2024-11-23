@@ -1,0 +1,107 @@
+/* Tablet styles */
+@media screen and (min-width: 768px) {
+    .home {
+      flex-direction: row;
+      justify-content: space-between;
+      padding: 40px;
+    }
+  
+    .home-options-container {
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      max-width: 600px;
+    }
+  
+    .option-card-in,
+    .option-card-di,
+    .option-card-out,
+    .option-card-qp {
+      width: 200px;
+      height: 200px;
+      transform: rotate(45deg);
+    }
+  
+    .option-card-in p,
+    .option-card-di p,
+    .option-card-out p,
+    .option-card-qp p {
+      transform: rotate(-45deg);
+    }
+  
+    .option-card-tm-container {
+      width: 200px;
+      height: 200px;
+    }
+  
+    .option-card-tm {
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 200px solid rgb(200, 196, 196);
+    }
+  
+    .links-units-inquiry {
+      flex: 0 0 250px;
+      margin-top: 0;
+      margin-left: 20px;
+    }
+  }
+  
+  /* Desktop styles */
+  @media screen and (min-width: 1024px) {
+    .home-header {
+      font-size: 2rem;
+    }
+  
+    .home-options-container {
+      max-width: 800px;
+    }
+  
+    .option-card-in,
+    .option-card-di,
+    .option-card-out,
+    .option-card-qp {
+      width: 250px;
+      height: 250px;
+    }
+  
+    .option-card-tm-container {
+      width: 250px;
+      height: 250px;
+    }
+  
+    .option-card-tm {
+      border-left: 125px solid transparent;
+      border-right: 125px solid transparent;
+      border-bottom: 250px solid rgb(200, 196, 196);
+    }
+  
+    .links-units-inquiry {
+      flex: 0 0 300px;
+    }
+  }
+  
+  /* Hover effects */
+  .option-card-in:hover,
+  .option-card-di:hover,
+  .option-card-out:hover,
+  .option-card-qp:hover,
+  .option-card-tm:hover {
+    transform: translateY(-10px);
+    background-color: #8fbccc;
+    color: white;
+  }
+  
+  @media screen and (min-width: 768px) {
+  
+    .option-card-in:hover,
+    .option-card-di:hover,
+    .option-card-out:hover,
+    .option-card-qp:hover {
+      transform: translateY(-10px) rotate(45deg);
+    }
+  
+    .option-card-tm:hover {
+      border-bottom-color: #8fbccc;
+    }
+  }

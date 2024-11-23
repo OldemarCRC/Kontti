@@ -1,94 +1,74 @@
-/* Estilo general del navbar */
 .user-menu {
-  height: 100%;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  background-color: #ffffff; /* Ajusta al color de fondo deseado */
-  /* padding: 0 20px; */
-  margin-right: 80px;
-  
+  padding-left: 20px;
 }
 
-.user-menu-container{
-  height: 100%;
-}
-.user-menu-container-2{
-  height: 100%;
-  display: flex;
-  justify-content: space-between;
+.dropdown {
+position: relative;
+display: inline-block;
 }
 
-/* Lista y elementos de lista */
-.user-menu-nav {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  margin-right: 20px;
-  margin-top: 25px;
+.dropdown-toggle {
+background-color: #276ba6;
+color: white;
+padding: 8px 12px;
+border-radius: 5px;
+cursor: pointer;
+font-size: 14px;
 }
 
-/* Estilos para los ítems de la lista */
-.nav-item {
-  margin-left: 20px; /* Espacio entre los elementos */
-}
-
-/* Estilo para los enlaces */
-.nav-link {
-  text-decoration: none;
-  color: white; /* Ajusta al color deseado */
-  background-color: #276ba6;
-  padding: 5px 10px;
-  border-radius: 5px;
-  transition: background-color 0s ease;
-}
-
-.nav-link:hover {
-  background-color: #054f91; /* Color al hacer hover */
-}
-
-/* Dropdown */
 .dropdown-menu {
-  display: none;
-  position: absolute;
-  background-color: #f9f9f9;
-  min-width: 160px;
-  box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-  z-index: 1;
-  margin-top: 4px;
-  
+display: none;
+position: absolute;
+right: 0;
+background-color: #f9f9f9;
+min-width: 160px;
+box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+z-index: 1;
+list-style-type: none;
+padding: 0;
+margin: 0;
 }
 
 .dropdown:hover .dropdown-menu {
-  display: block; /* Muestra el menú al hacer hover */
+display: block;
 }
 
-/* Estilo para los ítems del dropdown */
-.dropdown-item {
-  color: black;
-  /* padding: 12px 16px; */
-  text-decoration: none;
-  display: block;
-  
+.dropdown-menu li {
+padding: 8px 12px;
 }
 
-.dropdown-item:hover {
-  background-color: #ddd; /* Color al hacer hover */
-  color: #054f91
-
+.dropdown-menu li:hover {
+background-color: #ddd;
 }
 
-.user-menu-list {
-  margin-bottom: 20px;
+.dropdown-menu a, .dropdown-menu span {
+color: black;
+text-decoration: none;
+display: block;
+cursor: pointer;
+font-size: 14px;
 }
 
-.user-menu-container ul {
-  list-style-type: none;
-  padding: 0;
+.dropdown-menu a:hover, .dropdown-menu span:hover {
+color: #054f91;
 }
 
-.user-menu-container li {
-  margin-bottom: 10px;
+@media (max-width: 768px) {
+.user-menu {
+justify-content: center;
+padding-left: 0;
+}
+
+.dropdown-menu {
+position: static;
+display: none;
+width: 100%;
+}
+
+.dropdown:hover .dropdown-menu {
+display: block;
+}
 }

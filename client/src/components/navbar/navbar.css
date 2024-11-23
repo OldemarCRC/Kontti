@@ -1,32 +1,41 @@
 .navbar {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   background-color: #fff;
-  padding: 10px 20px;
 }
 
 .navbar-options-container {
   display: flex;
-  gap: 30px;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .navbar-option-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   cursor: pointer;
 }
 
 .navbar-option-text {
-  margin-top: 5px;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #276ba6;
-  transition: transform 0.5s ease;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .navbar-option-text:hover {
-  transform: scale(1.2);
+  transform: scale(1.1);
   color: #054f91;
+}
+
+@media (max-width: 768px) {
+  .navbar-options-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .navbar-option-text {
+    font-size: 16px;
+  }
 }

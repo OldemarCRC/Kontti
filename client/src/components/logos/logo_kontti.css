@@ -1,5 +1,17 @@
-
-.navbar-logo-kontti {
-    max-height: 100%; /* Ajusta esto según el tamaño deseado para tu logo */
-    max-width: 100%; /* Asegura que el logo se ajuste al contenedor */
+.logo-container {
+    display: flex;
+    align-items: center;
+    height: 80px;
+  }
+  
+  .navbar-logo-kontti {
+    max-height: 100%;
+    width: auto;
+    object-fit: contain;
+  }
+  
+  @media (max-width: 768px) {
+    .logo-container {
+      height: 40px;
+    }
   }

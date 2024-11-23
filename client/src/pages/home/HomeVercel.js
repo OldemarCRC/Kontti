@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./home.css";
 import Header from "../../components/header/Header";
@@ -34,41 +34,45 @@ function Home() {
           <h2 className="home-header">
             Container Terminal Operations Dashboard
           </h2>
-          <div className="home-options">
+
+          <div className="home-options-container">
             <div
-              className="option-card-in"
+              className="option-card option-card-in"
               onClick={() => handleNavigate("/in-movements")}
             >
               <p>Incomings</p>
             </div>
+
             <div
-              className="option-card-di"
+              className="option-card option-card-di"
               onClick={() => handleNavigate("/containers-dispatch")}
             >
               <p>Dispatches</p>
             </div>
+
             <div
-              className="option-card-out"
+              className="option-card option-card-out"
               onClick={() => handleNavigate("/out-movements")}
             >
               <p>Outgoings</p>
             </div>
-            <div
-              class="option-card-sv"
-              onClick={() => handleNavigate("/stack-view")}
-            >
-              <p>Stack view</p>
+
+            <div className="option-card option-card-tm">
+              <div
+                onClick={() => handleNavigate("/stack-view")}
+              >
+                <p>Stack view</p>
+              </div>
             </div>
+
             <div
-              className="option-card-qp"
+              className="option-card option-card-qp"
               onClick={() => handleNavigate("/query-page")}
             >
               <p>Queries</p>
             </div>
           </div>
-          {/*Fin options-container */}
         </div>
-        {/*Fin div text-and-options*/}
         <aside className="links-units-inquiry">
           <h3>Useful Links</h3>
           <ul>
@@ -85,7 +89,6 @@ function Home() {
                 />
               </a>
             </li>
-
             <li>
               <a
                 href="https://www.track-trace.com/container"
@@ -99,7 +102,6 @@ function Home() {
                 />
               </a>
             </li>
-
             <li>
               <a
                 href="https://www.capps.com/cgi-bin/publicUnitInfo"
@@ -113,7 +115,6 @@ function Home() {
                 />
               </a>
             </li>
-
             <li>
               <a
                 href="https://tools.tritoncontainer.com/tritoncontainer/unitStatus/list?"
@@ -127,7 +128,6 @@ function Home() {
                 />
               </a>
             </li>
-
             <li>
               <a
                 href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx"
@@ -144,10 +144,10 @@ function Home() {
           </ul>
         </aside>
       </div>
-      {/*Fin div home */}
       <Footer />
     </div>
   );
 }
 
 export default Home;
+

@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -6,133 +5,120 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./logIn.css";
 
-// User or Admin LogIn
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: "",
     password: "",
   });
 
-  // AuthContext Authentication
   const { loading, error, dispatch } = useContext(AuthContext);
 
-  // Navigate
   const navigate = useNavigate();
 
-  // Handling changes
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  // Notifying if login was Successful
-  const notify = () => {
+  /* const notify = () => {
     toast.success("Login successful!");
-  };
+  }; */
 
-  // Checking username and password
   useEffect(() => {
     if (error) {
-      toast.error("Login failed");
+      toast.error(error);
     }
   }, [error]);
 
-  // User Submit for Login
-  const handleClick = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(`${process.env.REACT_APP_API_URL}/auth/login`,
-        credentials
-      );
-      if (res.data.details.isEmailVerified) {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
 
-        const token = res.data.details.token;
-        const userDetails = res.data.details;
+      const data = await response.json();
+
+      if (response.ok && data.details.isEmailVerified) {
+        const token = data.details.token;
+        const userDetails = data.details;
 
         dispatch({ type: "LOGIN_SUCCESS", payload: userDetails });
-        sessionStorage.setItem("userToken", token); // Guardar el token
-        sessionStorage.setItem("user", JSON.stringify(userDetails)); // Asegúrate de usar JSON.stringify aquí
+        sessionStorage.setItem("userToken", token);
+        sessionStorage.setItem("user", JSON.stringify(userDetails));
 
-        // Redireccionar según el rol del usuario
-        let destinationRoute = "/home"; // Ruta predeterminada
-        if (userDetails.role === "operator") {
-          destinationRoute = "/map"; // Ruta específica para operadores
-        }
-        notify();
-        setTimeout(() => navigate(destinationRoute), 2000);
+        toast.success("Login successful!");
+        setTimeout(() => navigate(userDetails.role === "operator" ? "/stack-view" : "/home"), 2000);
       } else {
-        const errorMessage =
-          "Please verify your email before logging in.";
-        toast.error(errorMessage);
-        dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
+        throw new Error(data.message || "Please verify your email before logging in.");
       }
     } catch (err) {
-      // Este bloque ahora manejará todos los mensajes de error.
-      const errorMessage =
-        err.response?.data?.message || "Login failed.";
+      const errorMessage = err.message || "Login failed.";
       toast.error(errorMessage);
       dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
     }
   };
+
 
   return (
     <div className="login-page">
       <ToastContainer autoClose={2000} />
       <div className="login-container">
         <div className="login-form">
-          <form>
+          <form onSubmit={handleSubmit}>
             <div>
               <h1 className="app-name">Kontti</h1>
               <h2>Containers Hub App</h2>
             </div>
-            <h5 className="login-message">Log in to your account</h5>
+            <h3 className="login-message">Log in to your account</h3>
             <div className="label-input">
-              <label form="username" className="login-label">
-                User name
+              <label htmlFor="username" className="login-label">
+                Username
               </label>
               <input
-                value={credentials.username}
                 type="text"
-                className="form-input"
                 id="username"
+                className="form-input"
+                value={credentials.username}
                 onChange={handleChange}
-                placeholder="Nombre de usuario"
+                placeholder="Enter your username"
+                aria-label="Username input" // Añadir
+                autoComplete="username"
+                required
               />
             </div>
             <div className="label-input">
-              <label form="passowrd" className="login-label">
+              <label htmlFor="password" className="login-label">
                 Password
               </label>
               <input
-                value={credentials.password}
                 type="password"
-                className="form-input"
                 id="password"
+                className="form-input"
+                value={credentials.password}
                 onChange={handleChange}
-                placeholder="Contraseña"
+                placeholder="Enter your password"
+                aria-label="Password input"
+                autoComplete="current-password"
+                required
               />
             </div>
             <div className="login-button">
               <button
                 className="lbtn"
-                disabled={loading}
-                onClick={handleClick}
                 type="submit"
+                disabled={loading}
               >
-                {loading && (
-                  <div className="" role="status">
-                    <span className="visually-hidden">Loading...</span>
-                  </div>
-                )}
-                Login
+                {loading ? 'Logging in...' : 'Login'}
               </button>
-              <br />
             </div>
           </form>
         </div>
-        {/*Fin de login-form */}
       </div>
-      {/*Fin de login-container */}
     </div>
   );
 };
