@@ -49,7 +49,7 @@ aside {
 .option-card-di,
 .option-card-qp,
 .option-card-sv {
-  border: 1px solid #ccc;
+  border: 1px solid #d6d4d4;
   width: 18.5rem;
   height: 18.5rem;
   display: flex;
@@ -61,7 +61,7 @@ aside {
   text-align: center;
   transform: rotate(45deg);
   cursor: pointer;
-  background-color: rgb(200, 196, 196);
+  background: linear-gradient(145deg, rgb(200, 196, 196), rgb(240, 240, 240));
   transition: transform 0.3s ease, box-shadow 0.3s ease,
     background-color 0.3s ease;
 }
@@ -110,9 +110,8 @@ aside {
 .option-card-qp:hover,
 .option-card-sv:hover {
   transform: translateY(-10px) rotate(45deg);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
+  background: linear-gradient(145deg, rgb(180, 176, 176), rgb(220, 220, 220));
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  background-color: #8fbccc;
   color: white;
 }
 
@@ -165,6 +164,8 @@ aside {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
+    justify-content: center;
+    margin-left: 0;
   }
 
   .option-card-in,
@@ -172,18 +173,9 @@ aside {
   .option-card-di,
   .option-card-qp,
   .option-card-sv {
-    background-color: rgb(200, 218, 12);
     position: initial;
     transform: rotate(0deg);
-    border: 1px solid #ccc;
-    align-items: center;
-    color: #0871cd;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-      background-color 0.3s ease;
+    border: 1.5px solid #f1eded;
   }
 
   .option-card-in p,
@@ -200,10 +192,6 @@ aside {
   .option-card-qp:hover,
   .option-card-sv:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #8fbccc;
-    color: white;
   }
 
 
@@ -221,6 +209,8 @@ aside {
     display: flex;
     flex-wrap: wrap;
     padding: 0;
+    justify-content: center;
+    margin-left: 0;
   }
 
   .option-card-in,
@@ -228,18 +218,10 @@ aside {
   .option-card-di,
   .option-card-qp,
   .option-card-sv {
-    background-color: red;
     position: initial;
     transform: rotate(0deg);
-    border: 1px solid #ccc;
+    border: 2px solid #f1eded;
     align-items: center;
-    color: #0871cd;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-      background-color 0.3s ease;
   }
 
   .option-card-in p,
@@ -256,16 +238,12 @@ aside {
   .option-card-qp:hover,
   .option-card-sv:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #8fbccc;
-    color: white;
   }
 }
 
 
 
-@media screen and (min-width: 667px) and (max-width: 800px) {
+@media screen and (min-width: 80px) and (max-width: 800px) {
 
   /* Estilos para iPhone 8 vertical */
 
@@ -276,7 +254,9 @@ aside {
   .home-options {
     display: flex;
     flex-wrap: wrap;
-    padding: 20px;
+    padding: 0;
+    justify-content: center;
+    margin-left: 0;
   }
 
   .option-card-in,
@@ -284,18 +264,10 @@ aside {
   .option-card-di,
   .option-card-qp,
   .option-card-sv {
-    background-color: rgb(230, 125, 12);
     position: initial;
     transform: rotate(0deg);
-    border: 1px solid #ccc;
+    border: 2px solid #f1eded;
     align-items: center;
-    color: #0871cd;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.3s ease, box-shadow 0.3s ease,
-      background-color 0.3s ease;
   }
 
   .option-card-in p,
@@ -312,66 +284,6 @@ aside {
   .option-card-qp:hover,
   .option-card-sv:hover {
     transform: translateY(-10px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    background-color: #8fbccc;
-    color: white;
   }
-
-  @media screen and (min-width: 375px) and (max-width: 667px) {
-
-    /* Estilos para iPhone 8 horizontal */
-
-    .home-header {
-      margin-bottom: 20px;
-    }
-  
-    .home-options {
-      display: flex;
-      flex-wrap: wrap;
-      padding: 20px;
-    }
-
-    .option-card-in,
-    .option-card-out,
-    .option-card-di,
-    .option-card-qp,
-    .option-card-sv {
-      background-color: rgb(235, 16, 224);
-      position: initial;
-      transform: rotate(0deg);
-      border: 1px solid #ccc;
-      align-items: center;
-      color: #0871cd;
-      font-size: 20px;
-      font-weight: bold;
-      text-align: center;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease,
-        background-color 0.3s ease;
-    }
-  
-    .option-card-in p,
-    .option-card-out p,
-    .option-card-di p,
-    .option-card-qp p,
-    .option-card-sv p {
-      transform: rotate(0deg);
-    }
-  
-    .option-card-in:hover,
-    .option-card-di:hover,
-    .option-card-out:hover,
-    .option-card-qp:hover,
-    .option-card-sv:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3), 0 6px 6px rgba(0, 0, 0, 0.2);
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-      background-color: #8fbccc;
-      color: white;
-    }
-
-  }
-
 
 }
