@@ -77,8 +77,9 @@ const CustomsNumberRegister = () => {
   useEffect(() => {
     if (!user) {
       navigate("/");
+    }else if(user.role === "operator") {
+      navigate("/stack-view");
     }
-
     const now = new Date();
     setCurrentDateTime({
       currentDate: now.toISOString().split("T")[0],

@@ -12,9 +12,8 @@ function DataManagement() {
   useEffect(() => {
     if (!user) {
       navigate("/");
-    }else if(user.role === "operator") {
-      // Si el usuario tiene el rol de "operator", redirige a la página de ubicación
-      navigate("/map");
+    } else if (user.role === "operator") {
+      navigate("/stack-view");
     }
   }, [user, navigate]);
 
@@ -25,40 +24,30 @@ function DataManagement() {
   return (
     <div className="data-management-page">
       <Header />
-      <div className="data-management">
         <div className="data-management-body">
-          <h2 className="data-management-header">Gestión de datos</h2>
+          <h2 className="data-management-header">Data Management</h2>
 
           <div className="data-management-options">
             <div
               className="customer-register-option"
               onClick={() => handleNavigate("/customer-register")}
             >
-              <p>Registro de clientes</p>
+              <p>Customer Registration</p>
             </div>
             <div
               className="truck-register-option"
               onClick={() => handleNavigate("/truck-co-register")}
             >
-              <p>Registro de transportistas</p>
+              <p>Transport Company Registration</p>
             </div>
             <div
               className="customs-nr-register-option"
               onClick={() => handleNavigate("/customs-number-register")}
             >
-              <p>Registro de manifiestos</p>
+              <p>Manifest Registration</p>
             </div>
-            {/* <div
-              className="qp-option"
-              
-            >
-              <p>Opción 4</p>
-            </div> */}
           </div>
         </div>
-
-      </div>
-
       <Footer />
     </div>
   );

@@ -8,7 +8,6 @@ import "../../pages/form_register_styles.css"
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
-// Truck company registration
 const TruckCoRegister = () => {
   const initialFormData = {
     idType: "",
@@ -23,13 +22,10 @@ const TruckCoRegister = () => {
 
   const [formData, setFormData] = useState(initialFormData);
 
-  // AuthContext Authentication
   const { user } = useContext(AuthContext);
 
-  // Navigation
   const navigate = useNavigate();
 
-  // Handling changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -49,8 +45,6 @@ const TruckCoRegister = () => {
   const delay = () => {
     navigate("/home");
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -81,7 +75,6 @@ const TruckCoRegister = () => {
 
       notify();
 
-      // Limpiar el formulario después del registro exitoso
       setFormData(initialFormData);
     } catch (error) {
       console.log(
@@ -92,12 +85,11 @@ const TruckCoRegister = () => {
     }
   };
 
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
   useEffect(() => {
     if (!user) {
-      navigate("/"); // Ajusta esta ruta según sea necesario
+      navigate("/");
     }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  }, [user, navigate]);
 
   return (
     <>
@@ -174,7 +166,6 @@ const TruckCoRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="contactPhone">
                 Número de teléfono del contacto
@@ -189,7 +180,6 @@ const TruckCoRegister = () => {
                 name="contactPhone"
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="contactEmail">
                 Correo electrónico del contacto

@@ -6,7 +6,6 @@ import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 import cai_logo from "../../assets/images/cai.png";
 import triton_logo from "../../assets/images/Triton.png";
-import tica_logo from "../../assets/images/LogoTicaB.png";
 import tracktrace_logo from "../../assets/images/track_trace.png";
 import check_digit_logo from "../../assets/images/check_digit_logo.png";
 
@@ -124,20 +123,6 @@ function Home() {
                   className="logo-link"
                   src={triton_logo}
                   alt="Triton logo"
-                />
-              </a>
-            </li>
-
-            <li>
-              <a
-                href="https://ticaconsultas.hacienda.go.cr/Tica/hcicgmic.aspx"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  className="logo-link"
-                  src={tica_logo}
-                  alt="tica logo"
                 />
               </a>
             </li>

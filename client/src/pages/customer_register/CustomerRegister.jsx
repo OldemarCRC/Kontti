@@ -22,14 +22,12 @@ const CustomerRegister = () => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
+  const token = sessionStorage.getItem("userToken");
 
-  // AuthContext Authentication
   const { user } = useContext(AuthContext);
 
-  // Navigation
   const navigate = useNavigate();
 
-  // Handling changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -39,17 +37,15 @@ const CustomerRegister = () => {
   };
 
   const notify = () => {
-    toast.success("¡Cliente registrado exitosamente!", {
-      onClose: () => delay(), // Llama a delay cuando la notificación se cierra
+    toast.success("Customer successfully registered!", {
+      onClose: () => delay(),
     });
   };
 
-  // Delay time & Navigation
   const delay = () => {
-    navigate("/home"); // Redirige al usuario a la página home
+    navigate("/home");
   };
 
-  // User Submit for Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
     const {
@@ -63,6 +59,10 @@ const CustomerRegister = () => {
       createdBy,
     } = formData;
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
       await axios.post(
         `${process.env.REACT_APP_API_URL}/customers/customer-register`,
         {
@@ -74,67 +74,68 @@ const CustomerRegister = () => {
           customerEmail,
           customerPhoneNumber,
           createdBy: user.username,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       );
-
       notify();
-
-      // Limpiar el formulario después del registro exitoso
       setFormData(initialFormData);
     } catch (error) {
       console.log(
-        "ERROR EN LA SOLICITUD:",
+        "REQUEST ERROR:",
         error.response ? error.response : error
       );
-      toast.error("¡Registro fallido!");
+      toast.error("Registration failed!");
     }
   };
 
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
   useEffect(() => {
     if (!user) {
-      navigate("/"); // Ajusta esta ruta según sea necesario
+      navigate("/");
+    } else if (user.role === "operator") {
+      navigate("/stack-view");
     }
-  }, [user, navigate]); // Incluye 'navigate' en la lista de dependencias para evitar advertencias
+  }, [user, navigate]);
 
   return (
     <>
       <ToastContainer autoClose={2000} />
       <Header />
-
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h1>Registrar cliente</h1>
+            <h1>Customer Registration</h1>
             <div className="label-input">
               <label className="form-label" htmlFor="idType">
-                Tipo de identificación
+                ID Type
               </label>
               <select
                 value={formData.idType}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="Selecciona el tipo de identificación"
+                placeholder="Select the ID type"
                 id="idType"
                 name="idType"
                 required
               >
-                <option value="">Selecciona el tipo de identificación</option>
-                <option value="J">Jurídica</option>
-                <option value="F">Física</option>
+                <option value="">Select ID type</option>
+                <option value="TIC">Tax Identification Code</option>
+                <option value="NIC">National Identity Card</option>
               </select>
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="idNumber">
-                Número de identificación
+                Number
               </label>
               <input
                 value={formData.idNumber}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Número de identificación"
+                placeholder="ID Number"
                 id="idNumber"
                 name="idNumber"
                 required
@@ -143,14 +144,14 @@ const CustomerRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="customerName">
-                Nombre del cliente
+                Customer name
               </label>
               <input
                 value={formData.customerName}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Nombre del cliente"
+                placeholder="Customer name"
                 id="customerName"
                 name="customerName"
                 required
@@ -159,14 +160,14 @@ const CustomerRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="customerAddress">
-                Dirección
+                Address
               </label>
               <input
                 value={formData.customerAddress}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Dirección"
+                placeholder="Address"
                 id="customerAddress"
                 name="customerAddress"
                 required
@@ -175,14 +176,14 @@ const CustomerRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="customerContact">
-                Contacto
+                Contact name
               </label>
               <input
                 value={formData.customerContact}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Contacto"
+                placeholder="Contact name"
                 id="customerContact"
                 name="customerContact"
               />
@@ -190,14 +191,14 @@ const CustomerRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="customerEmail">
-                Correo electrónico
+                Email
               </label>
               <input
                 value={formData.customerEmail}
                 onChange={handleChange}
                 type="email"
                 className="form-input"
-                placeholder="correo electrónico"
+                placeholder="email"
                 id="customerEmail"
                 name="customerEmail"
               />
@@ -205,14 +206,14 @@ const CustomerRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="customerPhoneNumber">
-                Teléfono
+                Phone number
               </label>
               <input
                 value={formData.customerPhoneNumber}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Número de teléfono"
+                placeholder="Phone number"
                 id="customerPhoneNumber"
                 name="customerPhoneNumber"
               />
@@ -220,7 +221,7 @@ const CustomerRegister = () => {
 
             <div className="register-button">
               <button className="lbtn" type="submit">
-                Registrar
+                Submit Registration
               </button>
             </div>
           </form>

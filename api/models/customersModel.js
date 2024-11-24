@@ -3,7 +3,7 @@ const CustomerSchema = new mongoose.Schema(
   {
     idType: {
       type: String,
-      enum: ['J', 'F'], // J para jurídica, F para física
+      enum: ['TIC', 'NIC'], 
       required: true,
     },
     idNumber: {

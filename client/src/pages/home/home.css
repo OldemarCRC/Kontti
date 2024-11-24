@@ -30,7 +30,7 @@ aside {
   flex: 1;
   text-align: center;
   flex-direction: column;
-
+  gap: 40px;
 }
 
 .home-header {
@@ -136,17 +136,20 @@ aside {
 .links-units-inquiry ul {
   list-style-type: none;
   padding: 0;
+  
 }
 
 .links-units-inquiry li {
   display: flex;
   margin-bottom: 10px;
   justify-content: center;
+
 }
 
 .links-units-inquiry a {
   color: #007bff;
   text-decoration: none;
+  
 }
 
 .links-units-inquiry a:hover {
