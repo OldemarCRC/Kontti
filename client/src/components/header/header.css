@@ -53,6 +53,8 @@
 
   .nav-visible {
     display: flex;
+    background-color: white;
+    z-index: 1000;
   }
 
   .header-content {
