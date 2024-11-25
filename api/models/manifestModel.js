@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
-const customsManifestSchema = new mongoose.Schema({
-    customsNumber: {
+const manifestSchema = new mongoose.Schema({
+    manifestNumber: {
       type: String,
       required: true,
       unique: true,
@@ -23,7 +23,7 @@ const customsManifestSchema = new mongoose.Schema({
       required: true,
       enum: ["Maritime", "Air", "Land"],
     },
-    customsManifestType: {
+    manifestType: {
       type: String,
       required: true,
       enum: ["in", "out"],
@@ -41,4 +41,4 @@ const customsManifestSchema = new mongoose.Schema({
   { timestamps: true }
 );
 
-export default mongoose.model("CustomsManifest", customsManifestSchema);
+export default mongoose.model("Manifest", manifestSchema);

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from "react";
-import axios from "axios";
 import calculateCheckDigit from "../../services/calculateCheckDigit.js";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -9,7 +8,7 @@ import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
 import fetchCustomers from "../../services/fetchCustomers.js";
-import fetchCustomsManifests from "../../services/fetchCustomsManifests.js";
+import fetchManifests from "../../services/fetchManifests.js";
 import fetchTruckCompanies from "../../services/fetchTruckCompanies.js";
 
 function InMovements() {
@@ -28,7 +27,7 @@ function InMovements() {
   const [formData, setFormData] = useState({
     movement: "In",
     entryType: "",
-    customsNumber: "",
+    manifestNumber: "",
     motorVessel: "",
     dateAndTime: "",
     customerName: "",
@@ -93,20 +92,20 @@ function InMovements() {
   }, []);
 
   useEffect(() => {
-    const loadCustomsManifests = async () => {
+    const loadManifests = async () => {
       try {
         if (!token) {
           console.error("No token found in sessionStorage");
           return;
         }
-        const manifests = await fetchCustomsManifests(token);
+        const manifests = await fetchManifests(token);
         setManifests(manifests);
       } catch (error) {
         console.error("Error loading manifests: ", error);
         toast.error("Error loading manifests.");
       }
     };
-    loadCustomsManifests();
+    loadManifests();
   }, []);
 
   useEffect(() => {
@@ -159,7 +158,7 @@ function InMovements() {
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
     const selectedManifest = manifests.find(
-      (m) => name === "customsNumber" && m.customsNumber === value
+      (m) => name === "manifestNumber" && m.manifestNumber === value
     );
 
     if (selectedManifest) {
@@ -223,22 +222,9 @@ function InMovements() {
     const dataToUpload = {
       ...formData,
       dateAndTime: dateTime,
-      /*       BLLineNumber: parseInt(formData.BLLineNumber, 10),
-      quantity: parseInt(formData.quantity, 10), */
 
       createdBy: user.username,
     };
-
-    // Validar que los valores convertidos sean válidos
-    /*     if (isNaN(dataToUpload.BLLineNumber) || dataToUpload.BLLineNumber <= 0) {
-      toast.error("BLLineNumber debe ser un número mayor a cero");
-      return;
-    } */
-
-    /*     if (isNaN(dataToUpload.quantity) || dataToUpload.quantity <= 0) {
-      toast.error("quantity debe ser un número mayor a cero");
-      return;
-    } */
 
     try {
       if (!token) {
@@ -250,7 +236,7 @@ function InMovements() {
       setFormData({
         movement: "In",
         entryType: "",
-        customsNumber: "",
+        manifestNumber: "",
         motorVessel: "",
         dateAndTime: "",
         customerName: "",
@@ -330,23 +316,22 @@ function InMovements() {
                   </option>
                 </select>
               </div>
-
               <div className="in-movement-item">
-                <label htmlFor="customsNumber" className="in-movement-label">
-                  Customs manifest number
+                <label htmlFor="manifestNumber" className="in-movement-label">
+                  Manifest number
                 </label>
                 <select
-                  value={formData.customsNumber}
+                  value={formData.manifestNumber}
                   onChange={handleSelectChange}
                   className="select-in"
-                  id="customsNumber"
-                  name="customsNumber"
+                  id="manifestNumber"
+                  name="manifestNumber"
                   required
                 >
-                  <option value="">Select the customs manifest</option>
+                  <option value="">Select the manifest</option>
                   {manifests.map((manifest) => (
-                    <option key={manifest._id} value={manifest.customsNumber}>
-                      {manifest.customsNumber}
+                    <option key={manifest._id} value={manifest.manifestNumber}>
+                      {manifest.manifestNumber}
                     </option>
                   ))}
                 </select>
@@ -358,7 +343,6 @@ function InMovements() {
                 </label>
                 <p>{formData.motorVessel}</p>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="customerName" className="in-movement-label">
                   Customer
@@ -379,7 +363,6 @@ function InMovements() {
                   ))}
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="date" className="in-movement-label">
                   Date
@@ -396,7 +379,6 @@ function InMovements() {
                   required
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="time" className="in-movement-label">
                   Time
@@ -416,53 +398,6 @@ function InMovements() {
                   required
                 />
               </div>
-
-              {/*  <div className="in-movement-item">
-                <label htmlFor="BLNumber" className="in-movement-label">
-                  BL nro.
-                </label>
-                <input
-                  value={formData.BLNumber}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="BL"
-                  id="BLNumber"
-                  name="BLNumber"
-                />
-              </div> */}
-
-              {/* <div className="in-movement-item">
-                <label htmlFor="ticaSequence" className="in-movement-label">
-                  Secuencia TICA.
-                </label>
-                <input
-                  value={formData.ticaSequence}
-                  onChange={handleChange}
-                  type="text"
-                  className="input-in"
-                  placeholder="Secuencia TICA"
-                  id="ticaSequence"
-                  name="ticaSequence"
-                />
-              </div> */}
-
-              {/*  <div className="in-movement-item">
-                <label htmlFor="BLLineNumber" className="in-movement-label">
-                  Línea del bl.
-                </label>
-                <input
-                  value={formData.BLLineNumber}
-                  onChange={handleChange}
-                  type="number"
-                  className="input-in"
-                  placeholder="Línea del bl"
-                  id="BLLineNumber"
-                  name="BLLineNumber"
-                  min="0"
-                />
-              </div> */}
-
               <div className="in-movement-item">
                 <label htmlFor="containerNumber" className="in-movement-label">
                   Sea Container Number
@@ -479,7 +414,6 @@ function InMovements() {
                   required
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="containerSize" className="in-movement-label">
                   Container Size
@@ -499,7 +433,6 @@ function InMovements() {
                   <option value="45">45</option>
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="containerType" className="in-movement-label">
                   Container Type
@@ -523,7 +456,6 @@ function InMovements() {
                   <option value="FR">FR</option>
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="isEmpty" className="in-movement-label">
                   Status
@@ -541,7 +473,6 @@ function InMovements() {
                   <option value="false">Full</option>
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="commodity" className="in-movement-label">
                   Commodity
@@ -557,7 +488,6 @@ function InMovements() {
                   disabled={formData.isEmpty === true}
                 />
               </div>
-
               {isNORActive && (
                 <div className="in-movement-item">
                   <label htmlFor="isNOR" className="in-movement-label">
@@ -610,7 +540,6 @@ function InMovements() {
                   </div>
                 </>
               )}
-
               <div className="in-movement-item">
                 <label htmlFor="portOfOrigin" className="in-movement-label">
                   Port of Origin (PO)
@@ -628,7 +557,6 @@ function InMovements() {
                   <option value="BEAMB">Amberes, Bélgica</option>
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="TIRNumber" className="in-movement-label">
                   TIR
@@ -643,7 +571,6 @@ function InMovements() {
                   name="TIRNumber"
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="weight" className="in-movement-label">
                   Weight
@@ -658,7 +585,6 @@ function InMovements() {
                   name="weight"
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="notes" className="in-movement-label">
                   Remarks
@@ -673,7 +599,6 @@ function InMovements() {
                   name="notes"
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="truckId" className="in-movement-label">
                   Truck Plate Number
@@ -689,7 +614,6 @@ function InMovements() {
                   required
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="truckCo" className="in-movement-label">
                 Transportation Company
@@ -713,7 +637,6 @@ function InMovements() {
                   ))}
                 </select>
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="truckDriver" className="in-movement-label">
                   Driver´s name
@@ -729,7 +652,6 @@ function InMovements() {
                   required
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="sealNumber_1" className="in-movement-label">
                   Seal Nr. 1
@@ -744,7 +666,6 @@ function InMovements() {
                   name="sealNumber_1"
                 />
               </div>
-
               <div className="in-movement-item">
                 <label htmlFor="sealNumber_2" className="in-movement-label">
                   Seal Nr. 2

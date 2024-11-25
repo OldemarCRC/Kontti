@@ -15,7 +15,7 @@ const DispatchOrderSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    customsNumber: {
+    manifestNumber: {
       type: String,
       required: true,
     },

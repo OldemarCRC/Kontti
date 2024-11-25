@@ -28,7 +28,7 @@ const MovementSchema = new mongoose.Schema(
         return v;
       }
     },
-    customsNumber: {
+    manifestNumber: {
       type: Number,
       required: function () {
         return this.entryType === "import" || this.departureType === "export";
@@ -159,17 +159,6 @@ const MovementSchema = new mongoose.Schema(
       type: String,
       required: false,
     },
-
-    /*aun no confirmo con el usuario si los siguientes dos atributos son necesarios
-    ticaSequence: {
-      type: Number,
-      required: true,
-    },
-    BLNumber: {
-      type: String,
-      required: false,
-    },
-*/
     reeferDamage: {
       type: Boolean,
       default: false,
@@ -185,7 +174,6 @@ const MovementSchema = new mongoose.Schema(
       required: false,
     },
     notes: {
-      //observaciones en listados
       type: String,
       required: false,
     },

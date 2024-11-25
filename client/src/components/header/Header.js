@@ -12,15 +12,17 @@ function Header() {
   };
 
   return (
-    <div className="header-content">
-      <LogoKontti />
-      <div className={`nav-container ${isNavVisible ? 'nav-visible' : ''}`}>
-        <NavBar />
+    <div className="header">
+      <div className="header-content">
+        <LogoKontti />
+        <div className={`nav-container ${isNavVisible ? 'nav-visible' : ''}`}>
+          <NavBar />
+        </div>
+        <UserMenu className="user-menu" />
+        <button className="nav-toggle" onClick={toggleNav}>
+          ☰
+        </button>
       </div>
-      <UserMenu className="user-menu" />
-      <button className="nav-toggle" onClick={toggleNav}>
-        ☰
-      </button>
     </div>
   );
 }

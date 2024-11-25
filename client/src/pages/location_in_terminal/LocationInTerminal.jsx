@@ -27,23 +27,19 @@ function LocationInTerminal() {
     }
   };
 
-  // Carga el inventario al montar el componente
   useEffect(() => {
     loadInventory();
   }, []);
 
-  // Maneja el cambio en el input de búsqueda
   const handleSearchChange = (e) => {
     const value = e.target.value;
-    setSelectedContainer(value); // Actualiza el contenedor seleccionado con el valor actual
+    setSelectedContainer(value);
 
-    // Filtra el inventario basado en la entrada del usuario
     const filteredData = inventory.filter((container) =>
       container.containerNumber.startsWith(value.toUpperCase())
     );
-    setFilteredInventory(filteredData); // Actualiza los contenedores filtrados
+    setFilteredInventory(filteredData);
   };
-
 
   const handleContainerSelection = (containerNumber) => {
     setSelectedContainer(containerNumber);

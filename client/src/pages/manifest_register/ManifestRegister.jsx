@@ -8,15 +8,15 @@ import "../../pages/form_register_styles.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
-const CustomsNumberRegister = () => {
+const ManifestRegister = () => {
   const initialFormData = {
-    customsNumber: "",
+    manifestNumber: "",
     motorVessel: "",
     voyageNumber: "",
     date: "",
     time: "",
     transportMode: "",
-    customsManifestType: "",
+    manifestType: "",
     customsLocationCode: "",
     createdBy: "",
   };
@@ -27,7 +27,7 @@ const CustomsNumberRegister = () => {
   });
 
   const [formData, setFormData] = useState(initialFormData);
-
+  const token = sessionStorage.getItem("userToken");
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -40,7 +40,7 @@ const CustomsNumberRegister = () => {
   };
 
   const notify = () => {
-    toast.success("¡Manifiesto registrado exitosamente!", {
+    toast.success("Manifest successfully registered!", {
       onClose: () => navigate("/home"),
     });
   };
@@ -58,26 +58,36 @@ const CustomsNumberRegister = () => {
     };
 
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
+      console.log(dataToUpload);
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/customs-manifest/manifest-register`,
-        dataToUpload
+        `${process.env.REACT_APP_API_URL}/manifest/manifest-register`,
+        dataToUpload,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
       );
 
       notify();
       setFormData(initialFormData);
     } catch (error) {
       console.log(
-        "ERROR EN LA SOLICITUD:",
+        "REQUEST ERROR:",
         error.response ? error.response : error
       );
-      toast.error("¡Registro fallido!");
+      toast.error("Registration failed!");
     }
   };
 
   useEffect(() => {
     if (!user) {
       navigate("/");
-    }else if(user.role === "operator") {
+    } else if (user.role === "operator") {
       navigate("/stack-view");
     }
     const now = new Date();
@@ -91,63 +101,58 @@ const CustomsNumberRegister = () => {
     <>
       <ToastContainer autoClose={2000} />
       <Header />
-
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h1>Registrar manifiesto de aduana</h1>
-
+            <h1>Manifest Registration</h1>
             <div className="label-input">
-              <label className="form-label" htmlFor="customsNumber">
-                Número de manifiesto
+              <label className="form-label" htmlFor="manifestNumber">
+                Manifest number
               </label>
               <input
-                value={formData.customsNumber}
+                value={formData.manifestNumber}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Número de manifiesto"
-                id="customsNumber"
-                name="customsNumber"
+                placeholder="Manifest number"
+                id="manifestNumber"
+                name="manifestNumber"
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="motorVessel">
-                Nombre del barco
+                Motor Vessel Name
               </label>
               <input
                 value={formData.motorVessel}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Nombre del barco"
+                placeholder="Motor Vessel name"
                 id="motorVessel"
                 name="motorVessel"
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="voyageNumber">
-                Viaje
+                Voyage number
               </label>
               <input
                 value={formData.voyageNumber}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Viaje"
+                placeholder="Voyage number"
                 id="voyageNumber"
                 name="voyageNumber"
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="date">
-                Fecha de arribo oficial
+                Official Arrival Date
               </label>
               <input
                 type="date"
@@ -160,10 +165,9 @@ const CustomsNumberRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="time">
-                Hora de arribo oficial
+                Official Arrival Time
               </label>
               <input
                 type="time"
@@ -180,10 +184,9 @@ const CustomsNumberRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="transportMode">
-                Modalidad de transporte
+                Transport Mode
               </label>
               <select
                 id="transportMode"
@@ -193,34 +196,32 @@ const CustomsNumberRegister = () => {
                 onChange={handleChange}
                 required
               >
-                <option value="">Seleccione un tipo</option>
-                <option value="Maritime">Marítimo</option>
-                <option value="Air">Aéreo</option>
-                <option value="Inland">Terrestre</option>
+                <option value="">Select transport mode</option>
+                <option value="Maritime">Maritime Transport Mode</option>
+                <option value="Air">Air Transport Mode</option>
+                <option value="Inland">Land Transport Mode</option>
               </select>
             </div>
-
             <div className="label-input">
-              <label className="form-label" htmlFor="customsManifestType">
-                Tipo de manifiesto
+              <label className="form-label" htmlFor="manifestType">
+                Manifest type
               </label>
               <select
-                id="customsManifestType"
-                name="customsManifestType"
+                id="manifestType"
+                name="manifestType"
                 className="form-input"
-                value={formData.customsManifestType}
+                value={formData.manifestType}
                 onChange={handleChange}
                 required
               >
-                <option value="">Seleccione un tipo</option>
-                <option value="in">Ingreso</option>
-                <option value="out">Salida</option>
+                <option value="">Select manifest type</option>
+                <option value="in">Import</option>
+                <option value="out">Export</option>
               </select>
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customsLocationCode">
-                Ubicación
+                Location
               </label>
               <input
                 value={formData.customsLocationCode}
@@ -233,10 +234,9 @@ const CustomsNumberRegister = () => {
                 required
               />
             </div>
-
             <div className="register-button">
               <button className="lbtn" type="submit">
-                Registrar
+                Submit Registration
               </button>
             </div>
           </form>
@@ -247,4 +247,4 @@ const CustomsNumberRegister = () => {
   );
 };
 
-export default CustomsNumberRegister;
+export default ManifestRegister;

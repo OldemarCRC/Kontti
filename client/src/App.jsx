@@ -14,7 +14,7 @@ import ContainerDispatch from "./pages/dispatch/ContainerDispatch";
 import CustomerRegister from "./pages/customer_register/CustomerRegister";
 import DataManagement from "./pages/data_management/DataManagement";
 import TruckCoRegister from "./pages/truck_co_register/TruckCoRegister";
-import CustomsNumberRegister from "./pages/customs_number_register/CustomsNumberRegister";
+import ManifestRegister from "./pages/manifest_register/ManifestRegister";
 import Dashboard from "./pages/dashboard_page/DashboardPage";
 import QueryPage from "./pages/query_page/QueryPage";
 
@@ -41,8 +41,8 @@ function App() {
           <Route path="/truck-co-register" element={<TruckCoRegister />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route
-            path="/customs-number-register"
-            element={<CustomsNumberRegister />}
+            path="/manifest-register"
+            element={<ManifestRegister />}
           />
           <Route path="/query-page" element={<QueryPage />} />
         </Routes>

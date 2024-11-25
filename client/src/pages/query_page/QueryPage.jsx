@@ -31,7 +31,7 @@ function QueryPage() {
   const headerMappings = {
     customerName: "Cliente",
     dateAndTime: "Ingreso",
-    customsNumber: "Manifiesto",
+    manifestNumber: "Manifiesto",
     commodity: "Mercancía",
     dispatchOrders: "Órdenes de salida",
     daysInTerminal: "Días en inventario",
@@ -60,7 +60,7 @@ function QueryPage() {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      navigate("/map");
+      navigate("/stack-view");
     }
     else {
       loadData();
@@ -209,7 +209,7 @@ function QueryPage() {
                 <tr>
                   <th>{headerMappings.customerName}</th>
                   <th>{headerMappings.dateAndTime}</th>
-                  <th>{headerMappings.customsNumber}</th>
+                  <th>{headerMappings.manifestNumber}</th>
                   <th>{headerMappings.portOfOrigin}</th>
                   <th>{headerMappings.containerNumber}</th>
                   <th>{headerMappings.containerSize}</th>
@@ -226,7 +226,7 @@ function QueryPage() {
                   <tr key={item._id}>
                     <td>{item.customerName}</td>
                     <td>{formatDateTime(item.dateAndTime)}</td>
-                    <td>{item.customsNumber}</td>
+                    <td>{item.manifestNumber}</td>
                     <td>{item.portOfOrigin}</td>
                     <td>{item.containerNumber}</td>
                     <td>{item.containerSize}</td>
@@ -252,7 +252,7 @@ function QueryPage() {
                 "dateAndTime",
                 "movement",
                 "customerName",
-                "customsNumber",
+                "manifestNumber",
                 "commodity",
                 "containerNumber",
                 "sealNumber_1",
@@ -267,7 +267,7 @@ function QueryPage() {
                     <td>{formatDateTime(item.dateAndTime)}</td>
                     <td>{item.movement}</td>
                     <td>{item.customerName}</td>
-                    <td>{item.customsNumber}</td>
+                    <td>{item.manifestNumber}</td>
                     <td>{item.commodity}</td>
                     <td>{item.containerNumber}</td>
                     <td>{item.sealNumber_1}</td>
@@ -289,7 +289,7 @@ function QueryPage() {
               {renderFilterHeader([
                 "customerName",
                 "orderNumber",
-                "customsNumber",
+                "manifestNumber",
                 "commodity",
                 "truckCo",
                 "truckId",
@@ -303,7 +303,7 @@ function QueryPage() {
                   <tr key={order._id}>
                     <td>{order.customerName}</td>
                     <td>{order.orderNumber}</td>
-                    <td>{order.customsNumber}</td>
+                    <td>{order.manifestNumber}</td>
                     <td>{order.commodity}</td>
                     <td>{order.truckCo}</td>
                     <td>{order.truckId}</td>

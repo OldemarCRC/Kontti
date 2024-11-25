@@ -6,7 +6,7 @@ const InventorySchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    customsNumber: {
+    manifestNumber: {
       type: Number,
       required: false,
     },

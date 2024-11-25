@@ -31,7 +31,7 @@ function OutMovements() {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      navigate("/map");
+      navigate("/stack-view");
     }
     else {
       const now = new Date();
@@ -54,8 +54,8 @@ function OutMovements() {
       );
       setDispatchOrders(createdOrders);
     } catch (error) {
-      console.error("Error Loading Dispatchs:", error);
-      toast.error("Error Loading Dispatchs");
+      console.error("Error Loading Dispatch Orders:", error);
+      toast.error("Error Loading Dispatch Orders");
     }
   };
 
@@ -95,6 +95,7 @@ function OutMovements() {
       await uploadDataToMongoDB(token, movementData, "movements");
 
       await updateDispatchOrderStatus(
+        token,
         selectedDispatchOrder.orderNumber,
         "dispatched"
       );
@@ -189,7 +190,7 @@ function OutMovements() {
                       </p>
                       <p>
                         <strong>Manifest number:</strong>{" "}
-                        {selectedDispatchOrder.customsNumber}
+                        {selectedDispatchOrder.manifestNumber}
                       </p>
 
 

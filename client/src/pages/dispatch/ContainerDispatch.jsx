@@ -27,7 +27,7 @@ function DispatchOrder() {
     orderNumber: "",
     idNumber: "",
     customerName: "",
-    customsNumber: "",
+    manifestNumber: "",
     motorVessel: "",
     dateIn: "",
     containerNumber: "",
@@ -60,7 +60,7 @@ function DispatchOrder() {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      navigate("/map");
+      navigate("/stack-view");
     } else {
       loadInventoryData();
       loadDispatchOrders();
@@ -206,7 +206,7 @@ function DispatchOrder() {
         departureType: formData.departureType,
         idNumber: selectedInventory.idNumber,
         customerName: selectedInventory.customerName,
-        customsNumber: selectedInventory.customsNumber,
+        manifestNumber: selectedInventory.manifestNumber,
         motorVessel: selectedInventory.motorVessel,
         dateIn: selectedInventory.dateAndTime,
         containerNumber: selectedContainerNumber,
@@ -407,7 +407,7 @@ function DispatchOrder() {
 
                     <div className="dispatch-order-item">
                       <label
-                        htmlFor="customsNumber"
+                        htmlFor="manifestNumber"
                         className="dispatch-order-label"
                       >
                         Manifest number
@@ -415,9 +415,9 @@ function DispatchOrder() {
                       <input
                         type="text"
                         className="dispatch-order-input"
-                        id="customsNumber"
-                        name="customsNumber"
-                        value={selectedInventory.customsNumber || ""}
+                        id="manifestNumber"
+                        name="manifestNumber"
+                        value={selectedInventory.manifestNumber || ""}
                         onChange={handleChange}
                         readOnly
                       />

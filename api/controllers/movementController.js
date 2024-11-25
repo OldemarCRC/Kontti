@@ -21,7 +21,7 @@ export const createMovement = async (req, res) => {
 
       const inventoryData = {
         customerName: savedMovement.customerName,
-        customsNumber: savedMovement.customsNumber,
+        manifestNumber: savedMovement.manifestNumber,
         motorVessel: savedMovement.motorVessel,
         dateAndTime: savedMovement.dateAndTime,
         containerNumber: savedMovement.containerNumber,

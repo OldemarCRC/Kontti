@@ -141,7 +141,6 @@ const CustomerRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customerName">
                 Customer name
@@ -157,7 +156,6 @@ const CustomerRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customerAddress">
                 Address
@@ -173,7 +171,6 @@ const CustomerRegister = () => {
                 required
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customerContact">
                 Contact name
@@ -188,7 +185,6 @@ const CustomerRegister = () => {
                 name="customerContact"
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customerEmail">
                 Email
@@ -203,7 +199,6 @@ const CustomerRegister = () => {
                 name="customerEmail"
               />
             </div>
-
             <div className="label-input">
               <label className="form-label" htmlFor="customerPhoneNumber">
                 Phone number
@@ -218,7 +213,6 @@ const CustomerRegister = () => {
                 name="customerPhoneNumber"
               />
             </div>
-
             <div className="register-button">
               <button className="lbtn" type="submit">
                 Submit Registration

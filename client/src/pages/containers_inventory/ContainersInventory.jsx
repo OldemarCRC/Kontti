@@ -68,7 +68,7 @@ function InventoryTable() {
 
         <button
           onClick={() =>
-            navigate("/terminal-map" )
+            navigate("/stack-view" )
           }
         >
           Ver Mapa de la Terminal

@@ -23,7 +23,7 @@ const TruckCoRegister = () => {
   const [formData, setFormData] = useState(initialFormData);
 
   const { user } = useContext(AuthContext);
-
+  const token = sessionStorage.getItem("userToken");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -36,7 +36,7 @@ const TruckCoRegister = () => {
   };
 
   const notify = () => {
-    toast.success("¡Cliente registrado exitosamente!", {
+    toast.success("Transport Company successfully registered!", {
       onClose: () => delay(),
     });
   };
@@ -59,17 +59,26 @@ const TruckCoRegister = () => {
       createdBy
     } = formData;
     try {
+      if (!token) {
+        console.error("No token found in sessionStorage");
+        return;
+      }
       await axios.post(
         `${process.env.REACT_APP_API_URL}/truck-companies/truck-company-register`,
         {
-            idType,
-            idNumber,
-            companyName,
-            contactPerson,
-            contactPhone,
-            contactEmail,
-            address,
-            createdBy,
+          idType,
+          idNumber,
+          companyName,
+          contactPerson,
+          contactPhone,
+          contactEmail,
+          address,
+          createdBy,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
       );
 
@@ -78,57 +87,59 @@ const TruckCoRegister = () => {
       setFormData(initialFormData);
     } catch (error) {
       console.log(
-        "ERROR EN LA SOLICITUD:",
+        "REQUEST ERROR:",
         error.response ? error.response : error
       );
-      toast.error("¡Registro fallido!");
+      toast.error("Registration failed!");
     }
   };
 
   useEffect(() => {
     if (!user) {
       navigate("/");
+    } else if (user.role === "operator") {
+      navigate("/stack-view");
     }
   }, [user, navigate]);
 
   return (
     <>
-    <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={2000} />
       <Header />
 
       <div className="register-container">
         <div className="register-form">
           <form onSubmit={handleSubmit}>
-            <h1>Registrar empresa de transporte</h1>
+            <h1>Transport Company Registration</h1>
             <div className="label-input">
               <label className="form-label" htmlFor="idType">
-              Tipo de identificación
+                ID type
               </label>
               <select
                 value={formData.idType}
                 onChange={handleChange}
                 className="form-input"
-                placeholder="Selecciona el tipo de identificación"
+                placeholder="Select ID type"
                 id="idType"
                 name="idType"
                 required
               >
-                <option value="">Selecciona el tipo de identificación</option>
-                <option value="J">Jurídica</option>
-                <option value="F">Física</option>
+                <option value="">Selecct ID type</option>
+                <option value="TIC">Tax Identification Code</option>
+                <option value="NIC">National Identity Card</option>
               </select>
             </div>
 
             <div className="label-input">
               <label className="form-label" htmlFor="idNumber">
-                Número de identificación
+                ID Number
               </label>
               <input
                 value={formData.idNumber}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Número de identificación"
+                placeholder="ID number"
                 id="idNumber"
                 name="idNumber"
                 required
@@ -137,14 +148,14 @@ const TruckCoRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="companyName">
-                Nombre del transportista
+                Transport Company Name
               </label>
               <input
                 value={formData.companyName}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Nombre de empresa transportista"
+                placeholder="Transport Company Name"
                 id="companyName"
                 name="companyName"
                 required
@@ -153,14 +164,14 @@ const TruckCoRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="contactPerson">
-                Nombre del contacto
+                Contact name
               </label>
               <input
                 value={formData.contactPerson}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Contacto"
+                placeholder="Contact name"
                 id="contactPerson"
                 name="contactPerson"
                 required
@@ -168,28 +179,28 @@ const TruckCoRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="contactPhone">
-                Número de teléfono del contacto
+                Phone number
               </label>
               <input
                 value={formData.contactPhone}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Teléfono de contacto"
+                placeholder="Phone number"
                 id="contactPhone"
                 name="contactPhone"
               />
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="contactEmail">
-                Correo electrónico del contacto
+                Email
               </label>
               <input
                 value={formData.contactEmail}
                 onChange={handleChange}
                 type="email"
                 className="form-input"
-                placeholder="correo electrónico"
+                placeholder="Email"
                 id="contactEmail"
                 name="contactEmail"
               />
@@ -197,14 +208,14 @@ const TruckCoRegister = () => {
 
             <div className="label-input">
               <label className="form-label" htmlFor="address">
-                Dirección
+                Address
               </label>
               <input
                 value={formData.address}
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Dirección"
+                placeholder="Address"
                 id="address"
                 name="address"
               />
@@ -212,7 +223,7 @@ const TruckCoRegister = () => {
 
             <div className="register-button">
               <button className="lbtn" type="submit">
-                Registrar
+                Submit Registration
               </button>
             </div>
           </form>

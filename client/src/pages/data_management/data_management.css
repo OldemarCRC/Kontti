@@ -23,14 +23,13 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 2px;
-  /* Espacio entre las cajas */
+  gap: 2rem;
+
 }
 
-/* Estilo base de las cajas */
 .data-management-options>div {
-  width: 250px;
-  height: 250px;
+  width: 20rem;
+  height: 20rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -45,25 +44,10 @@
     background-color 0.3s ease;
 }
 
-/* Efecto hover para parecer 3D */
+
 .data-management-options>div:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
   background: linear-gradient(145deg, rgb(180, 176, 176), rgb(220, 220, 220));
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   color: white;
-}
-
-/* Adaptabilidad para pantallas más pequeñas */
-@media (max-width: 768px) {
-  .data-management-options>div {
-    width: 200px;
-    height: 200px;
-  }
-}
-
-@media (max-width: 480px) {
-  .data-management-options>div {
-    width: 150px;
-    height: 150px;
-  }
 }

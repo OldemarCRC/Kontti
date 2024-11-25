@@ -92,34 +92,3 @@ export const updateLocation = async (req, res) => {
       });
   }
 };
-
-/* export const getInventory = async (req, res, next) => {
-  try {
-    const inventory = await Inventory.findById(req.params.id);
-    res.status(200).json(inventory);
-  } catch (err) {
-    next(err);
-  }
-};
-
-export const getInventorys = async (req, res, next) => {
- Object.keys(req.query).forEach((key) => {
-   if (req.query[key] === "") {
-     delete req.query[key];
-   }
- });
-
- console.log(req.query)
-
-}; */
-
-/* export const createContainer = async (req, res, next) => {
-  const newContainer = new Container(req.body);
-
-  try {
-    const savedContainer = await newContainer.save();
-    res.status(200).json(savedContainer);
-  } catch (err) {
-    next(err);
-  }
-}; */

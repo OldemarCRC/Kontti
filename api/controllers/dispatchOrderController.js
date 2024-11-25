@@ -14,7 +14,7 @@ export const createDispatchOrder = async (req, res) => {
         departureType,
         idNumber,
         customerName,
-        customsNumber,
+        manifestNumber,
         motorVessel,
         containerNumber,
         containerSize,

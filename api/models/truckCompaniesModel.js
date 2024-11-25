@@ -4,7 +4,7 @@ const TruckCompaniesSchema = new mongoose.Schema(
   {
     idType: {
       type: String,
-      enum: ['J', 'F'], // 'J' para jurídica, 'F' para física
+      enum: ['TIC', 'NIC'],
       required: true,
     },
     idNumber: {
@@ -28,9 +28,9 @@ const TruckCompaniesSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: function (v) {
-          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v); // Validación básica de email
+          return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(v);
         },
-        message: (props) => `${props.value} no es un correo electrónico válido.`,
+        message: (props) => `${props.value} it is not a valid email account.`,
       },
     },
     address: {

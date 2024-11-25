@@ -43,7 +43,7 @@ export const generatePDF = async (formData, userName) => {
     const {
       orderNumber,
       customerName,
-      customsNumber,
+      manifestNumber,
       containerNumber,
       containerSize,
       containerType,
@@ -149,7 +149,7 @@ export const generatePDF = async (formData, userName) => {
       x: 50,
       y: textYPosition - 160,
     });
-    page.drawText(`Customs Number: ${customsNumber}`, {
+    page.drawText(`Manifest Number: ${manifestNumber}`, {
       x: 50,
       y: textYPosition - 180,
     });

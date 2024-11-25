@@ -7,12 +7,12 @@ export async function fetchDispatchOrders(token) {
       }
     });
     if (!response.ok) {
-      throw new Error('Error al obtener los despachos');
+      throw new Error('Error fetching dispatch orders');
     }
     const data = await response.json();
     return data;
   } catch (error) {
-    console.error("Error al obtener los despachos:", error);
+    console.error("Error fetching dispatch orders:", error);
     return [];
   }
 }

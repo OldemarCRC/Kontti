@@ -53,7 +53,7 @@ function Home() {
               <p>Outgoings</p>
             </div>
             <div
-              class="option-card-sv"
+              className="option-card-sv"
               onClick={() => handleNavigate("/stack-view")}
             >
               <p>Stack view</p>
