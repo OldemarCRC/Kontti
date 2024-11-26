@@ -129,7 +129,7 @@ function InMovements() {
     if (!user) {
       navigate("/");
     } else if (user.role === "operator") {
-      navigate("/map");
+      navigate("/stack-view");
     }
 
     const now = new Date();

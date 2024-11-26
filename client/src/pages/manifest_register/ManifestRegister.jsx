@@ -228,7 +228,7 @@ const ManifestRegister = () => {
                 onChange={handleChange}
                 type="text"
                 className="form-input"
-                placeholder="Ubicación"
+                placeholder="Location"
                 id="customsLocationCode"
                 name="customsLocationCode"
                 required
