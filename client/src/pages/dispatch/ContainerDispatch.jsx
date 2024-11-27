@@ -602,7 +602,7 @@ function DispatchOrder() {
           </form>
 
           <div className="dispatch-order-section">
-            <h3>Pending Dispatch Orders</h3>
+            <h2>Pending Dispatch Orders</h2>
             <select
               value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
               onChange={handleDispatchOrderChange}

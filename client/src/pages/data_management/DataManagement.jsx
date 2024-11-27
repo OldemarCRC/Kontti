@@ -25,8 +25,7 @@ function DataManagement() {
     <div className="data-management-page">
       <Header />
       <div className="data-management-body">
-        <h2 className="data-management-header">Data Management</h2>
-
+        <h1 className="data-management-header">Data Management</h1>
         <div className="data-management-options">
           <div
             className="customer-register-option"

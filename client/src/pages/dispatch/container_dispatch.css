@@ -2,53 +2,53 @@
   .dispatch-order-container {
     display: flex;
     flex-direction: column;
-    justify-content: center; /*centra contenido del div verticalmente*/
+    justify-content: center;
     align-items: center;
-    font-size: 12px;
     width: 99vw;
     height: 80vh;
-    padding: 60px 20px 20px 20px;
-   /*  background-color: hwb(0 95% 4%); */
+    padding: 120px 20px 20px 20px;
   }
   
   .dispatch-order-header {
     height: 10%;
-    color: #046a7c;
+    color: #01070c;
     font-size: 1.2rem;
     text-align: center;
-    margin-bottom: 10px;
+    margin-bottom: 20px;
   }
   
   .dispatch-order-form{
     padding-top: 50px;
     padding-right: 50px;
   }
-  
-  /* Ajusta estos estilos según tus necesidades */
-  .input-in, .select-in, .input-date {
-    width: 100%; /* Esto hará que todos ocupen el mismo ancho dentro de su contenedor padre */
-    padding: 8px 12px; /* Ajusta el padding para cambiar la altura y el espacio interno */
-    margin-bottom: 10px; /* Espacio entre cada elemento del formulario */
-    border: 1px solid #ccc; /* Borde sutil para todos los inputs y selects */
-    border-radius: 50px; /* Bordes redondeados para suavizar el diseño */
+
+  .dispatch-order-section {
+    padding: 60px 20px 20px 20px;
   }
   
-  /* Asegúrate de que los contenedores de los elementos del formulario tengan un ancho definido o porcentaje */
+  .input-in, .select-in, .input-date {
+    width: 100%;
+    padding: 8px 12px; 
+    margin-bottom: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 50px;
+  }
+  
   .dispatch-order-item {
-    margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
+    margin-bottom: 20px;
     flex: 1 1 1%;
   }
   
   .data {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Ajusta el espacio entre los inputs/selects si están en la misma fila */
+    gap: 10px;
   }
   
   .optional-data{
     display: flex;
     flex-wrap: wrap;
-    gap: 10px; /* Ajusta el espacio entre los inputs/selects si están en la misma fila */
+    gap: 10px;
   }
   
   fieldset {
@@ -72,14 +72,15 @@
     .dispatch-order-container {
     margin-top: 100px;
     margin-bottom: 200px;
+    padding: 220px 0 0 0;
   
     }
-    .dispatch-order-header p{
-      display: none;
+    .dispatch-order-header{
+      margin-bottom: 120px;
     }
   
     .dispatch-order-item {
-      margin-bottom: 20px; /* Espacio entre cada grupo de etiqueta + input/select */
+      margin-bottom: 20px;
       flex: 1 1 25%;
     }
   

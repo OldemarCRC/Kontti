@@ -1,69 +1,107 @@
-.terminal-map {
-  padding: 100px 20px 20px 20px;
-}
-.terminal-container {
+.terminal-stack-view {
   display: flex;
-  padding-top: 10px;
-  flex-direction: row; /* Organiza los contenedores en fila */
-  height: 100vh; /* O el alto que prefieras */
-  background-color: #e5e0e0;
-  margin-bottom: 10px;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  padding: 120px 20px 20px 20px;
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0.8),
+      rgba(255, 255, 255, 0.8)), url('../../assets/images/inventory.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .zones-container {
-  flex: 2; /* Toma una fracción del espacio disponible */
-  overflow-y: auto; /* Permite desplazamiento si las zonas ocupan más altura de la disponible */
+  flex: 2;
+  overflow-y: auto;
   padding: 10px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-.stack-details {
-  flex: 4; /* Toma una mayor fracción del espacio disponible */
-  padding: 60px 10px 10px 10px;
-  overflow-y: auto; /* Para desplazamiento si el contenido es muy largo */
-}
-
-.containers-without-position {
-  flex: 1;
-  padding: 10px;
-  overflow-y: auto;
-}
-
-
 .zone {
   display: flex;
   flex-direction: column;
-  gap: 2px; /* Espacio entre stacks */
+  gap: 2px;
   background-color: transparent;
 }
 
-/* Estilos para las zonas A y B */
 .zone-a,
 .zone-b {
-  width: 150px; /* Ancho para las zonas A y B */
-  height: 266px; /* Altura para las zonas A y B */
-  margin-bottom: 10px;
+  width: 150px;
+  height: 266px;
+
 }
 
-/* Estilos para la zona C */
 .zone-c {
-  width: 200px; /* Ancho doble para la zona C */
-  height: 300px; /* Altura igual para la zona C */
-  margin-bottom: 150px;
+  width: 200px;
+  height: 300px;
 }
 
 .stack {
   align-items: center;
   display: flex;
-  justify-content: center; /* Distribuye los stacks horizontalmente */
-  border: 1px solid #666; /* Borde para los stacks */
+  justify-content: center;
+  border: 1px solid #666;
   padding: 5px;
-  height: calc(
-    100% / 7
-  ); /* Calcula la altura para que 7 stacks quepan dentro de A y B */
+  height: calc(100% / 7);
   background-color: rgb(209, 206, 206);
+}
+
+.containers-without-position {
+  margin-bottom: 20px;
+}
+
+.location-form {
+  display: flex;
+  flex-direction: column;
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.location-form fieldset {
+  border: none;
+  margin: 0;
+  padding: 0;
+}
+
+.location-form legend {
+  font-size: 1.5em;
+  margin-bottom: 10px;
+}
+
+.container-location {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.container-location-item {
+  flex: 1;
+  min-width: 120px;
+}
+
+.location-form button {
+  align-self: flex-end;
+  padding: 10px 20px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.stack-details {
+  margin-top: 20px;
+  flex: 4;
+  padding: 60px 10px 10px 10px;
+  overflow-y: auto;
+  width: 100%;
+  justify-items: center;
 }
 
 .stack-title {
@@ -73,31 +111,27 @@
   color: red;
   margin-top: 20px;
 }
-/* Estilos específicos para los stacks dentro de la zona C */
-.zone-c .stack {
-  height: calc(
-    100% / 8
-  ); /* Calcula la altura para que 8 stacks quepan dentro de C */
-  
-}
 
 .column {
-  flex: 1; /* Los divs de column se expandirán para llenar el espacio disponible */
-  border: 1px solid #39393b; /* Borde para las columnas */
-  margin: 0 2px; /* Margen entre columnas */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  border: 1px solid #39393b;
+  margin: 0 2px;
   width: 10px;
-  
+
 }
 
 .stack-view {
   display: flex;
   flex-direction: row;
-  width: 480px; /*para el ancho de las columnas de stacks*/
+  width: 480px;
+
 }
 
 .height {
   border: 1px solid rgb(144, 136, 136);
-  /* background-color: #b6b3b3; */
   background-image: url('../../assets/images/container.png');
   background-size: contain;
   background-repeat: no-repeat;
@@ -106,11 +140,11 @@
   font-size: smaller;
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
     -10px -10px 20px rgba(255, 255, 255, 0.5);
-    transition: transform 0.6s ease; /* Agrega transición suave */
-    color: blue;
+  transition: transform 0.6s ease;
+  color: blue;
 }
 
-.empty-slot{
+.empty-slot {
   text-align: center;
   color: #b6b3b3;
   height: 100px;
@@ -124,4 +158,3 @@
   box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.9),
     -10px -10px 20px rgba(255, 255, 255, 0.5);
 }
-

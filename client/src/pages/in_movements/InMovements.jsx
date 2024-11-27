@@ -287,10 +287,10 @@ function InMovements() {
       <Header />
       <div className="in-movement-container">
         <div className="in-movement-header">
-          <h2>Container Movement Entry</h2>
-          <p>
+          <h1>Container Movement Entry</h1>
+          <h2>
           Register Container Entry to Container Terminal.
-          </p>
+          </h2>
         </div>
         <form className="in-movement-form" onSubmit={handleSubmit}>
           <fieldset>

@@ -30,9 +30,9 @@ function Home() {
       <Header />
       <div className="home">
         <div className="text-and-options">
-          <h2 className="home-header">
+          <h1 className="home-header">
             Container Terminal Operations Dashboard
-          </h2>
+          </h1>
           <div className="home-options">
             <div
               className="option-card-in"

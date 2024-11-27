@@ -119,7 +119,7 @@ function OutMovements() {
       <div className="out-movement-container">
         <div className="out-movement-header">
           <h1>Container Departure</h1>
-          <p>Register container departure from the terminal.</p>
+          <h2>Register container departure from the terminal.</h2>
         </div>
         <div className="out-movement-box">
           <form
@@ -127,10 +127,10 @@ function OutMovements() {
             onSubmit={(e) => e.preventDefault()}
           >
             <fieldset>
-              <legend className="legend">Container departures</legend>
+              <legend className="legend">Departures</legend>
               <div className="release-orders-section">
-                <h2>Container departure confirmation</h2>
-                <h3>Select the dispatch to confirm</h3>
+                <p>Container departure confirmation</p>
+                <p>Select the dispatch to confirm</p>
                 <select
                   value={selectedDispatchOrder ? selectedDispatchOrder._id : ""}
                   onChange={handleDispatchOrderChange}
