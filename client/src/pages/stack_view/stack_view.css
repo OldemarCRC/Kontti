@@ -1,16 +1,22 @@
-.terminal-stack-view {
+.terminal-stack-body {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  align-items: center;
   padding: 120px 20px 20px 20px;
   background-image: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0.8),
-      rgba(255, 255, 255, 0.8)), url('../../assets/images/inventory.png');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
+  rgba(255, 255, 255, 0.8),
+  rgba(255, 255, 255, 0.8)), url('../../assets/images/inventory.png');
+background-size: cover;
+background-position: center;
+background-repeat: no-repeat;
+background-attachment: fixed;
+text-align: center;
+}
+
+.terminal-stack-view {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  align-items: center;
 }
 
 .zones-container {
@@ -33,7 +39,6 @@
 .zone-b {
   width: 150px;
   height: 266px;
-
 }
 
 .zone-c {

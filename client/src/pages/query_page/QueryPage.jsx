@@ -23,10 +23,8 @@ function QueryPage() {
   const [dispatchOrders, setDispatchOrders] = useState([]);
   const [filteredDispatchOrders, setFilteredDispatchOrders] = useState([]);
   const [customers, setCustomers] = useState([]);
-  /* const [customerName, setCustomerName] = useState("");
-  const [filterDate, setFilterDate] = useState(""); */
   const [activeSection, setActiveSection] = useState(null);
-  /* const [selectedLine, setSelectedLine] = useState(null);*/
+  const [isLoading, setIsLoading] = useState(false);
 
   const headerMappings = {
     customerName: "Cliente",
@@ -53,7 +51,7 @@ function QueryPage() {
     temperature: "Temp",
     ventilation: "Vent",
   };
-  
+
   const token = sessionStorage.getItem("userToken");
 
   useEffect(() => {
@@ -171,6 +169,12 @@ function QueryPage() {
     return format(date, "dd/MM/yyyy HH:mm");
   };
 
+  const containersMisplaced = inventory.filter(
+    (container) =>
+      !container.locationInTerminal ||
+      container.locationInTerminal.trim() === ""
+  );
+
   return (
     <>
       <Header />
@@ -183,141 +187,174 @@ function QueryPage() {
             title="Inventario"
             onClick={() => setActiveSection("inventory")}
           >
-            <p>Inventario</p>
+            <p>Inventory</p>
           </div>
           <div
             className="query-option-mov"
             title="Movimientos"
             onClick={() => setActiveSection("movements")}
           >
-            <p>Movimientos</p>
+            <p>Movements</p>
           </div>
           <div
             className="query-option-ro"
             title="Órdenes de salida"
             onClick={() => setActiveSection("dispatchOrders")}
           >
-            <p>Despachos</p>
+            <p>Dispatchs</p>
           </div>
         </div>
-
-        {activeSection === "inventory" && (
-          <div className="query-section">
-            <h2>Inventario Actual</h2>
-            <table>
-              <thead>
-                <tr>
-                  <th>{headerMappings.customerName}</th>
-                  <th>{headerMappings.dateAndTime}</th>
-                  <th>{headerMappings.manifestNumber}</th>
-                  <th>{headerMappings.portOfOrigin}</th>
-                  <th>{headerMappings.containerNumber}</th>
-                  <th>{headerMappings.containerSize}</th>
-                  <th>{headerMappings.containerType}</th>
-                  <th>{headerMappings.weight}</th>
-                  <th>{headerMappings.temperature}</th>
-                  <th>{headerMappings.ventilation}</th>
-                  <th>{headerMappings.portOfDestination}</th>
-                  <th>{headerMappings.daysInTerminal}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredInventory.map((item) => (
-                  <tr key={item._id}>
-                    <td>{item.customerName}</td>
-                    <td>{formatDateTime(item.dateAndTime)}</td>
-                    <td>{item.manifestNumber}</td>
-                    <td>{item.portOfOrigin}</td>
-                    <td>{item.containerNumber}</td>
-                    <td>{item.containerSize}</td>
-                    <td>{item.containerType}</td>
-                    <td>{item.weight}</td>
-                    <td>{item.temperature}</td>
-                    <td>{item.ventilation}</td>
-                    <td>{item.portOfDestination}</td>
-                    <td>{item.daysInTerminal}</td>
-                  </tr>
-                ))}
-              </tbody>
-
-            </table>
-          </div>
-        )}
-
-        {activeSection === "movements" && (
-          <div className="query-section">
-            <h2>Movimientos</h2>
-            <table>
-              {renderFilterHeader([
-                "dateAndTime",
-                "movement",
-                "customerName",
-                "manifestNumber",
-                "commodity",
-                "containerNumber",
-                "sealNumber_1",
-                "truckCo",
-                "truckId",
-                "truckDriver",
-                "orderNumber",
-              ])}
-              <tbody>
-                {filteredMovements.map((item) => (
-                  <tr key={item._id}>
-                    <td>{formatDateTime(item.dateAndTime)}</td>
-                    <td>{item.movement}</td>
-                    <td>{item.customerName}</td>
-                    <td>{item.manifestNumber}</td>
-                    <td>{item.commodity}</td>
-                    <td>{item.containerNumber}</td>
-                    <td>{item.sealNumber_1}</td>
-                    <td>{item.truckCo}</td>
-                    <td>{item.truckId}</td>
-                    <td>{item.truckDriver}</td>
-
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-
-        {activeSection === "dispatchOrders" && (
-          <div className="query-section">
-            <h2>Despachos</h2>
-            <table>
-              {renderFilterHeader([
-                "customerName",
-                "orderNumber",
-                "manifestNumber",
-                "commodity",
-                "truckCo",
-                "truckId",
-                "truckDriver",
-                "containerNumber",
-                "creationDateTime",
-                "status",
-              ])}
-              <tbody>
-                {filteredDispatchOrders.map((order) => (
-                  <tr key={order._id}>
-                    <td>{order.customerName}</td>
-                    <td>{order.orderNumber}</td>
-                    <td>{order.manifestNumber}</td>
-                    <td>{order.commodity}</td>
-                    <td>{order.truckCo}</td>
-                    <td>{order.truckId}</td>
-                    <td>{order.truckDriver}</td>
-                    <td>{order.containerNumber}</td>
-                    <td>{formatDateTime(order.creationDateTime)}</td>
-                    <td>{order.status}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+        <div
+          className="containers-misplaced"
+          title="Containers Misplaced"
+          onClick={() => setActiveSection("containersMisplaced")}
+        >
+          <p>Misplaced</p>
+        </div>
       </div>
+
+      {activeSection === "inventory" && (
+        <div className="query-section">
+          <h2>Inventario Actual</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>{headerMappings.customerName}</th>
+                <th>{headerMappings.dateAndTime}</th>
+                <th>{headerMappings.manifestNumber}</th>
+                <th>{headerMappings.portOfOrigin}</th>
+                <th>{headerMappings.containerNumber}</th>
+                <th>{headerMappings.containerSize}</th>
+                <th>{headerMappings.containerType}</th>
+                <th>{headerMappings.weight}</th>
+                <th>{headerMappings.temperature}</th>
+                <th>{headerMappings.ventilation}</th>
+                <th>{headerMappings.portOfDestination}</th>
+                <th>{headerMappings.daysInTerminal}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredInventory.map((item) => (
+                <tr key={item._id}>
+                  <td>{item.customerName}</td>
+                  <td>{formatDateTime(item.dateAndTime)}</td>
+                  <td>{item.manifestNumber}</td>
+                  <td>{item.portOfOrigin}</td>
+                  <td>{item.containerNumber}</td>
+                  <td>{item.containerSize}</td>
+                  <td>{item.containerType}</td>
+                  <td>{item.weight}</td>
+                  <td>{item.temperature}</td>
+                  <td>{item.ventilation}</td>
+                  <td>{item.portOfDestination}</td>
+                  <td>{item.daysInTerminal}</td>
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+        </div>
+      )}
+
+      {activeSection === "movements" && (
+        <div className="query-section">
+          <h2>Movimientos</h2>
+          <table>
+            {renderFilterHeader([
+              "dateAndTime",
+              "movement",
+              "customerName",
+              "manifestNumber",
+              "commodity",
+              "containerNumber",
+              "sealNumber_1",
+              "truckCo",
+              "truckId",
+              "truckDriver",
+              "orderNumber",
+            ])}
+            <tbody>
+              {filteredMovements.map((item) => (
+                <tr key={item._id}>
+                  <td>{formatDateTime(item.dateAndTime)}</td>
+                  <td>{item.movement}</td>
+                  <td>{item.customerName}</td>
+                  <td>{item.manifestNumber}</td>
+                  <td>{item.commodity}</td>
+                  <td>{item.containerNumber}</td>
+                  <td>{item.sealNumber_1}</td>
+                  <td>{item.truckCo}</td>
+                  <td>{item.truckId}</td>
+                  <td>{item.truckDriver}</td>
+
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {activeSection === "dispatchOrders" && (
+        <div className="query-section">
+          <h2>Despachos</h2>
+          <table>
+            {renderFilterHeader([
+              "customerName",
+              "orderNumber",
+              "manifestNumber",
+              "commodity",
+              "truckCo",
+              "truckId",
+              "truckDriver",
+              "containerNumber",
+              "creationDateTime",
+              "status",
+            ])}
+            <tbody>
+              {filteredDispatchOrders.map((order) => (
+                <tr key={order._id}>
+                  <td>{order.customerName}</td>
+                  <td>{order.orderNumber}</td>
+                  <td>{order.manifestNumber}</td>
+                  <td>{order.commodity}</td>
+                  <td>{order.truckCo}</td>
+                  <td>{order.truckId}</td>
+                  <td>{order.truckDriver}</td>
+                  <td>{order.containerNumber}</td>
+                  <td>{formatDateTime(order.creationDateTime)}</td>
+                  <td>{order.status}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+      {activeSection === "containersMisplaced" && (
+        <div className="containers-misplaced">
+          {containersMisplaced.length > 0 ? (
+            <>
+              <button onClick={loadData} disabled={isLoading}>
+                {isLoading ? "Updating..." : "Update misplaced"}
+              </button>
+              <h4>List of containers without location in the system</h4>
+              <ol>
+                {containersMisplaced.map((container) => (
+                  <li key={container.containerNumber}>
+                    {container.containerNumber}
+                  </li>
+                ))}
+              </ol>
+            </>
+          ) : (
+            <>
+              <button onClick={loadData} disabled={isLoading}>
+                {isLoading ? "Updating..." : "Update misplaced"}
+              </button>
+              <p>All containers have a position in the system.</p>
+            </>
+          )}
+        </div>
+      )}
       <Footer />
     </>
   );
@@ -330,3 +367,12 @@ const OptionCard = ({ title, onClick }) => (
 );
 
 export default QueryPage;
+
+
+
+
+
+
+
+
+
