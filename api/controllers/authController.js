@@ -68,8 +68,7 @@ export const register = async (req, res, next) => {
       { expiresIn: "1d" }
     );
 
-    // Crear URL de verificación
-    const verificationUrl = `https://kontti-client.onrender.com/account-verification?token=${verificationToken}`;
+    const verificationUrl = `${process.env.BASE_URL}/account-verification?token=${verificationToken}`;
 
     await sendVerificationEmail(
       user.fullName,
@@ -129,7 +128,6 @@ export const loginSecurityMiddleware = async (req, res, next) => {
         .json({ message: "Too many attempts. User blocked." });
     }
   } else {
-    // Si el usuario no existe, aún registramos el intento para prevenir enumeración
     await User.updateOne(
       { username: "nonexistent" },
       { $push: { loginAttempts: { date: new Date(), ip } } },
@@ -144,19 +142,16 @@ export const login = async (req, res, next) => {
   try {
     const user = await User.findOne({ username: req.body.username });
     if (!user) {
-      // Incrementamos el retraso incluso para usuarios no existentes
       await new Promise((resolve) => setTimeout(resolve, 1000));
       return next(createError(404, "Incorrect username or password."));
     }
 
-    // Verificar si el usuario está bloqueado
     if (user.isLocked) {
       return next(
         createError(403, "User blocked. Contact the administrator.")
       );
     }
 
-    // Verificar si la contraseña temporal ha expirado
     if (user.passwordChangeRequired && user.passwordExpiresAt < new Date()) {
       user.isLocked = true;
       await user.save();
@@ -168,7 +163,6 @@ export const login = async (req, res, next) => {
       );
     }
 
-    // Verificar si el correo electrónico del usuario ha sido verificado
     if (!user.isEmailVerified) {
       return next(
         createError(
@@ -184,7 +178,6 @@ export const login = async (req, res, next) => {
     );
 
     if (!isPasswordCorrect) {
-      // Incrementar el número de intentos
       user.attempts += 1;
       user.lastLoginAttempt = new Date();
 
@@ -197,7 +190,6 @@ export const login = async (req, res, next) => {
         console.error("Error sending login failure notification: ", err);
       }
 
-      // Actualizar loginAttempts array
       user.loginAttempts.push({ date: new Date(), ip: userIp });
 
       if (user.attempts >= 3) {
@@ -207,7 +199,6 @@ export const login = async (req, res, next) => {
 
       await user.save();
 
-      // Incrementar el retraso con cada intento fallido
       await new Promise((resolve) => setTimeout(resolve, user.attempts * 1000)); // Retraso para mitigar ataques de fuerza bruta
 
       return next(createError(400, "Incorrect username or password."));
@@ -244,13 +235,20 @@ export const login = async (req, res, next) => {
       user.lastLoginAttempt = new Date();
       await user.save();
 
-      const { password, ...otherDetails } = user._doc;
       res
         .cookie("access_token", token, {
           httpOnly: true,
         })
         .status(200)
-        .json({ details: { ...otherDetails, token } }); // Devolver el token en la respuesta
+        .json({
+          details: {
+            id: user._id,
+            username: user.username,
+            role: user.role,
+            isEmailVerified: user.isEmailVerified,
+            token
+          }
+        });
     }
   } catch (err) {
     console.log(err);

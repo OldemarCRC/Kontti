@@ -62,8 +62,7 @@ const Login = () => {
       dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
     }
   };
-
-
+  
   return (
     <div className="login-page">
       <ToastContainer autoClose={2000} />
