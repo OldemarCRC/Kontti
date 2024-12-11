@@ -1,15 +1,16 @@
 import axios from 'axios';
 
-const fetchManifests = async (token) => {
+const fetchManifests = async () => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/manifest`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/manifest`,
+            {
+                withCredentials: true
             }
-        });
+        );
         return response.data;
     } catch (error) {
-        console.error("Error loading manifest numbers: ", error);
+        console.error("Error fetching manifest numbers: ", error);
         throw error;
     }
 }; export default fetchManifests;

@@ -2,13 +2,9 @@ import jwt from "jsonwebtoken";
 import { createError } from "../utils/error.js";
 
 export const verifyToken = (req, res, next) => {
-  const authHeader = req.headers["authorization"];
-  if (!authHeader) {
-    return next(createError(403, "Token not provided"));
-  }
-  const token = authHeader.split(" ")[1];
+  const token = req.cookies.access_token;
   if (!token) {
-    return next(createError(403, "Token not provided"));
+    return next(createError(403, "Token not provide"));
   }
   jwt.verify(token, process.env.JWT, (err, decoded) => {
     if (err) {
@@ -18,9 +14,6 @@ export const verifyToken = (req, res, next) => {
     next();
   });
 };
-
-
-
 
 export const verifyUser = (req, res, next) => {
   verifyToken(req, res, next, () => {

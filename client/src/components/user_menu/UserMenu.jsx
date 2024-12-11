@@ -4,6 +4,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./user_menu.css";
+import axios from "axios";
 
 const UserMenu = () => {
   const { user, dispatch } = useContext(AuthContext);
@@ -11,13 +12,16 @@ const UserMenu = () => {
   const handleLogout = async () => {
     try {
       const user = JSON.parse(sessionStorage.getItem("user"));
-      await fetch(`${process.env.REACT_APP_API_URL}/logout`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId: user._id }),
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/logout`,
+        { userId: user.id },
+        {
+          withCredentials: true,
+          headers: {
+            'Content-Type': 'application/json',
+          }
+        }
+      );
       toast.success("Logged out");
 
       setTimeout(() => {

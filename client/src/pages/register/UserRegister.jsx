@@ -52,23 +52,13 @@ const UserRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const token = sessionStorage.getItem("userToken");
-    if (!token) {
-      console.error("No token found in sessionStorage");
-      return;
-    }
-
     const { username, fullName, email, role, phone, createdBy } = formData;
     const payload = { username, fullName, email, role, phone, createdBy };
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/auth/register`,
+        `${process.env.REACT_APP_API_URL}/api/auth/register`,
         payload,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        {withCredentials: true}
       );
 
       notify();

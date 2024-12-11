@@ -15,8 +15,7 @@ const ChangePassword = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
-
-
+  
   const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -50,11 +49,6 @@ const ChangePassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = sessionStorage.getItem("userToken");
-    if (!token) {
-      console.error("No token found in sessionStorage");
-      return;
-    }
     const { password, newPassword, confirmNewPassword } = formData;
     if (newPassword !== confirmNewPassword) {
       toast.error("New passwords do not match!");
@@ -62,17 +56,13 @@ const ChangePassword = () => {
     }
     try {
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/auth/change-password`,
+        `${process.env.REACT_APP_API_URL}/api/auth/change-password`,
         {
           userId: user._id,
           currentPassword: password,
           newPassword,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
+        {withCredentials: true}
       );
       notify();
     } catch (error) {

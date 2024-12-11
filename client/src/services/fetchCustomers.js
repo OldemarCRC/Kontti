@@ -1,15 +1,16 @@
 import axios from 'axios';
 
-const fetchCustomers = async (token) => {
+const fetchCustomers = async () => {
     try {
-        const response = await axios.get(`${process.env.REACT_APP_API_URL}/customers`, {
-            headers: {
-                'Authorization': `Bearer ${token}`
+        const response = await axios.get(
+            `${process.env.REACT_APP_API_URL}/api/customers`,
+            {
+                withCredentials: true
             }
-        });
+        );
         return response.data;
     } catch (error) {
-        console.error("Error cargando los clientes: ", error);
+        console.error("Error fetching the customers: ", error);
         throw error;
     }
 }; export default fetchCustomers;

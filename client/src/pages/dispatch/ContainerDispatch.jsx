@@ -54,7 +54,6 @@ function DispatchOrder() {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const token = sessionStorage.getItem("userToken");
 
   useEffect(() => {
     if (!user) {
@@ -70,11 +69,7 @@ function DispatchOrder() {
   useEffect(() => {
     const loadTruckCompanies = async () => {
       try {
-        if (!token) {
-          console.error("No token found in sessionStorage");
-          return;
-        }
-        const truckCompanies = await fetchTruckCompanies(token);
+        const truckCompanies = await fetchTruckCompanies();
         setTruckCompanies(truckCompanies);
       } catch (error) {
         console.error("Error loading Truck Companies: ", error);
@@ -86,11 +81,7 @@ function DispatchOrder() {
 
   const loadInventoryData = async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      const inventory = await fetchInventory(token);
+      const inventory = await fetchInventory();
       setInventoryData(inventory);
 
       const containersNumbers = Array.from(
@@ -105,11 +96,7 @@ function DispatchOrder() {
 
   const loadDispatchOrders = async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      const orders = await fetchDispatchOrders(token);
+      const orders = await fetchDispatchOrders();
       const createdOrders = orders.filter(
         (order) => order.status === "created"
       );
@@ -193,11 +180,6 @@ function DispatchOrder() {
     }
 
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        toast.error("No token found in sessionStorage");
-        return;
-      }
       const currentDateTime = new Date().toISOString();
 
       const payload = {
@@ -231,7 +213,7 @@ function DispatchOrder() {
         creationDateTime: currentDateTime,
         status: "created",
       };
-      await uploadDataToMongoDB(token, payload, "dispatchOrder");
+      await uploadDataToMongoDB(payload, "dispatchOrder");
       toast.success("Dispatch order registered!");
 
       loadInventoryData();
@@ -245,10 +227,6 @@ function DispatchOrder() {
 
   const handleGeneratePDF = async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
       const pdfURL = await generatePDF(selectedDispatchOrder, user.username);
       toast.success("Dispatch generated successfully!");
       window.open(pdfURL, "_blank");

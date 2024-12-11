@@ -51,9 +51,6 @@ function InMovements() {
     createdBy: "",
   });
 
-
-  const token = sessionStorage.getItem("userToken");
-
   useEffect(() => {
     const isReeferContainer = ["RFH", "RF"].includes(formData.containerType);
     setIsReefer(isReeferContainer);
@@ -78,11 +75,7 @@ function InMovements() {
   useEffect(() => {
     const loadCustomers = async () => {
       try {
-        if (!token) {
-          console.error("No token found in sessionStorage");
-          return;
-        }
-        const customers = await fetchCustomers(token);
+        const customers = await fetchCustomers();
         setCustomers(customers);
       } catch (error) {
         toast.error("Error loading customers.");
@@ -94,11 +87,7 @@ function InMovements() {
   useEffect(() => {
     const loadManifests = async () => {
       try {
-        if (!token) {
-          console.error("No token found in sessionStorage");
-          return;
-        }
-        const manifests = await fetchManifests(token);
+        const manifests = await fetchManifests();
         setManifests(manifests);
       } catch (error) {
         console.error("Error loading manifests: ", error);
@@ -111,11 +100,7 @@ function InMovements() {
   useEffect(() => {
     const loadTruckCompanies = async () => {
       try {
-        if (!token) {
-          console.error("No token found in sessionStorage");
-          return;
-        }
-        const truckCompanies = await fetchTruckCompanies(token);
+        const truckCompanies = await fetchTruckCompanies();
         setTruckCompanies(truckCompanies);
       } catch (error) {
         console.error("Error loading Truck Companies: ", error);
@@ -227,11 +212,7 @@ function InMovements() {
     };
 
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      await uploadDataToMongoDB(token, dataToUpload, "movements");
+      await uploadDataToMongoDB(dataToUpload, "movements");
       toast.success("Successful data entry!");
       setFormData({
         movement: "In",

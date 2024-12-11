@@ -18,20 +18,15 @@ function StackView() {
   const [inventory, setInventory] = useState([]);
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const token = sessionStorage.getItem("userToken");
 
   const loadInventory = useCallback(async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      const inventoryData = await fetchInventory(token);
+      const inventoryData = await fetchInventory();
       setInventory(inventoryData);
     } catch (error) {
       console.error("Error fetching inventory:", error);
     }
-  }, [token]);
+  },);
 
 
   const [filteredInventory, setFilteredInventory] = useState([]);
@@ -156,11 +151,7 @@ function StackView() {
     };
     console.log("handleUpload 2", dataToUpload);
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      await updateContainerLocation(token, dataToUpload);
+      await updateContainerLocation(dataToUpload);
       toast.success("Position updated!", { autoClose: 5000 });
       setFormData({
         containerNumber: "",

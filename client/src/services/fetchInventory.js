@@ -1,35 +1,31 @@
-export async function fetchInventory(token) {
+import axios from 'axios';
+
+export async function fetchInventory() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/inventory`, {
-      headers: {
-          'Authorization': `Bearer ${token}`
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/inventory`,
+      {
+        withCredentials: true
       }
-  });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    return data;
+    );
+    return response.data;
   } catch (error) {
     console.error("Error fetching inventory:", error);
     return [];
   }
 }
 
-export async function fetchContainers(token) {
+export async function fetchContainers() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/inventory/containers`, {
-      headers: {
-          'Authorization': `Bearer ${token}`
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/inventory/containers`,
+      {
+        withCredentials: true
       }
-  });
-    if (!response.ok) {
-      throw new Error('Network response was not ok');
-    }
-    const data = await response.json();
-    return data;
+    );
+    return response.data;
   } catch (error) {
-    console.error("Error fetching inventory:", error);
+    console.error("Error fetching containers:", error);
     return [];
   }
 }

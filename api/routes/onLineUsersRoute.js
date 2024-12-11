@@ -5,6 +5,6 @@ import { verifyToken } from "../utils/verifyToken.js";
 const router = express.Router();
 
 router.get("/online-users", verifyToken, onLineUsers);
-router.post("/logout", logoutUser);//considerar agregar verifyToken y enviarlo desde frontend
+router.post("/logout", verifyToken, logoutUser);
 
 export default router

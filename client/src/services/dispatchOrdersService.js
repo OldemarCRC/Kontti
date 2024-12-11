@@ -1,16 +1,14 @@
+import axios from "axios";
 
-export async function fetchDispatchOrders(token) {
+export async function fetchDispatchOrders() {
   try {
-    const response = await fetch(`${process.env.REACT_APP_API_URL}/dispatchOrder/dispatchOrders`, {
-      headers: {
-        'Authorization': `Bearer ${token}`
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/dispatchOrder/dispatchOrders`,
+      {
+        withCredentials: true
       }
-    });
-    if (!response.ok) {
-      throw new Error('Error fetching dispatch orders');
-    }
-    const data = await response.json();
-    return data;
+    );
+    return response.data;
   } catch (error) {
     console.error("Error fetching dispatch orders:", error);
     return [];
@@ -19,7 +17,16 @@ export async function fetchDispatchOrders(token) {
 
 
 export const fetchDispatchOrdersByCustomer = async (customer) => {
-  const response = await fetch(`${process.env.REACT_APP_API_URL}/dispatchOrder/dispatchOrders/customer/${customer}`);
-  if (!response.ok) throw new Error('Error al obtener los despachos');
-  return await response.json();
-};
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/dispatchOrder/dispatchOrders/customer/${customer}`,
+      {
+        withCredentials: true
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching dispatch orders by customer:", error);
+    return [];
+  }
+}

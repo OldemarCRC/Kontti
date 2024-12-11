@@ -22,7 +22,6 @@ const CustomerRegister = () => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const token = sessionStorage.getItem("userToken");
 
   const { user } = useContext(AuthContext);
 
@@ -59,10 +58,6 @@ const CustomerRegister = () => {
       createdBy,
     } = formData;
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
       await axios.post(
         `${process.env.REACT_APP_API_URL}/customers/customer-register`,
         {
@@ -75,11 +70,7 @@ const CustomerRegister = () => {
           customerPhoneNumber,
           createdBy: user.username,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+        { withCredentials: true }
       );
       notify();
       setFormData(initialFormData);

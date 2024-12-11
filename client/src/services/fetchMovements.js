@@ -1,17 +1,16 @@
-export async function fetchMovements(token) {
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/movements`, {
-        headers: {
-            'Authorization': `Bearer ${token}`
-        }
-    });
-      if (!response.ok) {
-        throw new Error('Error al obtener los movimientos');
+import axios from 'axios';
+
+export async function fetchMovements() {
+  try {
+    const response = await axios.get(
+      `${process.env.REACT_APP_API_URL}/api/movements`,
+      {
+        withCredentials: true
       }
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error("Error al obtener los movimientos:", error);
-      return [];
-    }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching movements:", error);
+    return [];
   }
+}

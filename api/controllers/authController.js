@@ -238,6 +238,8 @@ export const login = async (req, res, next) => {
       res
         .cookie("access_token", token, {
           httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
         })
         .status(200)
         .json({
@@ -246,7 +248,6 @@ export const login = async (req, res, next) => {
             username: user.username,
             role: user.role,
             isEmailVerified: user.isEmailVerified,
-            token
           }
         });
     }

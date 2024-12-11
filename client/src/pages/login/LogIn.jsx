@@ -33,24 +33,22 @@ const Login = () => {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/auth/login`, {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(credentials),
+        credentials: "include",
       });
 
       const data = await response.json();
 
       if (response.ok && data.details.isEmailVerified) {
-        const token = data.details.token;
         const userDetails = data.details;
 
         dispatch({ type: "LOGIN_SUCCESS", payload: userDetails });
-        sessionStorage.setItem("userToken", token);
         sessionStorage.setItem("user", JSON.stringify(userDetails));
-
         toast.success("Login successful!");
         setTimeout(() => navigate(userDetails.role === "operator" ? "/stack-view" : "/home"), 2000);
       } else {
