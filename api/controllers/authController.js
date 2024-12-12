@@ -239,7 +239,7 @@ export const login = async (req, res, next) => {
         .cookie("access_token", token, {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
-          sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax',
+          sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
         })
         .status(200)
         .json({
