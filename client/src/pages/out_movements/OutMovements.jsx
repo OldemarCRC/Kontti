@@ -25,8 +25,6 @@ function OutMovements() {
   const [dispatchOrders, setDispatchOrders] = useState([]);
   const [selectedDispatchOrder, setSelectedDispatchOrder] = useState(null);
 
-  const token = sessionStorage.getItem("userToken");
-
   useEffect(() => {
     if (!user) {
       navigate("/");
@@ -44,11 +42,7 @@ function OutMovements() {
 
   const loadDispatchOrders = async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      const orders = await fetchDispatchOrders(token);
+      const orders = await fetchDispatchOrders();
       const createdOrders = orders.filter(
         (order) => order.status === "created"
       );
@@ -74,10 +68,6 @@ function OutMovements() {
 
   const handleConfirmRelease = async () => {
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
       const { date, time } = formData;
 
       if (!date || !time) {
@@ -92,10 +82,9 @@ function OutMovements() {
         dateAndTime,
         createdBy: user.username,
       };
-      await uploadDataToMongoDB(token, movementData, "movements");
+      await uploadDataToMongoDB(movementData, "movements");
 
       await updateDispatchOrderStatus(
-        token,
         selectedDispatchOrder.orderNumber,
         "dispatched"
       );

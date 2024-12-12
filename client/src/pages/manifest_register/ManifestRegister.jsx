@@ -27,7 +27,6 @@ const ManifestRegister = () => {
   });
 
   const [formData, setFormData] = useState(initialFormData);
-  const token = sessionStorage.getItem("userToken");
   const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -58,17 +57,13 @@ const ManifestRegister = () => {
     };
 
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
-      console.log(dataToUpload);
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/manifest/manifest-register`,
+        `${process.env.REACT_APP_API_URL}/api/manifest/manifest-register`,
         dataToUpload,
         {
+          withCredentials: true,
           headers: {
-            Authorization: `Bearer ${token}`
+            'Content-Type': 'application/json',
           }
         }
       );
