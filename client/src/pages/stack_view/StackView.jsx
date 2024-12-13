@@ -26,7 +26,7 @@ function StackView() {
     } catch (error) {
       console.error("Error fetching inventory:", error);
     }
-  },);
+  },[]);
 
 
   const [filteredInventory, setFilteredInventory] = useState([]);
@@ -178,6 +178,8 @@ function StackView() {
         <div className="terminal-stack-body">
           <h1>Container Stack Overview and Management</h1>
           <div className="terminal-stack-view">
+            <div className="stacks">
+              <h2>Stacks</h2>
             <div className="zones-container">
               {zones.map((zone) => (
                 <div
@@ -199,7 +201,7 @@ function StackView() {
                 </div>
               ))}
             </div>
-
+            </div>{/*fin de stack*/}
             <form className="location-form" onSubmit={handleSubmit}>
               <fieldset>
                 <legend>Update position</legend>

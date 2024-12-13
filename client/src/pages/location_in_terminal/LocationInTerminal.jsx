@@ -7,9 +7,7 @@ import { updateContainerLocation } from "../../services/uploadService.js";
 function LocationInTerminal() {
   /* const [isUploading, setIsUploading] = useState(false); */
   const [inventory, setInventory] = useState([]); // Nuevo estado para almacenar el inventario
-  // Estado para manejar el filtro de contenedores
   const [filteredInventory, setFilteredInventory] = useState([]);
-  // Estado para el número de contenedor seleccionado
   const [selectedContainer, setSelectedContainer] = useState("");
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
   const [formData, setFormData] = useState({
@@ -17,7 +15,6 @@ function LocationInTerminal() {
     locationInTerminal: "",
   });
 
-  // Define la función para cargar el inventario
   const loadInventory = async () => {
     try {
       const inventoryData = await fetchInventory();
@@ -105,7 +102,7 @@ function LocationInTerminal() {
     try {
       await updateContainerLocation(dataToUpload);
       toast.success("¡Posición actualizada!", { autoClose: 5000 });
-      // Restablecer el formulario a su estado inicial aquí
+
       setFormData({
         containerNumber: "",
         locationInTerminal: "",
@@ -119,8 +116,8 @@ function LocationInTerminal() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita el envío tradicional del formulario
-    handleUpload(); // Aquí llamas a la función que maneja la carga de datos
+    e.preventDefault();
+    handleUpload();
   };
 
   return (
@@ -138,7 +135,7 @@ function LocationInTerminal() {
                 type="text"
                 value={selectedContainer}
                 onChange={handleSearchChange}
-                autoComplete="off" // Desactiva la autocompletación del navegador
+                autoComplete="off"
               />
               <ul>
                 {filteredInventory.map((container) => (
@@ -157,7 +154,6 @@ function LocationInTerminal() {
 
             <div className="container-location">
               <div className="container-location-item">
-                {/*containerType*/}
                 <label htmlFor="containerType" className="in-movement-label">
                   Zona
                 </label>
@@ -181,7 +177,6 @@ function LocationInTerminal() {
               </div>
 
               <div className="container-location-item">
-                {/*containerType*/}
                 <label htmlFor="containerType" className="in-movement-label">
                   Stack
                 </label>
@@ -217,7 +212,6 @@ function LocationInTerminal() {
               </div>
 
               <div className="container-location-item">
-                {/*containerType*/}
                 <label htmlFor="containerType" className="in-movement-label">
                   Columna
                 </label>

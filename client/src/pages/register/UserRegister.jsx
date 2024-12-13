@@ -8,7 +8,6 @@ import "./user_register.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
-// User Registration
 const UserRegister = () => {
   const initialFormData = {
     username: "",
@@ -21,13 +20,10 @@ const UserRegister = () => {
 
   const [formData, setFormData] = useState(initialFormData);
 
-  // AuthContext Authentication
   const { user } = useContext(AuthContext);
 
-  // Navigation
   const navigate = useNavigate();
 
-  // Handling changes
   const handleChange = (e) => {
     const { id, value } = e.target;
     setFormData((prevData) => ({
@@ -43,12 +39,10 @@ const UserRegister = () => {
     });
   };
 
-  // Delay time & Navigation
   const delay = () => {
     navigate("/home");
   };
 
-  // User Submit for Registration
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -62,7 +56,6 @@ const UserRegister = () => {
       );
 
       notify();
-      // Limpiar el formulario después del registro exitoso
       setFormData(initialFormData);
     } catch (error) {
       console.log(
@@ -73,7 +66,6 @@ const UserRegister = () => {
     }
   };
 
-  // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
   useEffect(() => {
     if (!user || user.role !== "admin") {
       navigate("/");
