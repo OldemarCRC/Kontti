@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useLocation, Link } from "react-router-dom";
 import axios from "axios";
 import "./account_verification.css";
-import logoKontti from "./kontti_logo.png";
+import logoKontti from "../../assets/images/kontti_logo.png";
 
 const AccountVerification = () => {
   const [verificacionEstado, setVerificacionEstado] = useState("");
@@ -10,7 +10,6 @@ const AccountVerification = () => {
 
   useEffect(() => {
     const verifyToken = async () => {
-      // Extraer el token de la URL
       const query = new URLSearchParams(location.search);
       const token = query.get("token");
 

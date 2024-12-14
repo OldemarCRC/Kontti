@@ -17,9 +17,24 @@ function DataManagement() {
     }
   }, [user, navigate]);
 
-  const handleNavigate = (path) => {
-    navigate(path);
-  };
+  const dataManagementOptions = [
+    { 
+      title: "Customer Registration", 
+      path: "/customer-register",
+      className: "customer-register-option"
+    },
+    { 
+      title: "Transport Company Registration", 
+      path: "/truck-co-register",
+      className: "truck-register-option"
+    },
+    { 
+      title: "Manifest Registration", 
+      path: "/manifest-register",
+      className: "customs-nr-register-option"
+    }
+
+  ];
 
   return (
     <div className="data-management-page">
@@ -27,35 +42,20 @@ function DataManagement() {
       <div className="data-management-body">
         <h1 className="data-management-header">Data Management</h1>
         <div className="data-management-options">
-          <div
-            className="customer-register-option"
-            onClick={() => handleNavigate("/customer-register")}
-          >
-            <p>Customer Registration</p>
-          </div>
-          <div
-            className="truck-register-option"
-            onClick={() => handleNavigate("/truck-co-register")}
-          >
-            <p>Transport Company Registration</p>
-          </div>
-          <div
-            className="customs-nr-register-option"
-            onClick={() => handleNavigate("/manifest-register")}
-          >
-            <p>Manifest Registration</p>
-          </div>
+          {dataManagementOptions.map((option, index) => (
+            <div
+              key={index}
+              className={option.className}
+              onClick={() => navigate(option.path)}
+            >
+              <p>{option.title}</p>
+            </div>
+          ))}
         </div>
       </div>
       <Footer />
     </div>
   );
 }
-
-const OptionCard = ({ title, onClick }) => (
-  <div className="option-page" onClick={onClick}>
-    <h3 className="option-text">{title}</h3>
-  </div>
-);
 
 export default DataManagement;

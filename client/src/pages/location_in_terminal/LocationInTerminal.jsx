@@ -192,7 +192,7 @@ function LocationInTerminal() {
                   <option value="">Stack</option>
                   {[...Array(8).keys()].map((i) => {
                     const stackNumber = i + 1;
-                    // Desactivar opciones de stack > 7 si la zona es A o B
+
                     const isDisabled =
                       (formData.locationInTerminal.charAt(0) === "A" ||
                         formData.locationInTerminal.charAt(0) === "B") &&

@@ -10,10 +10,9 @@ import Header from "../../components/header/Header";
 
 const Dashboard = () => {
   const [dashboardData, setDashboardData] = useState(null);
-  // AuthContext Authentication
+
   const { user } = useContext(AuthContext);
 
-  // Navigation
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +23,6 @@ const Dashboard = () => {
     loadData();
   }, []); 
 
-    // Verifica si el usuario ha iniciado sesión al montar el componente y cada vez que el valor de 'user' cambie
     useEffect(() => {
       if (!user || user.role !== "admin") {
         navigate("/");

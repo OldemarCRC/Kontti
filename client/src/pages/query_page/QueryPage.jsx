@@ -5,7 +5,6 @@ import { fetchInventory } from "../../services/fetchInventory";
 import { fetchMovements } from "../../services/fetchMovements";
 import {
   fetchDispatchOrders,
-  fetchDispatchOrdersByCustomer,
 } from "../../services/dispatchOrdersService";
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer.js";
@@ -22,7 +21,7 @@ function QueryPage() {
   const [filteredMovements, setFilteredMovements] = useState([]);
   const [dispatchOrders, setDispatchOrders] = useState([]);
   const [filteredDispatchOrders, setFilteredDispatchOrders] = useState([]);
-  const [customers, setCustomers] = useState([]);
+  /* const [customers, setCustomers] = useState([]); */
   const [activeSection, setActiveSection] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -65,10 +64,10 @@ function QueryPage() {
 
   const loadData = async () => {
     try {
+      setIsLoading(true); 
       const inventoryData = await fetchInventory();
       const currentDate = new Date();
 
-      // Calcular días transcurridos
       const updatedInventoryData = inventoryData.map((item) => {
         const entryDate = new Date(item.dateAndTime);
         const daysInTerminal = Math.floor(
@@ -88,12 +87,14 @@ function QueryPage() {
       setMovements(movementsData);
       setFilteredMovements(movementsData);
 
-      const uniqueCustomers = [
+     /*  const uniqueCustomers = [
         ...new Set(inventoryData.map((item) => item.customerName)),
       ];
-      setCustomers(uniqueCustomers);
+      setCustomers(uniqueCustomers); */
     } catch (error) {
       toast.error(error.message);
+    }finally {
+      setIsLoading(false);
     }
   };
 
@@ -353,19 +354,10 @@ function QueryPage() {
   );
 };
 
-const OptionCard = ({ title, onClick }) => (
+/* const OptionCard = ({ title, onClick }) => (
   <div className="option-page" onClick={onClick}>
     <h3 className="option-text">{title}</h3>
   </div>
-);
+); */
 
 export default QueryPage;
-
-
-
-
-
-
-
-
-

@@ -83,7 +83,7 @@ const Login = () => {
                 value={credentials.username}
                 onChange={handleChange}
                 placeholder="Enter your username"
-                aria-label="Username input" // Añadir
+                aria-label="Username input"
                 autoComplete="username"
                 required
               />

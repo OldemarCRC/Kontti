@@ -17,12 +17,15 @@ export const updateDispatchOrderStatus = async (orderNumber, status) => {
       }
     );
 
-    toast.success('Dispatch updated successfully!');
-    return true;
+    if (response.status === 200) {
+      toast.success('Dispatch updated successfully!');
+      return true;
+    } else {
+      throw new Error('Unexpected response status');
+    }
   } catch (error) {
     console.error('Error updating dispatch status:', error);
 
-    // Check if the error response contains a specific message
     const errorMessage = error.response?.data?.message || 'Error updating dispatch status';
     toast.error(errorMessage);
 

@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthContextProvider } from "./context/AuthContext";
 import "./App.css";
-import ContainersInventory from "./pages/containers_inventory/ContainersInventory";
 import InMovements from "./pages/in_movements/InMovements";
 import OutMovements from "./pages/out_movements/OutMovements";
 import LogIn from "./pages/login/LogIn";
@@ -34,7 +33,6 @@ function App() {
           <Route path="/in-movements" element={<InMovements />} />
           <Route path="/out-movements" element={<OutMovements />} />
           <Route path="/containers-dispatch" element={<ContainerDispatch />} />
-          <Route path="/inventory" element={<ContainersInventory />} />
           <Route path="/stack-view" element={<StackView />} />
           <Route path="/customer-register" element={<CustomerRegister />} />
           <Route path="/data-management" element={<DataManagement />} />

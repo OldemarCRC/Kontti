@@ -16,7 +16,7 @@ function InMovements() {
   const navigate = useNavigate();
   const [customers, setCustomers] = useState([]);
   const [manifests, setManifests] = useState([]);
-  const [isReefer, setIsReefer] = useState(false);
+  /* const [isReefer, setIsReefer] = useState(false); */
   const [truckCompanies, setTruckCompanies] = useState([]);
   const [isNORActive, setIsNORActive] = useState(false);
   const [isTempVentActive, setIsTempVentActive] = useState(false);
@@ -53,7 +53,7 @@ function InMovements() {
 
   useEffect(() => {
     const isReeferContainer = ["RFH", "RF"].includes(formData.containerType);
-    setIsReefer(isReeferContainer);
+    /* setIsReefer(isReeferContainer); */
 
     const shouldActivateNOR = isReeferContainer && formData.isEmpty === false;
     setIsNORActive(shouldActivateNOR);
@@ -158,10 +158,16 @@ function InMovements() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    let updatedValue = value;
+    /* let updatedValue = value; */
 
     if (name === "isEmpty" || name === "isNOR") {
-      updatedValue = value === "true";
+      const processedValue = value === "true";
+      setFormData((prevData) => ({
+        ...prevData,
+        [name]: processedValue,
+        ...(name === "isEmpty" && { commodity: processedValue ? "Empty" : "" }),
+      }));
+      return;
     }
 
     if (name === "customerName") {
@@ -173,29 +179,23 @@ function InMovements() {
         customerName: value,
         idNumber: selectedCustomer?.idNumber || "",
       }));
+      return;
     }
-    if (name === "isEmpty") {
-      const isEmptyValue = value === "true";
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: isEmptyValue,
-        commodity: isEmptyValue ? "Empty" : "",
-      }));
-    } else {
-      const fieldsToUpperCase = [
-        "containerNumber",
-        "truckId",
-        "truckDriver",
-        "commodity",
-      ];
-      const processedValue = fieldsToUpperCase.includes(name)
-        ? value.toUpperCase()
-        : value;
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: updatedValue,
-      }));
-    }
+    const fieldsToUpperCase = [
+      "containerNumber",
+      "truckId",
+      "truckDriver",
+      "commodity",
+    ];
+
+    const processedValue = fieldsToUpperCase.includes(name)
+      ? value.toUpperCase()
+      : value;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: processedValue,
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -672,3 +672,32 @@ function InMovements() {
 }
 
 export default InMovements;
+
+
+
+
+
+/* if (name === "isEmpty") {
+  const isEmptyValue = value === "true";
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: isEmptyValue,
+    commodity: isEmptyValue ? "Empty" : "",
+  }));
+} else {
+  const fieldsToUpperCase = [
+    "containerNumber",
+    "truckId",
+    "truckDriver",
+    "commodity",
+  ];
+  const finalValue = fieldsToUpperCase.includes(name)
+    ? value.toUpperCase()
+    : value;
+
+  setFormData((prevData) => ({
+    ...prevData,
+    [name]: finalValue,
+  }));
+}
+}; */
