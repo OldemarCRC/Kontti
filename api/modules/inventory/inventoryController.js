@@ -1,10 +1,7 @@
-import Inventory from "../models/inventoryModel.js";
-
-//******************************GET INVENTORY********************************/
+import Inventory from "./inventoryModel.js";
 
 export const getInventory = async (req, res) => {
   try {
-    // Obtener todo el inventario
     const inventory = await Inventory.find({});
     res.json(inventory);
   } catch (error) {
@@ -15,11 +12,8 @@ export const getInventory = async (req, res) => {
   }
 };
 
-//******************************GET CONTAINERS FROM INVENTORY********************************/
-
 export const getContainers = async (req, res) => {
   try {
-    // Obtener solo los números de contenedores del inventario
     const inventory = await Inventory.find({}, "containerNumber");
     res.json(inventory);
   } catch (error) {
@@ -29,8 +23,6 @@ export const getContainers = async (req, res) => {
       .send({ message: "Error fetching inventory", error: error.message });
   }
 };
-
-//****************************** FIN DE GET INVENTORY********************************/
 
 export const updateInventory = async (req, res, next) => {
   try {
@@ -54,41 +46,38 @@ export const deleteInventory = async (req, res, next) => {
   }
 };
 
-// Controlador para modificar la posición de un contenedor en la terminal.
-
 export const updateLocation = async (req, res) => {
   const { containerNumber, locationInTerminal } = req.body;
   console.log('Request body:', req.body);
   try {
     const updatedInventory = await Inventory.findOneAndUpdate(
-      { containerNumber }, // Filtra por número de contenedor
-      { $set: { locationInTerminal } }, // Actualiza la localización
-      { new: true } // Opción para retornar el documento modificado
+      { containerNumber }, 
+      { $set: { locationInTerminal } }, 
+      { new: true } 
     );
 
     if (!updatedInventory) {
       console.log('Container not found in inventory:', containerNumber);
       return res
         .status(404)
-        .json({ message: "Contenedor no encontrado en el inventario." });
+        .json({ message: "Container not found in inventory." });
     }
     console.log('Updated inventory:', updatedInventory);
     res.json(updatedInventory);
   } catch (error) {
-    // Verifica si el error es un error de duplicado de MongoDB
     if (error.code === 11000) {
       console.log('Duplicate entry error:', error);
       return res
         .status(400)
-        .json({ message: "Ya existe un contenedor en esa posición." });
+        .json({ message: "A container already exists in that location." });
     }
-    // Para otros tipos de errores, mantiene la respuesta genérica
     console.log('General error:', error);
     res
       .status(500)
       .json({
-        message: "Error al actualizar la localización del contenedor.",
+        message: "Error updating container location.",
         error: error.message,
       });
   }
 };
+

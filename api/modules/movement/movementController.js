@@ -1,21 +1,17 @@
-import Movement from "../models/movementModel.js";
-import Inventory from "../models/inventoryModel.js";
+import Movement from "./movementModel.js";
+import Inventory from "../inventory/inventoryModel.js";
 
 export const createMovement = async (req, res) => {
   const { containerNumber, movement } = req.body;
   try {
-    // Primero, verifica si el contenedor ya existe en el inventario
     const existingInventory = await Inventory.findOne({ containerNumber });
 
-    // Verifica si el movimiento es un ingreso
     if (movement === "In") {
-      //Verifica si el contenedor ya está en el inventario.
       if (existingInventory) {
         return res
           .status(400)
-          .json({ message: "El contenedor ya se encuentra en el inventario." });
+          .json({ message: "The container is already in the inventory." });
       }
-      // Si el contenedor no está en el inventario, procede a insertar el nuevo movimiento
       const newMovement = new Movement(req.body);
       const savedMovement = await newMovement.save();
 
@@ -44,39 +40,32 @@ export const createMovement = async (req, res) => {
         boxDamage: savedMovement.boxDamage,
         damageComments: savedMovement.damageComments,
       };
-      // Crea un nuevo documento en el inventario.
       const newInventoryItem = new Inventory(inventoryData);
       await newInventoryItem.save();
       res.status(201).json(savedMovement);
-    }
-    // Manejo para movimiento de salida
-    else if (movement === "Out") {
+    } else if (movement === "Out") {
       if (!existingInventory) {
         return res
           .status(400)
-          .json({ message: "El contenedor no se encuentra en el inventario." });
+          .json({ message: "The container is not in the inventory." });
       }
 
-      // Procede a insertar el nuevo movimiento
       const newMovement = new Movement(req.body);
       const savedMovement = await newMovement.save();
-
-      // Borrar documento del inventario
       await Inventory.findOneAndDelete({ containerNumber });
 
       res.status(201).json(savedMovement);
     } else {
-      // Manejo de valores inesperados para gateInOrGateOut
-      res.status(400).json({ message: "Valor inválido para gateInOrGateOut." });
+      res.status(400).json({ message: "Invalid value for gateInOrGateOut." });
     }
   } catch (error) {
     console.log(
-      "Error creando el movimiento o actualizando el inventario:",
+      "Error creating movement or updating inventory:",
       error
     );
     res
       .status(500)
-      .json({ message: "Error interno del servidor", error: error.message });
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -116,8 +105,7 @@ export const getMovements = async (req, res) => {
   const movements = await Movement.find();
   res.status(200).json(movements);
 }catch (error) {
-  console.error("Error al obtener los movimientos:", error);
-  res.status(500).json({ message: "Error al obtener los movimientos" });
+  console.error("Error retrieving movements:", error);
+  res.status(500).json({ message: "Error retrieving movements" });
 }
 };
-

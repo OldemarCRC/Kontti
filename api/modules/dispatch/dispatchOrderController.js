@@ -1,5 +1,5 @@
-import DispatchOrder from "../models/dispatchOrderModel.js";
-import Inventory from "../models/inventoryModel.js";
+import DispatchOrder from "./dispatchOrderModel.js";
+import Inventory from "../inventory/inventoryModel.js";
 
 export const createDispatchOrder = async (req, res) => {
   const session = await Inventory.startSession();
@@ -40,29 +40,26 @@ export const createDispatchOrder = async (req, res) => {
     } = req.body;
 
    
-
-    // Buscar el inventario correspondiente basado en customerName, customsNumber y ticaSequence
     const inventory = await Inventory.findOne({
       containerNumber,
     }).session(session);
     
     if (!inventory) {
-      throw new Error("No se encontró el inventario correspondiente");
+      throw new Error("The corresponding inventory was not found");
     }
 
-    // Guardar los cambios en la base de datos
     await inventory.save({ session });
 
     await session.commitTransaction();
     session.endSession();
     
-    res.status(200).json({ message: 'Despacho registrada' });
+    res.status(200).json({ message: 'Container dispatch registered' });
   } catch (error) {
     await session.abortTransaction();
     session.endSession();
     
-    console.error("Error al crear la orden de salida:", error);
-    res.status(500).json({ message: "Error interno del servidor" });
+    console.error("Error creating dispatch order:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -72,12 +69,10 @@ export const getDispatchOrders = async (req, res) => {
     const dispatchOrders = await DispatchOrder.find();
     res.status(200).json(dispatchOrders);
   } catch (error) {
-    console.error("Error al obtener los despachos:", error);
-    res.status(500).json({ message: "Error al obtener los despachos" });
+    console.error("Error fetching dispatches:", error);
+    res.status(500).json({ message: "Error fetching dispatches" });
   }
 };
-
-// Controlador para actualizar el estado de una orden de salida
 
 export const updateDispatchOrderStatus = async (req, res) => {
   const { dispatchOrderNumber, status } = req.body;
@@ -86,7 +81,7 @@ export const updateDispatchOrderStatus = async (req, res) => {
     const dispatchOrder = await DispatchOrder.findOne({ orderNumber });
 
     if (!dispatchOrder) {
-      return res.status(404).json({ message: "Orden de salida no encontrada" });
+      return res.status(404).json({ message: "Dispatch order not found" });
     }
 
     dispatchOrder.status = status;
@@ -95,12 +90,12 @@ export const updateDispatchOrderStatus = async (req, res) => {
     res.status(200).json(dispatchOrder);
   } catch (error) {
     console.error(
-      "Error al actualizar el despacho:",
+      "Error updating dispatch:",
       error
     );
     res
       .status(500)
-      .json({ message: "Error interno del servidor", error: error.message });
+      .json({ message: "Internal server error", error: error.message });
   }
 };
 
@@ -113,7 +108,7 @@ export const getDispatchOrdersByCustomer = async (req, res) => {
     res
       .status(500)
       .json({
-        message: "Error al obtener los despachos",
+        message: "Error fetching dispatches",
         error: error.message,
       });
   }

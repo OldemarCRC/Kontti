@@ -1,8 +1,8 @@
-import User from "../models/userModel.js";
+import User from "../users/userModel.js";
 import mongoose from "mongoose";
 import rateLimit from "express-rate-limit";
 import bcrypt from "bcryptjs";
-import { createError } from "../utils/error.js";
+import { createError } from "../../services/errorHandler.js";
 import jwt from "jsonwebtoken";
 import {
   sendVerificationEmail,
@@ -10,8 +10,8 @@ import {
   sendLoginNotification,
   sendFailLoginNotification,
   sendDBConnectionFailureNotification,
-} from "../utils/mailer.js";
-import { generateRandomPassword } from "../utils/passwordUtils.js";
+} from "../../services/mailer.js";
+import { generateRandomPassword } from "./passwordUtils.js";
 
 
 export const isMongoConnected = async (req, res, next) => {
@@ -103,18 +103,15 @@ export const loginSecurityMiddleware = async (req, res, next) => {
   let user = await User.findOne({ username });
 
   if (user) {
-    // Registrar intento
     user.loginAttempts.push({ date: new Date(), ip });
     await user.save();
 
-    // Verificar si el usuario está bloqueado
     if (user.isLocked) {
       return res
         .status(403)
         .json({ message: "User blocked. Contact the administrator." });
     }
 
-    // Verificar intentos recientes
     const recentAttempts = user.loginAttempts.filter(
       (attempt) => attempt.date > new Date(Date.now() - 15 * 60 * 1000)
     ).length;

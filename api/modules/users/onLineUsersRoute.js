@@ -1,6 +1,6 @@
 import express from "express";
-import { onLineUsers, logoutUser  } from "../controllers/onLineUsersController.js";
-import { verifyToken } from "../utils/verifyToken.js";
+import { onLineUsers, logoutUser  } from "./onLineUsersController.js";
+import { verifyToken } from "../../middlewares/verifyToken.js";
 
 const router = express.Router();
 

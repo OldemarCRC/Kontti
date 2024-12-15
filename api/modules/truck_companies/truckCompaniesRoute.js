@@ -1,6 +1,6 @@
 import express from "express";
-import { truckCompanyRegister, truckCompaniesList } from "../controllers/truckCompaniesController.js";
-import { verifyToken } from "../utils/verifyToken.js";
+import { truckCompanyRegister, truckCompaniesList } from "./truckCompaniesController.js";
+import { verifyToken } from "../../middlewares/verifyToken.js";
 
 const router = express.Router();
 

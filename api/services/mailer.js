@@ -114,7 +114,7 @@ export const sendVerificationEmail = async (fullName, email, verificationUrl, te
     <p><strong>Date and time of attempted login:</strong> ${failLoginattemptDate}</p>
     <p><strong>IP address of start of access attempt:</strong> ${userIp}</p>
     <p>An unsuccessful attempt to log in to the system with your user has been detected.</p>
-    <p>f you were not the one who performed this action, we recommend that you immediately contact your administrator or our support team to protect your account.</p>
+    <p>If you were not the one who performed this action, we recommend that you immediately contact your administrator or our support team to protect your account.</p>
 
     <h2><strong>Login details</strong></h2>
     <ul>

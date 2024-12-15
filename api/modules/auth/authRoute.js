@@ -1,6 +1,6 @@
 import express from "express";
-import { isMongoConnected, loginLimiter, loginSecurityMiddleware, login, register, verifyEmail, changePassword } from "../controllers/authController.js";
-import { verifyToken } from "../utils/verifyToken.js";
+import { isMongoConnected, loginLimiter, loginSecurityMiddleware, login, register, verifyEmail, changePassword } from "./authController.js";
+import { verifyToken } from "../../middlewares/verifyToken.js";
 
 const router = express.Router();
 
