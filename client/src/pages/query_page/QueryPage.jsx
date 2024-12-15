@@ -9,7 +9,7 @@ import {
 import { toast } from "react-toastify";
 import Footer from "../../components/footer/Footer.js";
 import Header from "../../components/header/Header.js";
-import { format } from "date-fns"; // Importa date-fns
+import { format } from "date-fns";
 import "./query_page.css";
 
 function QueryPage() {
@@ -21,7 +21,6 @@ function QueryPage() {
   const [filteredMovements, setFilteredMovements] = useState([]);
   const [dispatchOrders, setDispatchOrders] = useState([]);
   const [filteredDispatchOrders, setFilteredDispatchOrders] = useState([]);
-  /* const [customers, setCustomers] = useState([]); */
   const [activeSection, setActiveSection] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -87,10 +86,6 @@ function QueryPage() {
       setMovements(movementsData);
       setFilteredMovements(movementsData);
 
-     /*  const uniqueCustomers = [
-        ...new Set(inventoryData.map((item) => item.customerName)),
-      ];
-      setCustomers(uniqueCustomers); */
     } catch (error) {
       toast.error(error.message);
     }finally {
@@ -173,7 +168,7 @@ function QueryPage() {
     <>
       <Header />
       <div className="query-page">
-        <h1>Consultas</h1>
+        <h1>Data Queries</h1>
 
         <div className="query-options-container">
           <div
