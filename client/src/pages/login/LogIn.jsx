@@ -19,10 +19,6 @@ const Login = () => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  /* const notify = () => {
-    toast.success("Login successful!");
-  }; */
-
   useEffect(() => {
     if (error) {
       toast.error(error);

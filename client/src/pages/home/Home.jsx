@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // Importa useNavigate
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import "./home.css";
 import Header from "../../components/header/Header";
