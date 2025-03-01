@@ -59,12 +59,8 @@ const TruckCoRegister = () => {
       createdBy
     } = formData;
     try {
-      if (!token) {
-        console.error("No token found in sessionStorage");
-        return;
-      }
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/truck-companies/truck-company-register`,
+        `${process.env.REACT_APP_API_URL}/api/truck-companies/truck-company-register`,
         {
           idType,
           idNumber,
@@ -75,11 +71,7 @@ const TruckCoRegister = () => {
           address,
           createdBy,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+        { withCredentials: true }
       );
 
       notify();

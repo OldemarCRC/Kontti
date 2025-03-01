@@ -533,9 +533,9 @@ function InMovements() {
                   name="portOfOrigin"
                 >
                   <option value="">Select Port of Origin</option>
-                  <option value="NLRTM">Rotterdam, Países Bajos</option>
-                  <option value="DEHAM">Hamburgo, Alemania</option>
-                  <option value="BEAMB">Amberes, Bélgica</option>
+                  <option value="FIHEL">PORT OF HELSINKI, FINLAND</option>
+                  <option value="FIKTK">PORT OF KOTKA-HAMINA, FINLAND</option>
+                  <option value="FITKU">PORT OF TURKU, FINLAND</option>
                 </select>
               </div>
               <div className="in-movement-item">

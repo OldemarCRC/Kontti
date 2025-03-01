@@ -135,23 +135,3 @@ const DispatchOrderSchema = new mongoose.Schema(
 
 export default mongoose.model("DispatchOrder", DispatchOrderSchema);
 
-/* BLNumber: {
-  type: String,
-  required: false,
-  trim: true,
-},
-
-ticaSequence: {
-  type: Number,
-  required: true,
-},
-
-BLLineNumber: {
-  type: Number,
-  required: true,
-}, 
-
- DUANumber: {
-    type: String,
-    required: true,
-  },*/

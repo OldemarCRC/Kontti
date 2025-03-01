@@ -59,7 +59,7 @@ const CustomerRegister = () => {
     } = formData;
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/customers/customer-register`,
+        `${process.env.REACT_APP_API_URL}/api/customers/customer-register`,
         {
           idType,
           idNumber,
@@ -68,7 +68,7 @@ const CustomerRegister = () => {
           customerContact,
           customerEmail,
           customerPhoneNumber,
-          createdBy: user.username,
+          createdBy,
         },
         { withCredentials: true }
       );
