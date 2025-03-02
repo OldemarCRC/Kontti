@@ -52,7 +52,7 @@ const UserRegister = () => {
       await axios.post(
         `${process.env.REACT_APP_API_URL}/api/auth/register`,
         payload,
-        {withCredentials: true}
+        { withCredentials: true }
       );
 
       notify();
@@ -62,7 +62,11 @@ const UserRegister = () => {
         "ERROR IN THE REQUEST:",
         error.response ? error.response : error
       );
-      toast.error("Registration failed!");
+      if (error.response) {
+        toast.error(`Registration failed: ${error.response.data.message}`);
+      } else {
+        toast.error("Registration failed due to an unknown error.");
+      }
     }
   };
 
@@ -83,7 +87,7 @@ const UserRegister = () => {
             <h5 className="register-message">Register user</h5>
             <div className="label-input">
               <label className="form-label" htmlFor="fullName">
-              User's full name
+                User's full name
               </label>
               <input
                 value={formData.fullName}
@@ -98,7 +102,7 @@ const UserRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="username">
-              User name
+                User name
               </label>
               <input
                 value={formData.username}
@@ -113,7 +117,7 @@ const UserRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
-              Email
+                Email
               </label>
               <input
                 value={formData.email}
@@ -128,7 +132,7 @@ const UserRegister = () => {
             </div>
             <div className="label-input">
               <label className="form-label" htmlFor="email">
-              User role
+                User role
               </label>
               <select
                 value={formData.role}

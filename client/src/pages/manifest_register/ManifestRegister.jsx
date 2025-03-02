@@ -75,7 +75,11 @@ const ManifestRegister = () => {
         "REQUEST ERROR:",
         error.response ? error.response : error
       );
-      toast.error("Registration failed!");
+      if (error.response) {
+        toast.error(`Registration failed: ${error.response.data.message}`);
+      } else {
+        toast.error("Registration failed due to an unknown error.");
+      }
     }
   };
 

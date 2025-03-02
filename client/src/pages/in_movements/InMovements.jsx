@@ -672,32 +672,3 @@ function InMovements() {
 }
 
 export default InMovements;
-
-
-
-
-
-/* if (name === "isEmpty") {
-  const isEmptyValue = value === "true";
-  setFormData((prevData) => ({
-    ...prevData,
-    [name]: isEmptyValue,
-    commodity: isEmptyValue ? "Empty" : "",
-  }));
-} else {
-  const fieldsToUpperCase = [
-    "containerNumber",
-    "truckId",
-    "truckDriver",
-    "commodity",
-  ];
-  const finalValue = fieldsToUpperCase.includes(name)
-    ? value.toUpperCase()
-    : value;
-
-  setFormData((prevData) => ({
-    ...prevData,
-    [name]: finalValue,
-  }));
-}
-}; */

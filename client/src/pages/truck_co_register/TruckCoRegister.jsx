@@ -23,7 +23,6 @@ const TruckCoRegister = () => {
   const [formData, setFormData] = useState(initialFormData);
 
   const { user } = useContext(AuthContext);
-  const token = sessionStorage.getItem("userToken");
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -82,7 +81,11 @@ const TruckCoRegister = () => {
         "REQUEST ERROR:",
         error.response ? error.response : error
       );
-      toast.error("Registration failed!");
+      if (error.response) {
+        toast.error(`Registration failed: ${error.response.data.message}`);
+      } else {
+        toast.error("Registration failed due to an unknown error.");
+      }
     }
   };
 
