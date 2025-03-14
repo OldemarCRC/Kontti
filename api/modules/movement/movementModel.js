@@ -12,7 +12,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.movement === "In";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -23,7 +23,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.movement === "Out";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -33,7 +33,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.entryType === "import" || this.departureType === "export";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -43,7 +43,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.entryType === "import" || this.departureType === "export";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -77,7 +77,7 @@ const MovementSchema = new mongoose.Schema(
     commodity: {
       type: String,
       required: true
-      },
+    },
     weight: {
       type: Number,
       required: true,
@@ -87,7 +87,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.departureType === "export";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -97,7 +97,7 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.entryType === "import";
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -105,9 +105,10 @@ const MovementSchema = new mongoose.Schema(
     destination: {
       type: String,
       required: function () {
-        return this.movement === "Out";
+        return this.movement === "Out" &&
+          ["toConsignee", "toShipper", "toCustomsAux"].includes(this.departureType);
       },
-      set: function(v) {
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }
@@ -117,7 +118,17 @@ const MovementSchema = new mongoose.Schema(
       required: function () {
         return this.departureType === "toConsignee";
       },
-      set: function(v) {
+      set: function (v) {
+        if (v === "") return undefined;
+        return v;
+      }
+    },
+    shipperName: {
+      type: String,
+      required: function () {
+        return this.departureType === "toShipper";
+      },
+      set: function (v) {
         if (v === "") return undefined;
         return v;
       }

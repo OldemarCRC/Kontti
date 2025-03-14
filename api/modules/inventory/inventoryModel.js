@@ -81,6 +81,15 @@ const InventorySchema = new mongoose.Schema(
       type: String,
       required: false,
     },
+    isReservedForDispatch: {
+      type: Boolean,
+      default: false
+    },
+    activeDispatchOrderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'DispatchOrder',
+      default: null
+    },
     notes: {
       type: String,
       required: false,
@@ -101,6 +110,6 @@ const InventorySchema = new mongoose.Schema(
     },
   },
   { collection: "inventory" }
-); // Especifica el nombre de la colección aquí);
+);
 
 export default mongoose.model("Inventory", InventorySchema);

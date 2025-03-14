@@ -23,6 +23,7 @@ export const createDispatchOrder = async (req, res) => {
         commodity,
         isNOR,
         weight,
+        portOfDestination,
         sealNumber_1,
         sealNumber_2,
         temperature,
@@ -32,6 +33,8 @@ export const createDispatchOrder = async (req, res) => {
         truckCo,
         truckDriver,
         consigneeName,
+        shipperName,
+        anotherTerminal,
         destination,
         createdBy,
         creationDateTime,
@@ -48,6 +51,8 @@ export const createDispatchOrder = async (req, res) => {
       throw new Error("The corresponding inventory was not found");
     }
 
+    inventory.isReservedForDispatch = true;
+    inventory.activeDispatchOrderId = savedDispatchOrder._id;
     await inventory.save({ session });
 
     await session.commitTransaction();
@@ -75,7 +80,7 @@ export const getDispatchOrders = async (req, res) => {
 };
 
 export const updateDispatchOrderStatus = async (req, res) => {
-  const { dispatchOrderNumber, status } = req.body;
+  const { orderNumber, status } = req.body;
 
   try {
     const dispatchOrder = await DispatchOrder.findOne({ orderNumber });

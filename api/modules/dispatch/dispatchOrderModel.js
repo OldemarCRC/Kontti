@@ -30,7 +30,44 @@ const DispatchOrderSchema = new mongoose.Schema(
     },
     destination: {
       type: String,
-      required: true,
+      required: function () {
+        return this.movement === "Out" &&
+          ["toConsignee", "toShipper", "toCustomsAux"].includes(this.departureType);
+      },
+      set: function (v) {
+        if (v === "") return undefined;
+        return v;
+      }
+    },
+    portOfDestination: {
+      type: String,
+      required: function () {
+        return this.departureType === "export";
+      },
+      set: function (v) {
+        if (v === "") return undefined;
+        return v;
+      }
+    },
+    consigneeName: {
+      type: String,
+      required: function () {
+        return this.departureType === "toConsignee";
+      },
+      set: function (v) {
+        if (v === "") return undefined;
+        return v;
+      }
+    },
+    shipperName: {
+      type: String,
+      required: function () {
+        return this.departureType === "toShipper";
+      },
+      set: function (v) {
+        if (v === "") return undefined;
+        return v;
+      }
     },
     creationDateTime: {
       type: Date,
@@ -70,18 +107,6 @@ const DispatchOrderSchema = new mongoose.Schema(
     },
     weight: {
       type: Number,
-      required: false,
-    },
-    portOfDestination: {
-      type: String,
-      required: false,
-    },
-    portOfOrigin: {
-      type: String,
-      required: false,
-    },
-    consigneeName: {
-      type: String,
       required: false,
     },
     truckId: {

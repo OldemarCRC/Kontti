@@ -48,7 +48,6 @@ export const deleteInventory = async (req, res, next) => {
 
 export const updateLocation = async (req, res) => {
   const { containerNumber, locationInTerminal } = req.body;
-  console.log('Request body:', req.body);
   try {
     const updatedInventory = await Inventory.findOneAndUpdate(
       { containerNumber }, 
@@ -62,7 +61,6 @@ export const updateLocation = async (req, res) => {
         .status(404)
         .json({ message: "Container not found in inventory." });
     }
-    console.log('Updated inventory:', updatedInventory);
     res.json(updatedInventory);
   } catch (error) {
     if (error.code === 11000) {

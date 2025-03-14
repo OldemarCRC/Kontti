@@ -96,7 +96,8 @@ function OutMovements() {
       toast.success("Container exit movement successfully generated!");
     } catch (error) {
       console.error("Error confirming container exit movement:", error);
-      toast.error("Error confirming container exit movement");
+      const errorMessage = error.response?.data?.message || "Error confirming container exit movement";
+      toast.error(errorMessage);
     }
   };
 

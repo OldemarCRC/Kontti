@@ -25,6 +25,7 @@ function DispatchOrder() {
 
   const initialFormData = {
     orderNumber: "",
+    departureType: "",
     idNumber: "",
     customerName: "",
     manifestNumber: "",
@@ -37,7 +38,7 @@ function DispatchOrder() {
     commodity: "",
     isNOR: "",
     weight: "",
-    portOfOrigin: "",
+    portOfDestination: "",
     sealNumber_1: "",
     sealNumber_2: "",
     temperature: "",
@@ -47,6 +48,8 @@ function DispatchOrder() {
     truckCo: "",
     truckDriver: "",
     consigneeName: "",
+    shipperName: "",
+    anotherTerminal: "",
     destination: "",
     createdBy: "",
     creationDateTime: "",
@@ -82,10 +85,14 @@ function DispatchOrder() {
   const loadInventoryData = async () => {
     try {
       const inventory = await fetchInventory();
-      setInventoryData(inventory);
+
+      // Filtrar solo los contenedores que NO están reservados para despacho
+      const availableInventory = inventory.filter(item => !item.isReservedForDispatch);
+
+      setInventoryData(availableInventory);
 
       const containersNumbers = Array.from(
-        new Set(inventory.map((item) => item.containerNumber))
+        new Set(availableInventory.map((item) => item.containerNumber))
       );
       setContainersNumbers(containersNumbers);
     } catch (error) {
@@ -198,7 +205,7 @@ function DispatchOrder() {
         commodity: selectedInventory.commodity,
         isNOR: selectedInventory.isNOR,
         weight: selectedInventory.weight,
-        portOfOrigin: selectedInventory.portOfOrigin,
+        portOfDestination: formData.portOfDestination,
         sealNumber_1: formData.sealNumber_1,
         sealNumber_2: formData.sealNumber_2,
         temperature: selectedInventory.temperature,
@@ -208,6 +215,8 @@ function DispatchOrder() {
         truckCo: formData.truckCo,
         truckDriver: formData.truckDriver,
         consigneeName: formData.consigneeName,
+        shipperName: formData.shipperName,
+        anotherTerminal: formData.anotherTerminal,
         destination: formData.destination,
         createdBy: user.username,
         creationDateTime: currentDateTime,
@@ -442,6 +451,7 @@ function DispatchOrder() {
             </fieldset>
 
             <section className="data">
+
               <div className="dispatch-order-item">
                 <label htmlFor="departureType" className="dispatch-order-label">
                   Type of Dispatch
@@ -462,34 +472,88 @@ function DispatchOrder() {
                 </select>
               </div>
 
-              <div className="dispatch-order-item">
-                <label htmlFor="consigneeName" className="dispatch-order-label">
-                  Consignee
-                </label>
-                <input
-                  type="text"
-                  className="dispatch-order-input"
-                  id="consigneeName"
-                  name="consigneeName"
-                  value={formData.consigneeName}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
+              {formData.departureType === 'toConsignee' && (
+                <div className="dispatch-order-item">
+                  <label htmlFor="consigneeName" className="dispatch-order-label">
+                    Consignee
+                  </label>
+                  <input
+                    type="text"
+                    className="dispatch-order-input"
+                    id="consigneeName"
+                    name="consigneeName"
+                    value={formData.consigneeName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              )}
 
-              <div className="dispatch-order-item">
-                <label htmlFor="destination" className="dispatch-order-label">
-                  Destination
-                </label>
-                <input
-                  type="text"
-                  className="dispatch-order-input"
-                  id="destination"
-                  name="destination"
-                  value={formData.destination || ""}
-                  onChange={handleChange}
-                />
-              </div>
+              {formData.departureType === 'toShipper' && (
+                <div className="dispatch-order-item">
+                  <label htmlFor="shipperName" className="dispatch-order-label">
+                    Shipper
+                  </label>
+                  <input
+                    type="text"
+                    className="dispatch-order-input"
+                    id="shipperName"
+                    name="shipperName"
+                    value={formData.shipperName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              )}
+
+              {formData.departureType === 'toCustomsAux' && (
+                <div className="dispatch-order-item">
+                  <label htmlFor="anotherTerminal" className="dispatch-order-label">
+                    Terminal
+                  </label>
+                  <input
+                    type="text"
+                    className="dispatch-order-input"
+                    id="anotherTerminal"
+                    name="anotherTerminal"
+                    value={formData.anotherTerminal}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              )}
+
+              {(formData.departureType === 'toConsignee' || formData.departureType === 'toShipper' || formData.departureType === 'toCustomsAux') && (
+                <div className="dispatch-order-item">
+                  <label htmlFor="destination" className="dispatch-order-label">
+                    Destination
+                  </label>
+                  <input
+                    type="text"
+                    className="dispatch-order-input"
+                    id="destination"
+                    name="destination"
+                    value={formData.destination || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
+
+              {formData.departureType === 'export' && (
+                <div className="dispatch-order-item">
+                  <label htmlFor="portOfDestination" className="dispatch-order-label">
+                    Port of Destination
+                  </label>
+                  <input
+                    type="text"
+                    className="dispatch-order-input"
+                    id="portOfDestination"
+                    name="portOfDestination"
+                    value={formData.portOfDestination || ""}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div className="dispatch-order-item">
                 <label htmlFor="truckId" className="dispatch-order-label">
