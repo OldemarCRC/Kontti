@@ -47,6 +47,12 @@ const CustomerRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (user?.role === "demo") {
+      toast.info("Demo users are not allow to register new customers.");
+      return;
+    }
+    
     const {
       idType,
       idNumber,
@@ -96,7 +102,7 @@ const CustomerRegister = () => {
 
   return (
     <>
-      <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={5000} />
       <Header />
       <div className="register-container">
         <div className="register-form">
@@ -208,7 +214,12 @@ const CustomerRegister = () => {
               />
             </div>
             <div className="register-button">
-              <button className="lbtn" type="submit">
+              <button className="lbtn" type="submit"
+                disabled={user?.role === "demo"}
+                style={{
+                  cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+                  opacity: user?.role === "demo" ? 0.6 : 1,
+                }}>
                 Submit Registration
               </button>
             </div>

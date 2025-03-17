@@ -186,6 +186,11 @@ function DispatchOrder() {
       return;
     }
 
+    if (user?.role === "demo") {
+      toast.info("Demo users are not allow to create dispatch orders.");
+      return;
+    }
+
     try {
       const currentDateTime = new Date().toISOString();
 
@@ -638,7 +643,12 @@ function DispatchOrder() {
               </div>
             </section>
 
-            <button type="submit" className="submit-button">
+            <button type="submit" className="submit-button"
+              disabled={user?.role === "demo"}
+              style={{
+                cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+                opacity: user?.role === "demo" ? 0.6 : 1,
+              }}>
               Register Dispatch Order
             </button>
           </form>

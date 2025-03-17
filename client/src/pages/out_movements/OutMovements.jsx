@@ -67,6 +67,11 @@ function OutMovements() {
   };
 
   const handleConfirmRelease = async () => {
+    if (user?.role === "demo") {
+      toast.info("Demo users are not allow to include container´s movements.");
+      return;
+    }
+
     try {
       const { date, time } = formData;
 
@@ -218,7 +223,12 @@ function OutMovements() {
                         {selectedDispatchOrder.sealNumber_2}
                       </p>
                     </div>
-                    <button onClick={handleConfirmRelease}>
+                    <button onClick={handleConfirmRelease}
+                      disabled={user?.role === "demo"}
+                      style={{
+                        cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+                        opacity: user?.role === "demo" ? 0.6 : 1,
+                      }}>
                       Confirm container departure
                     </button>
                   </>

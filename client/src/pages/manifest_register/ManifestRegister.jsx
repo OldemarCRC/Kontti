@@ -46,6 +46,11 @@ const ManifestRegister = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (user?.role === "demo") {
+      toast.info("Demo users are not allow to register manifests.");
+      return;
+    }
+
     const dateTime = new Date(
       `${formData.date}T${formData.time}`
     ).toISOString();
@@ -234,7 +239,12 @@ const ManifestRegister = () => {
               />
             </div>
             <div className="register-button">
-              <button className="lbtn" type="submit">
+              <button className="lbtn" type="submit"
+                disabled={user?.role === "demo"}
+                style={{
+                  cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+                  opacity: user?.role === "demo" ? 0.6 : 1,
+                }}>
                 Submit Registration
               </button>
             </div>

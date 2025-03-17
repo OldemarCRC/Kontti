@@ -6,15 +6,21 @@ export const verifyToken = (req, res, next) => {
   if (!token) {
     return next(createError(403, "Token not provide"));
   }
-  jwt.verify(token, process.env.JWT, (err, decoded) => {
-    if (err) {
-      return next(createError(401, "Unauthorized"));
-    }
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT);
     req.userId = decoded.id;
+    
+    req.user = {
+      id: decoded.id,
+      role: decoded.role, 
+    };
+    
     next();
-  });
+  } catch (err) {
+    return next(createError(401, "Unauthorized"));
+  }
 };
-
 export const verifyUser = (req, res, next) => {
   verifyToken(req, res, next, () => {
     if (req.user.id === req.params.id) {

@@ -11,6 +11,10 @@ const Login = () => {
     password: "",
   });
 
+  const demoCredentials = {
+    username: "demo_user",
+    password: "demo_user_1234"
+  }
   const { loading, error, dispatch } = useContext(AuthContext);
 
   const navigate = useNavigate();
@@ -18,6 +22,11 @@ const Login = () => {
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
+
+  useEffect(() => {
+    // Establece las credenciales demo al cargar el componente
+    setCredentials(demoCredentials);
+  }, []);
 
   useEffect(() => {
     if (error) {
@@ -56,7 +65,7 @@ const Login = () => {
       dispatch({ type: "LOGIN_FAILURE", payload: errorMessage });
     }
   };
-  
+
   return (
     <div className="login-page">
       <ToastContainer autoClose={2000} />

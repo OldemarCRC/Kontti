@@ -17,7 +17,7 @@ const DispatchOrderSchema = new mongoose.Schema(
     },
     manifestNumber: {
       type: String,
-      required: true,
+      required: false,
     },
     motorVessel: {
       type: String,

@@ -6,17 +6,18 @@ import {
   getUsers,
 } from "./userController.js";
 import { verifyAdmin, verifyToken, verifyUser } from "../../middlewares/verifyToken.js";
+import roleAccessControl from "../../middlewares/roleAccessControl.js"
 
 const router = express.Router();
 
 
-router.put("/:id", verifyToken, verifyUser, updateUser);
+router.put("/:id", verifyToken, verifyUser, roleAccessControl, updateUser);
 
-router.delete("/:id", verifyToken, verifyUser, deleteUser);
+router.delete("/:id", verifyToken, verifyUser, roleAccessControl, deleteUser);
 
-router.get("/:id", verifyToken, verifyUser, getUser);
+router.get("/:id", verifyToken, verifyUser, roleAccessControl, getUser);
 
-router.get("/", verifyToken, verifyAdmin, getUsers);
+router.get("/", verifyToken, verifyAdmin, roleAccessControl, getUsers);
 
 export default router;
 

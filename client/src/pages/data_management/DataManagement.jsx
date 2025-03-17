@@ -19,6 +19,11 @@ function DataManagement() {
 
   const dataManagementOptions = [
     { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
       title: "Customer Registration", 
       path: "/customer-register",
       className: "customer-register-option"
@@ -32,7 +37,37 @@ function DataManagement() {
       title: "Manifest Registration", 
       path: "/manifest-register",
       className: "customs-nr-register-option"
-    }
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
+    { 
+      title: "", 
+      path: "#",
+      className: "customer-register-option"
+    },
 
   ];
 

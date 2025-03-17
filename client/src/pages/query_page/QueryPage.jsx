@@ -190,7 +190,7 @@ function QueryPage() {
             title="Órdenes de salida"
             onClick={() => setActiveSection("dispatchOrders")}
           >
-            <p>Dispatchs</p>
+            <p>Dispatches</p>
           </div>
           <div
             className="query-option-cm"
@@ -203,7 +203,7 @@ function QueryPage() {
 
         {activeSection === "inventory" && (
           <div className="query-section">
-            <h2>Inventario Actual</h2>
+            <h2>Current inventory</h2>
             <table>
               <thead>
                 <tr>
@@ -246,7 +246,7 @@ function QueryPage() {
 
         {activeSection === "movements" && (
           <div className="query-section">
-            <h2>Movimientos</h2>
+            <h2>Movements</h2>
             <table>
               {renderFilterHeader([
                 "dateAndTime",
@@ -284,7 +284,7 @@ function QueryPage() {
 
         {activeSection === "dispatchOrders" && (
           <div className="query-section">
-            <h2>Despachos</h2>
+            <h2>Dispatches</h2>
             <table>
               {renderFilterHeader([
                 "customerName",

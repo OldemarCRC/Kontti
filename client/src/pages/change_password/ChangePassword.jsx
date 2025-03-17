@@ -15,7 +15,7 @@ const ChangePassword = () => {
     newPassword: "",
     confirmNewPassword: "",
   });
-  
+
   const { user, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -46,9 +46,13 @@ const ChangePassword = () => {
     navigate("/");
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (user?.role === "demo") {
+      toast.info("Demo user cannot change the password in this version.");
+      return;
+    }
+
     const { password, newPassword, confirmNewPassword } = formData;
     if (newPassword !== confirmNewPassword) {
       toast.error("New passwords do not match!");
@@ -62,19 +66,29 @@ const ChangePassword = () => {
           currentPassword: password,
           newPassword,
         },
-        {withCredentials: true}
+        { withCredentials: true }
       );
       notify();
     } catch (error) {
-      console.log("REQUEST ERROR:", error.response ? error.response : error);
-      toast.error("Password change unsuccessful!");
+      if (error.response) {
+        // El servidor respondió con un código de estado fuera del rango 2xx
+        console.log("REQUEST ERROR:", error.response);
+        toast.error(`Error ${error.response.status}: ${error.response.data.message || "Password change unsuccessful!"}`);
+      } else if (error.request) {
+        // La solicitud se envió pero no se recibió respuesta
+        console.log("REQUEST ERROR: No response received", error.request);
+        toast.error("No response from the server. Please try again later.");
+      } else {
+        // Algo pasó al configurar la solicitud que desencadenó un error
+        console.log("REQUEST ERROR: General error", error.message);
+        toast.error("An unexpected error occurred.");
+      }
     }
   };
 
   return (
     <>
       <Header />
-
       <div className="change-password-container">
         <div className="change-password-form">
           <form onSubmit={handleSubmit}>
@@ -128,7 +142,12 @@ const ChangePassword = () => {
               />
             </div>
             <div className="change-password-button">
-              <button className="lbtn" type="submit">
+              <button className="lbtn" type="submit"
+                disabled={user?.role === "demo"}
+                style={{
+                  cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+                  opacity: user?.role === "demo" ? 0.6 : 1,
+                }}>
                 Confirm password change
               </button>
             </div>
@@ -136,7 +155,7 @@ const ChangePassword = () => {
         </div>
       </div>
       <Footer />
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 };

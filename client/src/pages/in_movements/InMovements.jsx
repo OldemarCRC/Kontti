@@ -200,6 +200,12 @@ function InMovements() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (user?.role === "demo") {
+      toast.info("Demo users are not allow to include container´s movements.");
+      return;
+    }
+
     const dateTime = new Date(
       `${formData.date}T${formData.time}`
     ).toISOString();
@@ -270,7 +276,7 @@ function InMovements() {
         <div className="in-movement-header">
           <h1>Container Movement Entry</h1>
           <h2>
-          Register Container Entry to Container Terminal.
+            Register Container Entry to Container Terminal.
           </h2>
         </div>
         <form className="in-movement-form" onSubmit={handleSubmit}>
@@ -298,16 +304,21 @@ function InMovements() {
                 </select>
               </div>
               <div className="in-movement-item">
-                <label htmlFor="manifestNumber" className="in-movement-label">
+                <label
+                  htmlFor="manifestNumber"
+                  className={`in-movement-label ${formData.entryType !== "import" ? "text-muted" : ""}`}
+                >
                   Manifest number
+                  {formData.entryType === "import" && <span className="required-indicator">*</span>}
                 </label>
                 <select
-                  value={formData.manifestNumber}
+                  value={formData.entryType === "import" ? formData.manifestNumber : ""}
                   onChange={handleSelectChange}
                   className="select-in"
                   id="manifestNumber"
                   name="manifestNumber"
-                  required
+                  required={formData.entryType === "import"}
+                  disabled={formData.entryType !== "import"}
                 >
                   <option value="">Select the manifest</option>
                   {manifests.map((manifest) => (
@@ -536,6 +547,9 @@ function InMovements() {
                   <option value="FIHEL">PORT OF HELSINKI, FINLAND</option>
                   <option value="FIKTK">PORT OF KOTKA-HAMINA, FINLAND</option>
                   <option value="FITKU">PORT OF TURKU, FINLAND</option>
+                  <option value="CRMOB">PORT OF MOIN, COSTA RICA</option>
+                  <option value="CRLIO">PORT OF LIMON, COSTA RICA</option>
+                  <option value="NOOSL">PORT OF OSLO, NORWAY</option>
                 </select>
               </div>
               <div className="in-movement-item">
@@ -597,7 +611,7 @@ function InMovements() {
               </div>
               <div className="in-movement-item">
                 <label htmlFor="truckCo" className="in-movement-label">
-                Transportation Company
+                  Transportation Company
                 </label>
                 <select
                   value={formData.truckCo}
@@ -663,7 +677,12 @@ function InMovements() {
               </div>
             </section>
           </fieldset>
-          <button type="submit">Confirm sea container´s entry</button>
+          <button type="submit"
+            disabled={user?.role === "demo"}
+            style={{
+              cursor: user?.role === "demo" ? "not-allowed" : "pointer",
+              opacity: user?.role === "demo" ? 0.6 : 1,
+            }}>Confirm sea container´s entry</button>
         </form>
       </div>
       <Footer />

@@ -46,6 +46,11 @@ const UserRegister = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (user?.role !== "admin") {
+      toast.info("User cannot register new users.");
+      return;
+    }
+
     const { username, fullName, email, role, phone, createdBy } = formData;
     const payload = { username, fullName, email, role, phone, createdBy };
     try {
@@ -78,7 +83,7 @@ const UserRegister = () => {
 
   return (
     <>
-      <ToastContainer autoClose={2000} />
+      <ToastContainer autoClose={5000} />
       <Header />
 
       <div className="register-container">
@@ -150,6 +155,7 @@ const UserRegister = () => {
                 <option value="operator">Stacker operator</option>
                 <option value="externalUser">External user</option>
                 <option value="surveyor">Container surveyor</option>
+                <option value="demo">Demo user</option>
               </select>
             </div>
             <div className="label-input">
@@ -168,7 +174,12 @@ const UserRegister = () => {
             </div>
 
             <div className="register-button">
-              <button className="lbtn" type="submit">
+              <button className="lbtn" type="submit"
+                disabled={user?.role === "demo"}
+                style={{
+                  cursor: user?.role !== "admin" ? "not-allowed" : "pointer",
+                  opacity: user?.role !== "admin" ? 0.6 : 1,
+                }}>
                 Register
               </button>
             </div>
