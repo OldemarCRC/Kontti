@@ -12,7 +12,13 @@ const UserMenu = () => {
   const handleLogout = async () => {
     try {
       const user = JSON.parse(sessionStorage.getItem("user"));
-      await axios.post(
+      if (!user || !user.id) {
+        throw new Error("No user found in sessionStorage");
+      }
+      toast.info("Trying to log out...");
+  
+      // Hacer la solicitud de logout
+      const response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/logout`,
         { userId: user.id },
         {
@@ -22,16 +28,31 @@ const UserMenu = () => {
           }
         }
       );
-      toast.success("Logged out");
-
-      setTimeout(() => {
-        sessionStorage.removeItem("user");
-        dispatch({ type: "LOGOUT" });
-        window.location.reload();
-      }, 800);
+  
+      if (response.status === 200) {
+        toast.success("Session closed successfully");
+        setTimeout(() => {
+          sessionStorage.removeItem("user");
+          dispatch({ type: "LOGOUT" });
+          window.location.reload();
+        }, 800);
+      } else {
+        throw new Error(`Unexpected status code: ${response.status}`);
+      }
     } catch (error) {
-      console.error("Logout error:", error);
-      toast.error("There was an issue logging out. Please try again.");
+      // Manejo detallado de errores para mostrar en pantalla
+      let errorMessage = "There was a problem logging out. Please try again.";
+      if (error.response) {
+        // El servidor respondió con un error (por ejemplo, 401, 403, 500)
+        errorMessage = `Server Error - Status ${error.response.status}: ${error.response.data.message || 'Error desconocido'}`;
+      } else if (error.request) {
+        // La solicitud se envió pero no se recibió respuesta
+        errorMessage = "No server response. Check your internet connection.";
+      } else {
+        // Error al configurar la solicitud
+        errorMessage = `Error preparing the request: ${error.message}`;
+      }
+      toast.error(errorMessage);
     }
   };
 
@@ -60,3 +81,36 @@ const UserMenu = () => {
 };
 
 export default UserMenu;
+
+
+
+
+
+
+
+
+/* const handleLogout = async () => {
+  try {
+    const user = JSON.parse(sessionStorage.getItem("user"));
+    await axios.post(
+      ${process.env.REACT_APP_API_URL}/api/logout,
+      { userId: user.id },
+      {
+        withCredentials: true,
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      }
+    );
+    toast.success("Logged out");
+
+
+setTimeout(() => {
+  sessionStorage.removeItem("user");
+  dispatch({ type: "LOGOUT" });
+  window.location.reload();
+}, 800);
+} catch (error) {
+console.error("Logout error:", error);
+toast.error("There was an issue logging out. Please try again.");
+} */
