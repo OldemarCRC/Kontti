@@ -55,7 +55,7 @@ const UserRegister = () => {
     const payload = { username, fullName, email, role, phone, createdBy };
     try {
       await axios.post(
-        `${process.env.VITE_API_URL}/api/auth/register`,
+        `${import.meta.env.VITE_API_URL}/api/auth/register`,
         payload,
         { withCredentials: true }
       );

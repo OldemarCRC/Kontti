@@ -11,6 +11,12 @@
   },
   "scripts": {
     "version:bump": "npm version patch -m 'Bump version to %s'",
-    "version:minor": "npm version minor -m 'Bump minor version to %s'"
+    "version:minor": "npm version minor -m 'Bump minor version to %s'",
+    "dev": "concurrently \"npm run dev --workspace=api\" \"npm run dev --workspace=client\" --names \"API,CLIENT\" --prefix-colors \"blue,green\"",
+    "dev:api": "npm run dev --workspace=api",
+    "dev:client": "npm run dev --workspace=client"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
   }
 }

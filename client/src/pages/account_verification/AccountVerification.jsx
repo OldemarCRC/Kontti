@@ -15,7 +15,7 @@ const AccountVerification = () => {
 
       try {
         await axios.get(
-          `${process.env.VITE_API_URL}/api/auth/verify-email?token=${token}`
+          `${import.meta.env.VITE_API_URL}/api/auth/verify-email?token=${token}`
         );
         setVerificacionEstado(
           "Success: Your email has been verified. You can close this window and continue using the application."

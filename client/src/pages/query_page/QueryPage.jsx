@@ -7,8 +7,8 @@ import {
   fetchDispatchOrders,
 } from "../../services/dispatchOrdersService";
 import { toast } from "react-toastify";
-import Footer from "../../components/footer/Footer.js";
-import Header from "../../components/header/Header.js";
+import Footer from "../../components/footer/Footer.jsx";
+import Header from "../../components/header/Header.jsx";
 import { format } from "date-fns";
 import "./query_page.css";
 

@@ -7,8 +7,8 @@ import { toast } from "react-toastify";
 import "./container_dispatch.css";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import { generatePDF } from "../../services/pdfService.js";
-import Footer from "../../components/footer/Footer.js";
-import Header from "../../components/header/Header.js";
+import Footer from "../../components/footer/Footer.jsx";
+import Header from "../../components/header/Header.jsx";
 import fetchTruckCompanies from "../../services/fetchTruckCompanies.js";
 
 function DispatchOrder() {

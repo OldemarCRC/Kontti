@@ -3,7 +3,7 @@ import axios from 'axios';
 export async function fetchMovements() {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/movements`,
+      `${import.meta.env.VITE_API_URL}/api/movements`,
       {
         withCredentials: true
       }

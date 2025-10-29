@@ -63,7 +63,7 @@ const ManifestRegister = () => {
 
     try {
       await axios.post(
-        `${process.env.VITE_API_URL}/api/manifest/manifest-register`,
+        `${import.meta.env.VITE_API_URL}/api/manifest/manifest-register`,
         dataToUpload,
         {
           withCredentials: true,

@@ -63,7 +63,7 @@ const TruckCoRegister = () => {
     } = formData;
     try {
       await axios.post(
-        `${process.env.VITE_API_URL}/api/truck-companies/truck-company-register`,
+        `${import.meta.env.VITE_API_URL}/api/truck-companies/truck-company-register`,
         {
           idType,
           idNumber,

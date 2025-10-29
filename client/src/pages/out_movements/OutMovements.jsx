@@ -6,8 +6,8 @@ import { fetchDispatchOrders } from "../../services/dispatchOrdersService";
 import { updateDispatchOrderStatus } from "../../services/updateDispatchOrderStatus";
 import { uploadDataToMongoDB } from "../../services/uploadService.js";
 import "./out_movements.css";
-import Footer from "../../components/footer/Footer.js";
-import Header from "../../components/header/Header.js";
+import Footer from "../../components/footer/Footer.jsx";
+import Header from "../../components/header/Header.jsx";
 
 function OutMovements() {
   const { user } = useContext(AuthContext);

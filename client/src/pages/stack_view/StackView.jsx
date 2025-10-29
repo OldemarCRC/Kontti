@@ -5,8 +5,8 @@ import { toast } from "react-toastify";
 import { fetchInventory } from "../../services/fetchInventory.js";
 import { updateContainerLocation } from "../../services/uploadService.js";
 import "./stack_view.css";
-import Footer from "../../components/footer/Footer.js";
-import Header from "../../components/header/Header.js";
+import Footer from "../../components/footer/Footer.jsx";
+import Header from "../../components/header/Header.jsx";
 
 const zones = [
   { id: "A", stacks: [7, 6, 5, 4, 3, 2, 1] },

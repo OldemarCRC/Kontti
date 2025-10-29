@@ -3,7 +3,7 @@ import axios from 'axios';
 const fetchTruckCompanies = async () => {
     try {
         const response = await axios.get(
-            `${process.env.VITE_API_URL}/api/truck-companies`,
+            `${import.meta.env.VITE_API_URL}/api/truck-companies`,
             {
                 withCredentials: true
             }
