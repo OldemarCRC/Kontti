@@ -31,4 +31,4 @@ node_modules/
 # Agregado para ignorar archivos .env específicos del entorno
 .env.development
 .env.production
-
+modificaciones.docx

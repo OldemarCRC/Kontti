@@ -1,4 +1,4 @@
-import React, { useEffect, useContext, useState } from "react";
+import { useEffect, useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
@@ -8,7 +8,7 @@ import "../../pages/form_register_styles.css";
 import Header from "../../components/header/Header";
 import Footer from "../../components/footer/Footer";
 
-// Customer Registration
+
 const CustomerRegister = () => {
   const initialFormData = {
     idType: "",

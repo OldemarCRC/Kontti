@@ -237,6 +237,7 @@ export const login = async (req, res, next) => {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'lax',
+          path: '/',
         })
         .status(200)
         .json({

@@ -24,7 +24,6 @@ const Login = () => {
   };
 
   useEffect(() => {
-    // Establece las credenciales demo al cargar el componente
     setCredentials(demoCredentials);
   }, []);
 
