@@ -4,7 +4,7 @@ import axios from 'axios';
 export const updateDispatchOrderStatus = async (orderNumber, status) => {
   try {
     const response = await axios.patch(
-      `${process.env.REACT_APP_API_URL}/api/dispatchOrder/updateStatus`,
+      `${process.env.VITE_API_URL}/api/dispatchOrder/updateStatus`,
       {
         orderNumber,
         status,

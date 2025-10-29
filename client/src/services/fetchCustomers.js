@@ -3,7 +3,7 @@ import axios from 'axios';
 const fetchCustomers = async () => {
     try {
         const response = await axios.get(
-            `${process.env.REACT_APP_API_URL}/api/customers`,
+            `${process.env.VITE_API_URL}/api/customers`,
             {
                 withCredentials: true
             }

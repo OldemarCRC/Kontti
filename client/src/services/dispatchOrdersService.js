@@ -3,7 +3,7 @@ import axios from "axios";
 export async function fetchDispatchOrders() {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/dispatchOrder/dispatchOrders`,
+      `${process.env.VITE_API_URL}/api/dispatchOrder/dispatchOrders`,
       {
         withCredentials: true
       }
@@ -19,7 +19,7 @@ export async function fetchDispatchOrders() {
 export const fetchDispatchOrdersByCustomer = async (customer) => {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/dispatchOrder/dispatchOrders/customer/${customer}`,
+      `${process.env.VITE_API_URL}/api/dispatchOrder/dispatchOrders/customer/${customer}`,
       {
         withCredentials: true
       }

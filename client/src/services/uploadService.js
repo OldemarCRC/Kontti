@@ -3,7 +3,7 @@ import axios from 'axios';
 export const uploadDataToMongoDB = async (dataToSend, collection) => {
   try {
     const response = await axios.post(
-      `${process.env.REACT_APP_API_URL}/api/${collection}`,
+      `${process.env.VITE_API_URL}/api/${collection}`,
       dataToSend,
       {
         withCredentials: true,
@@ -24,7 +24,7 @@ export const uploadDataToMongoDB = async (dataToSend, collection) => {
 export const updateContainerLocation = async (dataToSend) => {
   try {
     const response = await axios.patch(
-      `${process.env.REACT_APP_API_URL}/api/inventory/location`,
+      `${process.env.VITE_API_URL}/api/inventory/location`,
       dataToSend,
       {
         withCredentials: true,

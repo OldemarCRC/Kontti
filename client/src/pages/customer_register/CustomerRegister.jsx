@@ -64,7 +64,7 @@ const CustomerRegister = () => {
     } = formData;
     try {
       await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/customers/customer-register`,
+        `${process.env.VITE_API_URL}/api/customers/customer-register`,
         {
           idType,
           idNumber,

@@ -60,7 +60,7 @@ const ChangePassword = () => {
     }
     try {
       await axios.put(
-        `${process.env.REACT_APP_API_URL}/api/auth/change-password`,
+        `${process.env.VITE_API_URL}/api/auth/change-password`,
         {
           userId: user._id,
           currentPassword: password,

@@ -18,7 +18,7 @@ const UserMenu = () => {
       }
       // Hacer la solicitud de logout
       const response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/logout`,
+        `${process.env.VITE_API_URL}/api/logout`,
         { userId: user.id },
         {
           withCredentials: true,

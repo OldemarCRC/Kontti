@@ -3,7 +3,7 @@ import axios from 'axios';
 export async function fetchInventory() {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/inventory`,
+      `${process.env.VITE_API_URL}/api/inventory`,
       {
         withCredentials: true
       }
@@ -18,7 +18,7 @@ export async function fetchInventory() {
 export async function fetchContainers() {
   try {
     const response = await axios.get(
-      `${process.env.REACT_APP_API_URL}/api/inventory/containers`,
+      `${process.env.VITE_API_URL}/api/inventory/containers`,
       {
         withCredentials: true
       }
