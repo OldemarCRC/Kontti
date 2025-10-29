@@ -1,11 +1,15 @@
 {
   "name": "kontti-tos",
-  "version": "1.0.0",   
+  "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "client",
+    "api"
+  ],
   "dependencies": {
     "express-rate-limit": "^7.4.0"
   },
-  "scripts": { 
+  "scripts": {
     "version:bump": "npm version patch -m 'Bump version to %s'",
     "version:minor": "npm version minor -m 'Bump minor version to %s'"
   }
