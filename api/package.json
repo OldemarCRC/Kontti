@@ -11,8 +11,13 @@
     "start:prod": "node index.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "private": true,
+  "author": "Jose Oldemar Chaves Urbina",
+  "license": "PROPRIETARY",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OldemarCRC/Kontti.git"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.7",

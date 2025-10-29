@@ -284,7 +284,7 @@ lsof -ti:3000 | xargs kill -9
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the Proprietary License.
 
 ## Contact
 
