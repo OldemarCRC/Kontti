@@ -1,9 +1,4 @@
+import * as crypto from 'crypto';
 export function generateRandomPassword() {
-    const length = 12;
-    const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+";
-    let password = "";
-    for (let i = 0; i < length; i++) {
-      password += charset.charAt(Math.floor(Math.random() * charset.length));
-    }
-    return password;
+    return crypto.randomBytes(12).toString('hex');
   }
