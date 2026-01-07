@@ -26,13 +26,8 @@
     "express": "^4.22.1",
     "express-rate-limit": "^7.4.0",
     "jsonwebtoken": "^9.0.2",
-<<<<<<< HEAD
-    "mongoose": "^8.8.3",
-    "nodemailer": "^7.0.10",
-=======
     "mongoose": "^8.9.5",
     "nodemailer": "^7.0.11",
->>>>>>> c12fc08474d45a92b346911e7e122fb9bf73f203
     "nodemon": "^3.0.3"
   },
   "engines": {
