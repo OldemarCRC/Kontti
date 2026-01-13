@@ -14,6 +14,7 @@ dist
 dist-ssr
 *.local
 client/node_modules/
+client/build/
 api/node_modules/
 # Editor directories and files
 .vscode/*
