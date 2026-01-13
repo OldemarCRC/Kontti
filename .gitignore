@@ -31,4 +31,8 @@ node_modules/
 # Agregado para ignorar archivos .env específicos del entorno
 .env.development
 .env.production
+
+
+# otros archivos
+Consulta3D.docx
 modificaciones.docx
