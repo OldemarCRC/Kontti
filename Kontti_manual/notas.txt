@@ -1,0 +1,15 @@
+Para mejorar la experiencia del usuario, considera añadir:
+
+Capturas de pantalla o GIFs animados que muestren el funcionamiento
+ de las características principales.
+
+Una sección de "Getting Started" para guiar a los nuevos usuarios.
+
+Ejemplos de casos de uso comunes.
+
+Una sección de preguntas frecuentes (FAQ).
+
+Información de contacto para soporte técnico.
+
+Recuerda mantener el manual actualizado a medida que la aplicación 
+evolucione y añadas nuevas características.
